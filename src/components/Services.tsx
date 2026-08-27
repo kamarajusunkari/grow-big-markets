@@ -19,48 +19,48 @@ interface ServiceCardData {
 
 const FEATURED_SERVICES: ServiceCardData[] = [
   {
-    id: 'web-mobile-dev',
-    category: 'DEVELOPMENT & ARCHITECTURE',
-    title: 'Web & Mobile Application Development',
-    subtitle: 'We Build Strong Foundations. We Develop Seamless Solutions.',
-    desc: 'Clean code, smart solutions, and real results. Custom responsive web platforms and native iOS/Android mobile apps engineered for scale.',
-    fullDesc: 'We design and develop custom web applications and mobile apps built around your business goals, user journeys, and digital scaling requirements.',
+    id: 'ppc-paid-ads',
+    category: 'PAID MEDIA & PPC',
+    title: 'Performance Marketing (Meta & Google PPC)',
+    subtitle: "We Don't Just Run Ads. We Scale High-ROAS Revenue.",
+    desc: 'High-converting ad campaigns across Google Search, Meta (Instagram/Facebook), YouTube & LinkedIn engineered to maximize ROAS.',
+    fullDesc: 'We construct data-driven ad campaigns that maximize return on ad spend (ROAS), lower customer acquisition costs (CAC), and turn cold traffic into loyal buyers.',
     imageSrc: '/bdb38855-3775-42ba-8d23-f32c41f2e827.webp',
-    imageAlt: 'Web & Mobile Application Development - Strong Foundations',
-    deliverables: ['Custom Web Applications', 'Native iOS & Android Apps', 'Responsive Mobile-First UX', 'Core Web Vitals & Clean Code'],
+    imageAlt: 'Performance Marketing & Paid Ads',
+    deliverables: ['Google Search & Shopping Ads', 'Meta (Instagram & Facebook) Ads', 'High ROAS Campaign Scaling', 'Precision Retargeting Funnels'],
   },
   {
-    id: 'ai-automation',
-    category: 'AI & AUTONOMOUS SYSTEMS',
-    title: 'AI & Autonomous Workflow Automation',
-    subtitle: 'Stop Revenue Leaks. Automate Your Business Operations.',
-    desc: 'Eliminate missed invoices, duplicate payments, and manual errors with intelligent 24/7 AI chatbots, LLM agents, and automated workflows.',
-    fullDesc: 'Leverage generative AI, autonomous LLM agents, chatbot support, and workflow automation platforms to cut manual tasks and operate 24/7.',
+    id: 'seo-search-growth',
+    category: 'ORGANIC SEARCH & RANKINGS',
+    title: 'Search Engine Optimization (SEO) & Organic Growth',
+    subtitle: 'Dominate Google Rankings. Drive High-Intent Traffic.',
+    desc: 'Propel your brand to the top of search engine results with technical SEO audits, high-authority backlink building, and keyword strategies.',
+    fullDesc: 'Dominating search engine rankings through technical SEO audits, high-intent keyword strategies, local search optimization, and white-hat link building.',
     imageSrc: '/679b7310-0afd-42d1-953b-94209bbf2c6f.png',
-    imageAlt: 'AI & Automation - We Automate You Grow',
-    deliverables: ['Custom LLM Chatbots & Agents', '24/7 Lead Qualification', 'Invoice & Payroll Automation', 'Predictive Workflows'],
+    imageAlt: 'Search Engine Optimization SEO',
+    deliverables: ['Technical & On-Page SEO Audits', 'High-Intent Keyword Strategy', 'Local Business & Maps SEO', 'Authority Link Building'],
   },
   {
-    id: 'digital-marketing',
-    category: 'PERFORMANCE & REVENUE',
-    title: 'Digital Marketing & SEO Performance',
-    subtitle: "We Don't Just Run Ads. We Generate Revenue.",
-    desc: 'Performance-focused PPC campaigns, Meta & Google ads, and SEO search dominance tied directly to measurable revenue generation.',
-    fullDesc: 'Scale your reach with targeted PPC campaigns, Meta & Google Ads management, social media marketing, and data-backed performance growth channels.',
+    id: 'social-media-branding',
+    category: 'SOCIAL MEDIA & BRANDING',
+    title: 'Social Media Marketing & Content Scaling',
+    subtitle: 'Build Authentic Brand Authority & Engage Audience.',
+    desc: 'Build a high-converting social media presence across Instagram, LinkedIn, YouTube, and TikTok with strategic reels and content calendars.',
+    fullDesc: 'Engage your target demographic through viral short-form video reels, strategic content calendars, active community management, and influencer partnerships.',
     imageSrc: '/158bb487-34c7-4e8d-a53f-b72845659451.webp',
-    imageAlt: 'Digital Marketing - We Generate Revenue',
-    deliverables: ['Google & Meta Ads Engine', 'Technical SEO Search Dominance', 'High ROAS Campaign Strategy', 'Revenue Analytics'],
+    imageAlt: 'Social Media Marketing & Content Scaling',
+    deliverables: ['Reels & Video Content Creation', 'Brand Authority Strategy', 'Active DM & Community Growth', 'Influencer Partnerships'],
   },
   {
-    id: 'growth-enterprise',
-    category: 'ENTERPRISE & STRATEGY',
-    title: 'Growth Acceleration & Enterprise Systems',
-    subtitle: 'We Make Your Business Stronger Than You Think!',
-    desc: 'Connected ERP/CRM platforms, operational scaling engines, and executive growth strategies built to amplify your business power.',
-    fullDesc: 'Unify sales, operations, finance, and HR data into a single scalable command center equipped with custom pipeline automations and real-time reporting.',
+    id: 'cro-funnel-scaling',
+    category: 'CONVERSION & FUNNELS',
+    title: 'Conversion Rate Optimization (CRO) & Sales Funnels',
+    subtitle: 'Turn Website Visitors Into Paying Loyal Customers.',
+    desc: 'Optimize every step of your sales funnel through heatmap audits, landing page design, A/B testing, and persuasive copywriting.',
+    fullDesc: 'Transform website traffic into qualified leads and sales through conversion-focused landing page design, A/B split testing, and user behavior analytics.',
     imageSrc: '/who we are.webp',
-    imageAlt: 'Growth Acceleration - Business Stronger Than You Think',
-    deliverables: ['Custom CRM & ERP Architecture', 'Pipeline Velocity Automation', 'Executive GTM Strategy', 'Multi-Department Analytics'],
+    imageAlt: 'Conversion Rate Optimization CRO',
+    deliverables: ['High-Converting Landing Pages', 'A/B Split Testing & Analytics', 'Lead Capture Form Funnels', 'Heatmap & Behavior Audits'],
   },
 ];
 
@@ -131,16 +131,16 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
         }}
       >
         {/* Section Header */}
-        <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '3.5rem' }} className="reveal-fade-up">
           <span
             style={{
               fontSize: '0.85rem',
               fontWeight: 900,
-              background: 'rgba(132, 204, 22, 0.2)',
-              color: '#4d7c0f',
+              background: 'rgba(253, 208, 11, 0.25)',
+              color: '#0f172a',
               padding: '0.4rem 1.1rem',
               borderRadius: 'var(--radius-full)',
-              border: '1px solid rgba(132, 204, 22, 0.4)',
+              border: '1px solid rgba(253, 208, 11, 0.55)',
               textTransform: 'uppercase',
               letterSpacing: '0.14em',
               display: 'inline-flex',
@@ -149,7 +149,7 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
               marginBottom: '0.75rem',
             }}
           >
-            <Sparkles size={14} /> OUR CORE CAPABILITIES
+            <Sparkles size={14} color="#0f172a" /> OUR CORE CAPABILITIES
           </span>
           
           <h2
@@ -161,7 +161,7 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
               letterSpacing: '-0.03em',
             }}
           >
-            Elevating Tomorrow's <span style={{ color: '#84cc16' }}>IT Landscape</span>
+            Elevating Tomorrow's <span style={{ color: '#FDD00B', background: '#3E6AB3', padding: '0.15rem 0.6rem', borderRadius: '8px', fontStyle: 'italic', fontSize: '0.88em', boxShadow: '0 4px 15px rgba(62, 106, 179, 0.35)', display: 'inline-block' }}>Marketing ROI</span>
           </h2>
         </div>
 
@@ -185,7 +185,7 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
                 cursor: 'pointer',
                 transition: 'transform 0.35s ease',
               }}
-              className="zeniqs-card-container"
+              className="zeniqs-card-container reveal-scale-up delay-100"
               onClick={() => setActiveModal(FEATURED_SERVICES[0])}
             >
               <div
@@ -232,7 +232,7 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
                 cursor: 'pointer',
                 transition: 'transform 0.35s ease',
               }}
-              className="zeniqs-card-container"
+              className="zeniqs-card-container reveal-scale-up delay-300"
               onClick={() => setActiveModal(FEATURED_SERVICES[2])}
             >
               <div
@@ -292,6 +292,7 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
                 width: 'max-content',
                 marginBottom: '-0.5rem',
               }}
+              className="reveal-fade-up delay-100"
             >
               <div style={{ display: 'flex' }}>
                 <img
@@ -322,7 +323,7 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
                 cursor: 'pointer',
                 transition: 'transform 0.35s ease',
               }}
-              className="zeniqs-card-container"
+              className="zeniqs-card-container reveal-scale-up delay-200"
               onClick={() => setActiveModal(FEATURED_SERVICES[1])}
             >
               <div
@@ -369,7 +370,7 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
                 cursor: 'pointer',
                 transition: 'transform 0.35s ease',
               }}
-              className="zeniqs-card-container"
+              className="zeniqs-card-container reveal-scale-up delay-400"
               onClick={() => setActiveModal(FEATURED_SERVICES[3])}
             >
               <div
@@ -417,19 +418,24 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
         <div style={{ textAlign: 'center' }}>
           <button
             onClick={onOpenBooking}
-            className="btn btn-dark"
             style={{
-              padding: '1.1rem 2.5rem',
+              padding: '1.1rem 2.6rem',
               fontSize: '1.05rem',
               fontWeight: 900,
               borderRadius: 'var(--radius-full)',
-              boxShadow: '0 12px 30px rgba(15, 23, 42, 0.25)',
+              background: '#FDD00B', // Sunburst Gold Accent (#FDD00B)
+              color: '#0f172a',
+              border: '1.5px solid rgba(132, 204, 22, 0.5)',
+              boxShadow: '0 12px 35px rgba(253, 208, 11, 0.45)',
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '10px',
+              gap: '12px',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
             }}
+            className="services-gold-btn"
           >
-            <PhoneCall size={20} color="#84cc16" /> Contact Us For Custom IT Solutions <ArrowRight size={20} />
+            <PhoneCall size={20} color="#0f172a" /> Contact Us For Custom Marketing Strategy <ArrowRight size={20} color="#0f172a" />
           </button>
         </div>
 

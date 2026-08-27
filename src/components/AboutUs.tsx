@@ -42,7 +42,7 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
           className="about-top-grid"
         >
           {/* Top Left: Subtitle Pill & Main Title */}
-          <div>
+          <div className="reveal-fade-up">
             <div style={{ marginBottom: '1rem' }}>
               <span
                 style={{
@@ -77,7 +77,7 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
           </div>
 
           {/* Top Right: Paragraph & Action Buttons */}
-          <div>
+          <div className="reveal-fade-up delay-100">
             <p
               style={{
                 fontSize: '1.05rem',
@@ -87,7 +87,7 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
                 fontWeight: 500,
               }}
             >
-              We empower ambitious businesses with cutting-edge web platforms, mobile applications, AI automation engines, enterprise ERP/CRM systems, and performance marketing strategies engineered for rapid, scalable growth.
+              We empower ambitious businesses, healthcare clinics, e-commerce brands, and financial institutions with ROI-focused digital marketing campaigns, high-converting Google & Meta ads, search engine optimization (SEO), and performance marketing strategies engineered for rapid revenue growth.
             </p>
 
             {/* Action Buttons Row (Matching Screenshot: Black Pill Button + Circular Play Button) */}
@@ -151,6 +151,7 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
               border: '1px solid rgba(15, 23, 42, 0.08)',
               height: '320px',
             }}
+            className="reveal-scale-up delay-100"
           >
             <img
               src="/about (1).webp"
@@ -164,24 +165,25 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
             />
           </div>
 
-          {/* Card 2: Lavender Card (10+ Years Experience) */}
+          {/* Card 2: Royal Blue Tint Card (10+ Years Experience) */}
           <div
             style={{
-              background: '#e9d5ff', // Light Lavender matching screenshot
+              background: '#ebf2fa',
               borderRadius: '26px',
               padding: '2rem 1.65rem',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
-              boxShadow: '0 10px 30px rgba(192, 132, 252, 0.15)',
-              border: '1px solid rgba(192, 132, 252, 0.3)',
+              boxShadow: '0 10px 30px rgba(62, 106, 179, 0.12)',
+              border: '1px solid rgba(62, 106, 179, 0.3)',
               height: '320px',
             }}
+            className="reveal-scale-up delay-200"
           >
             <div style={{ fontSize: '3.2rem', fontWeight: 900, color: '#0f172a', lineHeight: 1, marginBottom: '0.4rem' }}>
               10+
             </div>
-            <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#6b21a8', marginBottom: '0.85rem' }}>
+            <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#3E6AB3', marginBottom: '0.85rem' }}>
               Years Experience
             </div>
             <p style={{ fontSize: '0.875rem', color: '#475569', lineHeight: 1.5, fontWeight: 500 }}>
@@ -189,7 +191,7 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
             </p>
           </div>
 
-          {/* Card 3: White Card (150+ Happy Clients) */}
+          {/* Card 3: White Card (150+ Happy Clients with Gold & Blue Icons) */}
           <div
             style={{
               background: '#ffffff',
@@ -197,33 +199,35 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
               padding: '2rem 1.65rem',
               display: 'flex',
               flexDirection: 'column',
-              justifyContent: 'spaceBetween',
-              boxShadow: '0 12px 30px rgba(0, 0, 0, 0.04)',
+              justifyContent: 'space-between',
+              boxShadow: '0 12px 30px rgba(0, 0, 0, 0.05)',
               border: '1px solid rgba(15, 23, 42, 0.1)',
               height: '320px',
               position: 'relative',
             }}
+            className="reveal-scale-up delay-300"
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div
                 style={{
-                  width: '36px',
-                  height: '36px',
-                  borderRadius: '10px',
-                  background: '#f3e8ff',
-                  color: '#a855f7',
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '12px',
+                  background: '#FDD00B',
+                  color: '#0f172a',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  boxShadow: '0 4px 12px rgba(253, 208, 11, 0.35)',
                 }}
               >
                 <Smile size={20} />
               </div>
-              <ArrowUpRight size={20} color="#0f172a" />
+              <ArrowUpRight size={22} color="#3E6AB3" />
             </div>
 
             <div>
-              <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#64748b', marginBottom: '0.2rem' }}>
+              <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#3E6AB3', marginBottom: '0.2rem' }}>
                 Happy Clients
               </div>
               <div style={{ fontSize: '2.8rem', fontWeight: 900, color: '#0f172a', lineHeight: 1.05, marginBottom: '0.5rem' }}>
@@ -235,24 +239,25 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
             </div>
           </div>
 
-          {/* Card 4: Lavender Card (50+ Expert Team) */}
+          {/* Card 4: Gold Tint Card (50+ Techwise Team) */}
           <div
             style={{
-              background: '#e9d5ff', // Light Lavender matching screenshot
+              background: '#fffbe6',
               borderRadius: '26px',
               padding: '2rem 1.65rem',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
-              boxShadow: '0 10px 30px rgba(192, 132, 252, 0.15)',
-              border: '1px solid rgba(192, 132, 252, 0.3)',
+              boxShadow: '0 10px 30px rgba(253, 208, 11, 0.15)',
+              border: '1px solid rgba(253, 208, 11, 0.5)',
               height: '320px',
             }}
+            className="reveal-scale-up delay-400"
           >
             <div style={{ fontSize: '3.2rem', fontWeight: 900, color: '#0f172a', lineHeight: 1, marginBottom: '0.4rem' }}>
               50+
             </div>
-            <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#6b21a8', marginBottom: '0.85rem' }}>
+            <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#3E6AB3', marginBottom: '0.85rem' }}>
               Techwise Team
             </div>
             <p style={{ fontSize: '0.875rem', color: '#475569', lineHeight: 1.5, fontWeight: 500 }}>
@@ -260,48 +265,49 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
             </p>
           </div>
 
-          {/* Card 5: Purple Gradient Card (Get Started With Us) */}
+          {/* Card 5: Royal Blue Gradient Card (Get Started With Us) */}
           <div
             onClick={onOpenBooking}
             style={{
-              background: 'linear-gradient(135deg, #c084fc 0%, #a855f7 100%)',
+              background: 'linear-gradient(135deg, #3E6AB3 0%, #1e3a8a 100%)',
               borderRadius: '26px',
               padding: '2rem 1.65rem',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
-              boxShadow: '0 15px 35px rgba(168, 85, 247, 0.3)',
+              boxShadow: '0 15px 35px rgba(62, 106, 179, 0.4)',
               color: '#ffffff',
               cursor: 'pointer',
               height: '320px',
               transition: 'all 0.3s ease',
+              border: '1px solid rgba(253, 208, 11, 0.3)',
             }}
-            className="about-get-started-card"
+            className="about-get-started-card reveal-scale-up delay-500"
           >
             {/* Avatars Overlap Row */}
             <div style={{ display: 'flex' }}>
               <img
                 src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80"
                 alt="Team 1"
-                style={{ width: '38px', height: '38px', borderRadius: '50%', border: '2px solid #ffffff', marginLeft: 0 }}
+                style={{ width: '38px', height: '38px', borderRadius: '50%', border: '2px solid #FDD00B', marginLeft: 0 }}
               />
               <img
                 src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80"
                 alt="Team 2"
-                style={{ width: '38px', height: '38px', borderRadius: '50%', border: '2px solid #ffffff', marginLeft: '-10px' }}
+                style={{ width: '38px', height: '38px', borderRadius: '50%', border: '2px solid #FDD00B', marginLeft: '-10px' }}
               />
               <img
                 src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=100&q=80"
                 alt="Team 3"
-                style={{ width: '38px', height: '38px', borderRadius: '50%', border: '2px solid #ffffff', marginLeft: '-10px' }}
+                style={{ width: '38px', height: '38px', borderRadius: '50%', border: '2px solid #FDD00B', marginLeft: '-10px' }}
               />
             </div>
 
             <div>
-              <h3 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#ffffff', marginBottom: '0.5rem', lineHeight: 1.2 }}>
+              <h3 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#FDD00B', marginBottom: '0.5rem', lineHeight: 1.2 }}>
                 Get Started With Us
               </h3>
-              <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.85)', lineHeight: 1.45 }}>
+              <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.9)', lineHeight: 1.45 }}>
                 Launch your digital transformation sprint with direct executive guidance.
               </p>
             </div>

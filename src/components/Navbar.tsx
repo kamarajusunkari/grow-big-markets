@@ -111,38 +111,42 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, theme, onToggleTh
             {theme === 'dark' ? <Sun size={19} color="#84cc16" /> : <Moon size={19} color="#2563eb" />}
           </button>
 
-          {/* Hero Lime Green Color Container Div in Header containing Contact Button & App Icon */}
+          {/* Header Contact Container (#3E6AB3) containing Contact Button (#FDD00B) & Grid Icon */}
           <div
             style={{
-              background: '#84cc16', // Hero Section Lime Green Color
-              padding: '0.4rem 0.6rem 0.4rem 0.6rem',
+              background: '#3E6AB3', // Royal Blue Background (#3E6AB3)
+              padding: '0.4rem 0.65rem',
               borderRadius: 'var(--radius-full)',
               display: 'flex',
               alignItems: 'center',
               gap: '0.6rem',
-              boxShadow: '0 4px 15px rgba(132, 204, 22, 0.35)',
+              boxShadow: '0 6px 20px rgba(62, 106, 179, 0.35)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
             }}
             className="desktop-cta"
           >
-            {/* Contact Button */}
+            {/* Contact Button in Sunburst Yellow Gold (#FDD00B) */}
             <button
               onClick={onOpenBooking}
-              className="btn btn-dark"
               style={{
                 borderRadius: 'var(--radius-full)',
-                padding: '0.55rem 1.3rem',
+                padding: '0.6rem 1.4rem',
                 fontSize: '0.875rem',
-                fontWeight: 800,
+                fontWeight: 900,
+                fontFamily: 'var(--font-heading)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',
-                background: '#0f172a',
-                color: '#ffffff',
+                background: '#FDD00B', // Sunburst Yellow Gold (#FDD00B)
+                color: '#0f172a',
                 border: 'none',
                 cursor: 'pointer',
+                boxShadow: '0 4px 15px rgba(253, 208, 11, 0.4)',
+                transition: 'all 0.25s ease',
               }}
+              className="navbar-contact-btn"
             >
-              Contact Now <ArrowUpRight size={16} />
+              Contact Now <ArrowUpRight size={16} color="#0f172a" />
             </button>
 
             {/* Grid App Icon */}
@@ -151,12 +155,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, theme, onToggleTh
                 width: '36px',
                 height: '36px',
                 borderRadius: '50%',
-                background: '#a3e635',
+                background: 'rgba(255, 255, 255, 0.2)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#0f172a',
+                color: '#ffffff',
                 cursor: 'pointer',
+                transition: 'all 0.2s ease',
               }}
               onClick={onOpenBooking}
             >

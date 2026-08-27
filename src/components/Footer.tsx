@@ -24,7 +24,15 @@ export const Footer: React.FC = () => {
         position: 'relative',
       }}
     >
-      <div className="container">
+      {/* Main Container Aligned Parallel to Navbar Header */}
+      <div
+        style={{
+          width: '100%',
+          maxWidth: '1440px',
+          margin: '0 auto',
+          padding: '0 2rem',
+        }}
+      >
         <div
           style={{
             display: 'grid',
@@ -35,37 +43,33 @@ export const Footer: React.FC = () => {
         >
           {/* Col 1: Brand Info */}
           <div>
-            <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none', marginBottom: '1.25rem' }}>
+            <a href="#" style={{ display: 'inline-flex', alignItems: 'center', textDecoration: 'none', marginBottom: '1.25rem' }}>
               <div
                 style={{
-                  width: '38px',
-                  height: '38px',
-                  borderRadius: '50%',
-                  background: '#ffcc00',
+                  background: '#ffffff',
+                  padding: '6px 14px',
+                  borderRadius: '12px',
+                  border: '1px solid rgba(15, 23, 42, 0.08)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontWeight: 900,
-                  fontSize: '0.85rem',
-                  color: '#0f172a',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.04)',
                 }}
               >
-                GB
+                <img
+                  src="/d52ab5cc-5257-47d0-a3c2-2478d0403f2b.jpg"
+                  alt="Grow Big Marketers Logo"
+                  style={{
+                    height: '34px',
+                    width: 'auto',
+                    objectFit: 'contain',
+                  }}
+                />
               </div>
-              <span
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: '1.25rem',
-                  fontWeight: 900,
-                  color: 'var(--text-primary)',
-                }}
-              >
-                GROW <span style={{ color: '#ffcc00' }}>BIG</span>
-              </span>
             </a>
 
             <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '1.5rem' }}>
-              We build AI-powered digital systems that grow businesses. Web development, mobile apps, software, and digital marketing engineered for performance.
+              Premier digital marketing & performance agency. High-converting Meta & Google PPC ads, search engine optimization (SEO), and brand scaling strategies.
             </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
@@ -78,18 +82,18 @@ export const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Col 2: Digital Services */}
+          {/* Col 2: Marketing Services */}
           <div>
             <h4 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '1.25rem', color: 'var(--text-primary)' }}>
-              Digital Services
+              Marketing Services
             </h4>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.65rem', fontSize: '0.875rem' }}>
-              <li><a href="#services" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Web Development</a></li>
-              <li><a href="#services" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Mobile App Development</a></li>
-              <li><a href="#services" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Digital Marketing & Ads</a></li>
-              <li><a href="#services" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Search Engine Optimization</a></li>
-              <li><a href="#services" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>CRM & ERP Systems</a></li>
-              <li><a href="#services" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>AI & Automation</a></li>
+              <li><a href="#services" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Performance Marketing (PPC)</a></li>
+              <li><a href="#services" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Search Engine Optimization (SEO)</a></li>
+              <li><a href="#services" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Social Media & Reels Growth</a></li>
+              <li><a href="#services" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Conversion Rate Optimization (CRO)</a></li>
+              <li><a href="#services" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Lead Generation & Funnels</a></li>
+              <li><a href="#services" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Brand Strategy & Copywriting</a></li>
             </ul>
           </div>
 

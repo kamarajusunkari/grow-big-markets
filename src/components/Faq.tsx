@@ -94,23 +94,27 @@ export const Faq: React.FC<FaqProps> = ({ onOpenBooking }) => {
               alignSelf: 'flex-start',
               zIndex: 10,
             }}
-            className="faq-sticky-left"
+            className="faq-sticky-left reveal-fade-up"
           >
             {/* Tagline Subtitle */}
             <div style={{ marginBottom: '1.25rem' }}>
               <span
                 style={{
-                  fontSize: '0.8rem',
+                  fontSize: '0.85rem',
                   fontWeight: 900,
-                  color: '#d97706',
+                  background: 'rgba(253, 208, 11, 0.25)',
+                  color: '#0f172a',
+                  padding: '0.4rem 1.1rem',
+                  borderRadius: 'var(--radius-full)',
+                  border: '1px solid rgba(253, 208, 11, 0.55)',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.15em',
+                  letterSpacing: '0.14em',
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '6px',
                 }}
               >
-                <Sparkles size={14} color="#84cc16" /> QUESTIONS & ANSWERS
+                <Sparkles size={14} color="#0f172a" /> QUESTIONS & ANSWERS
               </span>
             </div>
 
@@ -127,7 +131,7 @@ export const Faq: React.FC<FaqProps> = ({ onOpenBooking }) => {
               }}
             >
               Clear answers for <br />
-              <span style={{ color: '#84cc16' }}>complex operations</span>
+              <span style={{ color: '#FDD00B', background: '#3E6AB3', padding: '0.15rem 0.6rem', borderRadius: '8px', fontStyle: 'italic', fontSize: '0.88em', boxShadow: '0 4px 15px rgba(62, 106, 179, 0.35)', display: 'inline-block' }}>complex operations</span>
             </h2>
 
             {/* Subtitle Paragraph (Consistent Brand Body Font: Plus Jakarta Sans) */}
@@ -189,9 +193,9 @@ export const Faq: React.FC<FaqProps> = ({ onOpenBooking }) => {
                 <button
                   onClick={onOpenBooking}
                   style={{
-                    background: '#f59e0b',
+                    background: '#FDD00B', // Sunburst Gold Accent (#FDD00B)
                     color: '#0f172a',
-                    border: 'none',
+                    border: '1px solid rgba(132, 204, 22, 0.4)',
                     padding: '0.9rem 1.75rem',
                     borderRadius: '18px',
                     fontSize: '0.95rem',
@@ -201,7 +205,7 @@ export const Faq: React.FC<FaqProps> = ({ onOpenBooking }) => {
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '12px',
-                    boxShadow: '0 8px 20px rgba(245, 158, 11, 0.35)',
+                    boxShadow: '0 8px 20px rgba(253, 208, 11, 0.4)',
                     transition: 'all 0.25s ease',
                   }}
                   className="faq-cta-btn"
@@ -227,7 +231,7 @@ export const Faq: React.FC<FaqProps> = ({ onOpenBooking }) => {
           </div>
 
           {/* RIGHT COLUMN: SCROLLABLE ACCORDION LIST */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }} className="reveal-fade-up delay-100">
             {FAQ_LIST.map((item) => {
               const isOpen = openId === item.id;
               return (

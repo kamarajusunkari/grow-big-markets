@@ -31,9 +31,9 @@ export const Hero: React.FC<HeroProps> = () => {
             position: 'relative',
             width: '100%',
             borderRadius: '32px',
-            background: 'linear-gradient(135deg, #a3e635 0%, #84cc16 65%, #65a30d 100%)', // Full Vibrant Lime-Green Hero Fill
+            background: 'linear-gradient(135deg, #FFE866 0%, #FDD00B 65%, #E5B800 100%)', // Full Sunburst Gold (#FDD00B) Hero Fill
             color: '#0f172a',
-            boxShadow: '0 20px 50px rgba(132, 204, 22, 0.25)',
+            boxShadow: '0 20px 50px rgba(253, 208, 11, 0.35)',
             minHeight: '640px',
           }}
         >
@@ -51,7 +51,7 @@ export const Hero: React.FC<HeroProps> = () => {
             className="hero-grid-container"
           >
             {/* Left Column: Stacked Display Typography "Grow Big Marketers" */}
-            <div style={{ position: 'relative', zIndex: 2 }}>
+            <div style={{ position: 'relative', zIndex: 2 }} className="reveal-fade-up">
               
               {/* Top Badge Pill */}
               <div style={{ marginBottom: '1.25rem' }}>
@@ -71,7 +71,7 @@ export const Hero: React.FC<HeroProps> = () => {
                     border: '1px solid rgba(15, 23, 42, 0.25)',
                   }}
                 >
-                  <Sparkles size={14} /> Digital Systems & Software
+                  <Sparkles size={14} /> Digital Marketing & Growth Agency
                 </span>
               </div>
 
@@ -129,27 +129,27 @@ export const Hero: React.FC<HeroProps> = () => {
                   marginBottom: '2.25rem',
                 }}
               >
-                We design and develop scalable digital solutions that help businesses streamline operations, connect with customers, and turn ambitious ideas into real-world products.
+                Accelerate your revenue with data-driven SEO, performance marketing campaigns, high-converting Google & Meta PPC ads, and end-to-end brand scaling strategies.
               </p>
 
               {/* Key feature pills */}
               <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', fontSize: '0.9rem', fontWeight: 800, color: '#0f172a' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <CheckCircle2 size={18} color="#0f172a" /> Web & Mobile Apps
+                  <CheckCircle2 size={18} color="#0f172a" /> Performance Ads (PPC)
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <CheckCircle2 size={18} color="#0f172a" /> AI & Automation
+                  <CheckCircle2 size={18} color="#0f172a" /> Organic SEO Scale
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <CheckCircle2 size={18} color="#0f172a" /> ERP & CRM
+                  <CheckCircle2 size={18} color="#0f172a" /> Social Growth & Reels
                 </div>
               </div>
             </div>
 
             {/* Right Column: Displaying Exact Image h1_1.webp */}
-            <div style={{ position: 'relative', zIndex: 2 }}>
+            <div style={{ position: 'relative', zIndex: 2 }} className="reveal-scale-up delay-200">
               
-              {/* Circular Rotating Badge ("EXPLORE MORE ↓") at junction */}
+              {/* Circular Rotating Badge ("GROW REVENUE ↓") at junction */}
               <a
                 href="#services"
                 style={{
@@ -185,11 +185,11 @@ export const Hero: React.FC<HeroProps> = () => {
                   />
                   <text fill="#ffffff" fontSize="10" fontWeight="bold" letterSpacing="2px">
                     <textPath href="#circlePath">
-                      EXPLORE MORE • EXPLORE MORE •
+                      GROW REVENUE • SCALE BRANDS •
                     </textPath>
                   </text>
                 </svg>
-                <ArrowDown size={22} color="#84cc16" />
+                <ArrowDown size={22} color="#FDD00B" />
               </a>
 
               {/* Display h1_1.webp Image */}

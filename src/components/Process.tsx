@@ -122,7 +122,7 @@ export const Process: React.FC<ProcessProps> = ({ onOpenBooking }) => {
               alignSelf: 'flex-start',
               zIndex: 10,
             }}
-            className="sticky-left-container"
+            className="sticky-left-container reveal-fade-up"
           >
             {/* Tagline */}
             <div style={{ marginBottom: '1.25rem' }}>
@@ -130,11 +130,11 @@ export const Process: React.FC<ProcessProps> = ({ onOpenBooking }) => {
                 style={{
                   fontSize: '0.85rem',
                   fontWeight: 900,
-                  background: 'rgba(132, 204, 22, 0.2)',
-                  color: '#4d7c0f',
+                  background: 'rgba(253, 208, 11, 0.2)',
+                  color: '#0f172a',
                   padding: '0.45rem 1.25rem',
                   borderRadius: 'var(--radius-full)',
-                  border: '1px solid rgba(132, 204, 22, 0.4)',
+                  border: '1px solid rgba(253, 208, 11, 0.5)',
                   textTransform: 'uppercase',
                   letterSpacing: '0.15em',
                   display: 'inline-flex',
@@ -142,7 +142,7 @@ export const Process: React.FC<ProcessProps> = ({ onOpenBooking }) => {
                   gap: '8px',
                 }}
               >
-                <Sparkles size={14} /> GROW BIG METHODOLOGY
+                <Sparkles size={14} color="#0f172a" /> GROW BIG METHODOLOGY
               </span>
             </div>
 
@@ -157,7 +157,7 @@ export const Process: React.FC<ProcessProps> = ({ onOpenBooking }) => {
                 letterSpacing: '-0.03em',
               }}
             >
-              Empowering Growth & Scale in the <span style={{ color: '#84cc16' }}>Digital World</span>
+              Empowering Growth & Scale in the <span style={{ color: '#FDD00B', background: '#3E6AB3', padding: '0.15rem 0.6rem', borderRadius: '8px', fontStyle: 'italic', fontSize: '0.88em', boxShadow: '0 4px 15px rgba(62, 106, 179, 0.35)', display: 'inline-block' }}>Digital World</span>
             </h2>
 
             {/* Description */}
@@ -183,7 +183,7 @@ export const Process: React.FC<ProcessProps> = ({ onOpenBooking }) => {
                   fontSize: '1rem',
                   fontWeight: 900,
                   borderRadius: 'var(--radius-full)',
-                  boxShadow: '0 12px 30px rgba(132, 204, 22, 0.35)',
+                  boxShadow: '0 12px 30px rgba(253, 208, 11, 0.45)',
                 }}
               >
                 Explore the Development World <ArrowRight size={18} />
@@ -194,7 +194,7 @@ export const Process: React.FC<ProcessProps> = ({ onOpenBooking }) => {
           {/* RIGHT COLUMN: SCROLLABLE TIMELINE TRACK WITH PASTEL LIGHT OPACITY BG CARDS */}
           <div style={{ position: 'relative' }}>
             
-            {/* Main Hero Color Vertical Scroll Strip (#84cc16 Lime Green) */}
+            {/* Main Brand Sunburst Gold Vertical Scroll Strip (#FDD00B) */}
             <div
               style={{
                 position: 'absolute',
@@ -202,10 +202,10 @@ export const Process: React.FC<ProcessProps> = ({ onOpenBooking }) => {
                 bottom: '25px',
                 left: '23px',
                 width: '10px',
-                background: 'linear-gradient(to bottom, #84cc16 0%, #a3e635 50%, #10b981 100%)',
+                background: 'linear-gradient(to bottom, #FDD00B 0%, #FFE866 50%, #10b981 100%)',
                 borderRadius: '5px',
                 zIndex: 1,
-                boxShadow: '0 0 20px rgba(132, 204, 22, 0.5)',
+                boxShadow: '0 0 20px rgba(253, 208, 11, 0.55)',
               }}
             />
 
@@ -221,6 +221,7 @@ export const Process: React.FC<ProcessProps> = ({ onOpenBooking }) => {
                     position: 'relative',
                     zIndex: 2,
                   }}
+                  className="reveal-fade-up"
                 >
                   {/* Number Circle */}
                   <div

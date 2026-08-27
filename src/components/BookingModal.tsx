@@ -81,16 +81,16 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
                   onChange={(e) => setSelectedService(e.target.value)}
                   className="form-select"
                 >
-                  <option value="Web Development">Web Development</option>
-                  <option value="Mobile App Development">Mobile App Development (iOS & Android)</option>
-                  <option value="Digital Marketing">Digital Marketing & PPC Ads</option>
-                  <option value="Search Engine Optimization">Search Engine Optimization (SEO)</option>
-                  <option value="CRM Solutions">CRM Solutions & Pipeline Setup</option>
-                  <option value="ERP Solutions">ERP Enterprise Software</option>
-                  <option value="AI & Automation">AI & Autonomous Workflow Automation</option>
-                  <option value="UI/UX Design">UI/UX Design & Product Strategy</option>
-                  <option value="eCommerce Development">eCommerce Online Store</option>
-                  <option value="Cloud Solutions">Cloud Infrastructure & API Integration</option>
+                  <option value="Performance Marketing (Google & Meta PPC)">Performance Marketing (Google & Meta PPC)</option>
+                  <option value="Search Engine Optimization (SEO)">Search Engine Optimization (SEO)</option>
+                  <option value="Social Media Marketing & Reels">Social Media Marketing & Reels</option>
+                  <option value="Conversion Rate Optimization (CRO)">Conversion Rate Optimization (CRO)</option>
+                  <option value="Lead Generation & Funnels">Lead Generation & Sales Funnels</option>
+                  <option value="Brand Strategy & Content Marketing">Brand Strategy & Content Marketing</option>
+                  <option value="Local Google Business & Maps SEO">Local Google Business & Maps SEO</option>
+                  <option value="E-Commerce Performance Ads">E-Commerce Performance Ads & Scale</option>
+                  <option value="Influencer Marketing Campaigns">Influencer Marketing Campaigns</option>
+                  <option value="Full-Funnel Digital Growth Audit">Full-Funnel Digital Growth Audit</option>
                 </select>
               </div>
 

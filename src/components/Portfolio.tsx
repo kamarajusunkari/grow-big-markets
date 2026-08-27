@@ -227,16 +227,16 @@ export const Portfolio: React.FC = () => {
           marginBottom: '3.5rem',
         }}
       >
-        <div style={{ textAlign: 'center' }}>
+        <div style={{ textAlign: 'center' }} className="reveal-fade-up">
           <span
             style={{
               fontSize: '0.85rem',
               fontWeight: 900,
-              background: 'rgba(132, 204, 22, 0.2)',
-              color: '#4d7c0f',
+              background: 'rgba(253, 208, 11, 0.25)',
+              color: '#0f172a',
               padding: '0.4rem 1.1rem',
               borderRadius: 'var(--radius-full)',
-              border: '1px solid rgba(132, 204, 22, 0.4)',
+              border: '1px solid rgba(253, 208, 11, 0.55)',
               textTransform: 'uppercase',
               letterSpacing: '0.14em',
               display: 'inline-flex',
@@ -245,7 +245,7 @@ export const Portfolio: React.FC = () => {
               marginBottom: '0.75rem',
             }}
           >
-            <Sparkles size={14} /> PROVEN IMPACT & CASE STUDIES
+            <Sparkles size={14} color="#0f172a" /> PROVEN IMPACT & CASE STUDIES
           </span>
 
           <h2
@@ -257,7 +257,7 @@ export const Portfolio: React.FC = () => {
               letterSpacing: '-0.03em',
             }}
           >
-            Recent Client Work That <span style={{ color: '#84cc16' }}>Delivers Results</span>
+            Recent Client Work That <span style={{ color: '#FDD00B', background: '#3E6AB3', padding: '0.15rem 0.6rem', borderRadius: '8px', fontStyle: 'italic', fontSize: '0.88em', boxShadow: '0 4px 15px rgba(62, 106, 179, 0.35)', display: 'inline-block' }}>Delivers Results</span>
           </h2>
         </div>
       </div>
@@ -271,6 +271,7 @@ export const Portfolio: React.FC = () => {
           display: 'flex',
           alignItems: 'center',
         }}
+        className="reveal-fade-up delay-100"
       >
         {/* Left & Right Edge Fades */}
         <div

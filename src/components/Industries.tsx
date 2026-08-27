@@ -130,6 +130,7 @@ export const Industries: React.FC = () => {
             alignItems: 'center',
             marginBottom: '3rem',
           }}
+          className="reveal-fade-up"
         >
           <div>
             <span
@@ -224,16 +225,16 @@ export const Industries: React.FC = () => {
                     overflow: 'hidden',
                     position: 'relative',
                     boxShadow: isActive
-                      ? '0 30px 60px rgba(132, 204, 22, 0.35), 0 10px 25px rgba(0, 0, 0, 0.15)'
+                      ? '0 30px 60px rgba(253, 208, 11, 0.4), 0 10px 25px rgba(0, 0, 0, 0.15)'
                       : '0 12px 30px rgba(0, 0, 0, 0.08)',
-                    border: isActive ? '2.5px solid #84cc16' : '1px solid rgba(15, 23, 42, 0.12)',
+                    border: isActive ? '2.5px solid #FDD00B' : '1px solid rgba(15, 23, 42, 0.12)',
                     cursor: 'pointer',
                     transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                     transform: isActive ? 'translateY(-16px) scale(1.04)' : 'translateY(0) scale(1)',
                     zIndex: isActive ? 5 : 2,
                     background: '#ffffff',
                   }}
-                  className="single-pillar-slice"
+                  className="single-pillar-slice reveal-scale-up"
                 >
                   {/* Pillar Image */}
                   <img
@@ -302,11 +303,11 @@ export const Industries: React.FC = () => {
                         style={{
                           fontSize: '0.75rem',
                           fontWeight: 800,
-                          color: '#84cc16',
+                          color: '#FDD00B',
                           background: 'rgba(15, 23, 42, 0.92)',
                           padding: '0.35rem 0.75rem',
                           borderRadius: 'var(--radius-full)',
-                          border: '1px solid rgba(132, 204, 22, 0.4)',
+                          border: '1px solid rgba(253, 208, 11, 0.5)',
                           display: 'inline-flex',
                           alignItems: 'center',
                           gap: '4px',
@@ -321,7 +322,7 @@ export const Industries: React.FC = () => {
             })}
           </div>
 
-          {/* GIANT BIG OVERLAY TYPOGRAPHY: "INDUSTRIES" IN WHITE & "WE SERVE" IN LIME GREEN */}
+          {/* GIANT BIG OVERLAY TYPOGRAPHY: "INDUSTRIES" IN WHITE & "WE SERVE" IN GOLD */}
           <div
             style={{
               position: 'absolute',
@@ -335,7 +336,7 @@ export const Industries: React.FC = () => {
           >
             <h2
               style={{
-                fontSize: 'clamp(3.8rem, 8.5vw, 7.5rem)', // GIANT BIG TEXT
+                fontSize: 'clamp(3.8rem, 8.5vw, 7.5rem)',
                 fontWeight: 900,
                 lineHeight: 0.92,
                 letterSpacing: '-0.04em',
@@ -345,7 +346,7 @@ export const Industries: React.FC = () => {
             >
               <span
                 style={{
-                  color: '#ffffff', // White for INDUSTRIES
+                  color: '#ffffff',
                   display: 'block',
                   textShadow: '0 4px 20px rgba(15, 23, 42, 0.8), 0 0 40px rgba(15, 23, 42, 0.9), -1px -1px 0 #0f172a, 1px -1px 0 #0f172a, -1px 1px 0 #0f172a, 1px 1px 0 #0f172a',
                 }}
@@ -354,9 +355,9 @@ export const Industries: React.FC = () => {
               </span>
               <span
                 style={{
-                  color: '#84cc16', // Lime Green for WE SERVE
+                  color: '#FDD00B', // Sunburst Gold Accent (#FDD00B)
                   display: 'block',
-                  textShadow: '0 0 40px rgba(132, 204, 22, 0.65), 0 4px 20px rgba(15, 23, 42, 0.8)',
+                  textShadow: '0 0 40px rgba(253, 208, 11, 0.7), 0 4px 20px rgba(15, 23, 42, 0.8)',
                 }}
               >
                 WE SERVE

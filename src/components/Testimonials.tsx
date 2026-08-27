@@ -132,7 +132,7 @@ export const Testimonials: React.FC = () => {
         }}
       >
         {/* Section Header (Matching Screenshot: 007 • TESTIMONIAL & What They're Saying) */}
-        <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '4rem' }} className="reveal-fade-up">
           <span
             style={{
               fontSize: '0.8rem',
@@ -150,7 +150,7 @@ export const Testimonials: React.FC = () => {
               marginBottom: '1rem',
             }}
           >
-            <Sparkles size={13} color="#84cc16" /> TESTIMONIALS
+            <Sparkles size={13} color="#FDD00B" /> TESTIMONIALS
           </span>
 
           <h2
@@ -176,7 +176,7 @@ export const Testimonials: React.FC = () => {
             overflow: 'hidden',
             position: 'relative',
           }}
-          className="testimonials-3-cols"
+          className="testimonials-3-cols reveal-fade-up delay-100"
         >
           {/* Edge Fade Gradients */}
           <div
@@ -339,7 +339,7 @@ const RenderCard: React.FC<{ item: TestimonialCard }> = ({ item }) => {
             color: '#ffffff',
           }}
         >
-          <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#84cc16', textTransform: 'uppercase', marginBottom: '0.35rem' }}>
+          <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#FDD00B', textTransform: 'uppercase', marginBottom: '0.35rem' }}>
             {item.logo}
           </div>
           <h4 style={{ fontSize: '1.25rem', fontWeight: 900, lineHeight: 1.25, color: '#ffffff' }}>

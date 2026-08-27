@@ -28,6 +28,41 @@ export const App: React.FC = () => {
     }
   }, [theme]);
 
+  // Global Scroll Reveal Entrance Observer
+  useEffect(() => {
+    const observerCallback: IntersectionObserverCallback = (entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    };
+
+    const observerOptions: IntersectionObserverInit = {
+      root: null,
+      rootMargin: '0px 0px -40px 0px',
+      threshold: 0.08,
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    const initObserver = () => {
+      const elements = document.querySelectorAll('.reveal-fade-up, .reveal-scale-up');
+      elements.forEach((el) => observer.observe(el));
+    };
+
+    // Initial run + slight delay for dynamically rendered DOM nodes
+    initObserver();
+    const timeoutId = setTimeout(initObserver, 150);
+
+    return () => {
+      clearTimeout(timeoutId);
+      const elements = document.querySelectorAll('.reveal-fade-up, .reveal-scale-up');
+      elements.forEach((el) => observer.unobserve(el));
+    };
+  }, []);
+
   const toggleTheme = () => {
     setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
   };
