@@ -36,7 +36,7 @@ const ALL_PILLARS: IndustryPillar[] = [
   {
     id: 'textiles',
     name: 'TEXTILES',
-    category: 'Apparel & Weaving',
+    category: 'Apparel & Fashion',
     image: 'https://images.unsplash.com/photo-1604754742629-3e5728249d73?auto=format&fit=crop&w=800&q=80',
   },
   {
@@ -51,6 +51,24 @@ const ALL_PILLARS: IndustryPillar[] = [
     category: 'Banking & Financial',
     image: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=800&q=80',
   },
+  {
+    id: 'automobile',
+    name: 'AUTOMOBILE',
+    category: 'EVs & Auto Tech',
+    image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 'education',
+    name: 'EDUCATION',
+    category: 'EdTech & Learning',
+    image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 'saas',
+    name: 'SAAS & TECH',
+    category: 'B2B Cloud Platforms',
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80',
+  },
 ];
 
 export const Industries: React.FC = () => {
@@ -59,15 +77,13 @@ export const Industries: React.FC = () => {
   const [mobileActiveIdx, setMobileActiveIdx] = useState(0);
   const mobileTrackRef = React.useRef<HTMLDivElement>(null);
 
-  // 5 Pillars per view on desktop
-  const maxStart = Math.max(0, ALL_PILLARS.length - 5);
-
+  // Infinite Circular Carousel Navigation on Desktop
   const handlePrev = () => {
-    setStartIndex((prev) => Math.max(0, prev - 1));
+    setStartIndex((prev) => (prev - 1 + ALL_PILLARS.length) % ALL_PILLARS.length);
   };
 
   const handleNext = () => {
-    setStartIndex((prev) => Math.min(maxStart, prev + 1));
+    setStartIndex((prev) => (prev + 1) % ALL_PILLARS.length);
   };
 
   const handleMobilePrev = () => {
@@ -92,7 +108,10 @@ export const Industries: React.FC = () => {
     }
   };
 
-  const visiblePillars = ALL_PILLARS.slice(startIndex, startIndex + 5);
+  // Always render 5 circular wrapped pillars on desktop
+  const visiblePillars = Array.from({ length: 5 }, (_, i) => {
+    return ALL_PILLARS[(startIndex + i) % ALL_PILLARS.length];
+  });
 
   // The center card (index 2 in 5-pillar grid) is active by default on desktop
   const activeIndex = hoveredIdx !== null ? hoveredIdx : 2;
@@ -198,42 +217,42 @@ export const Industries: React.FC = () => {
           <div style={{ display: 'flex', gap: '0.75rem' }} className="desktop-carousel-controls">
             <button
               onClick={handlePrev}
-              disabled={startIndex === 0}
               style={{
                 width: '46px',
                 height: '46px',
                 borderRadius: '50%',
-                background: startIndex === 0 ? '#f1f5f9' : '#ffffff',
-                color: startIndex === 0 ? '#94a3b8' : '#0f172a',
+                background: '#ffffff',
+                color: '#0f172a',
                 border: '1px solid rgba(15, 23, 42, 0.12)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                cursor: startIndex === 0 ? 'not-allowed' : 'pointer',
+                cursor: 'pointer',
                 boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
                 transition: 'all 0.25s ease',
               }}
+              className="desktop-nav-btn"
             >
               <ChevronLeft size={22} />
             </button>
 
             <button
               onClick={handleNext}
-              disabled={startIndex >= maxStart}
               style={{
                 width: '46px',
                 height: '46px',
                 borderRadius: '50%',
-                background: startIndex >= maxStart ? '#f1f5f9' : '#FDD00B',
-                color: startIndex >= maxStart ? '#94a3b8' : '#0f172a',
+                background: '#FDD00B',
+                color: '#0f172a',
                 border: '1px solid rgba(15, 23, 42, 0.12)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                cursor: startIndex >= maxStart ? 'not-allowed' : 'pointer',
+                cursor: 'pointer',
                 boxShadow: '0 4px 12px rgba(253, 208, 11, 0.3)',
                 transition: 'all 0.25s ease',
               }}
+              className="desktop-nav-btn"
             >
               <ChevronRight size={22} />
             </button>
@@ -257,7 +276,7 @@ export const Industries: React.FC = () => {
               const isActive = activeIndex === idx;
               return (
                 <div
-                  key={pillar.id}
+                  key={`${pillar.id}-${idx}`}
                   onMouseEnter={() => setHoveredIdx(idx)}
                   onMouseLeave={() => setHoveredIdx(null)}
                   style={{
@@ -274,8 +293,9 @@ export const Industries: React.FC = () => {
                     transform: isActive ? 'translateY(-16px) scale(1.04)' : 'translateY(0) scale(1)',
                     zIndex: isActive ? 5 : 2,
                     background: '#ffffff',
+                    opacity: 1,
                   }}
-                  className="single-pillar-slice reveal-scale-up"
+                  className="single-pillar-slice"
                 >
                   <img
                     src={pillar.image}

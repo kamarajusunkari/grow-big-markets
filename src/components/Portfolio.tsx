@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Sparkles, ArrowUpRight, CheckCircle2, X } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Sparkles, ArrowUpRight, CheckCircle2, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface CaseStudy {
   id: string;
@@ -202,9 +202,33 @@ const CASE_STUDIES: CaseStudy[] = [
 
 export const Portfolio: React.FC = () => {
   const [selectedStudy, setSelectedStudy] = useState<CaseStudy | null>(null);
+  const [mobileIdx, setMobileIdx] = useState(0);
+  const mobileTrackRef = useRef<HTMLDivElement>(null);
 
   // Duplicate list for continuous infinite marquee loop
   const marqueeCards = [...CASE_STUDIES, ...CASE_STUDIES];
+
+  const handleMobilePrev = () => {
+    if (mobileIdx > 0) {
+      const nextIdx = mobileIdx - 1;
+      setMobileIdx(nextIdx);
+      if (mobileTrackRef.current) {
+        const cardWidth = mobileTrackRef.current.clientWidth * 0.85;
+        mobileTrackRef.current.scrollTo({ left: nextIdx * cardWidth, behavior: 'smooth' });
+      }
+    }
+  };
+
+  const handleMobileNext = () => {
+    if (mobileIdx < CASE_STUDIES.length - 1) {
+      const nextIdx = mobileIdx + 1;
+      setMobileIdx(nextIdx);
+      if (mobileTrackRef.current) {
+        const cardWidth = mobileTrackRef.current.clientWidth * 0.85;
+        mobileTrackRef.current.scrollTo({ left: nextIdx * cardWidth, behavior: 'smooth' });
+      }
+    }
+  };
 
   return (
     <section
@@ -262,7 +286,7 @@ export const Portfolio: React.FC = () => {
         </div>
       </div>
 
-      {/* FULL-WIDTH CONTINUOUS HORIZONTAL MARQUEE CAROUSEL */}
+      {/* FULL-WIDTH CONTINUOUS HORIZONTAL MARQUEE CAROUSEL (DESKTOP) */}
       <div
         style={{
           width: '100%',
@@ -271,7 +295,7 @@ export const Portfolio: React.FC = () => {
           display: 'flex',
           alignItems: 'center',
         }}
-        className="reveal-fade-up delay-100"
+        className="portfolio-desktop-wrapper reveal-fade-up delay-100"
       >
         {/* Left & Right Edge Fades */}
         <div
@@ -374,6 +398,95 @@ export const Portfolio: React.FC = () => {
         </div>
       </div>
 
+      {/* MOBILE HORIZONTAL SWIPE CAROUSEL */}
+      <div className="mobile-portfolio-container">
+        <div
+          className="mobile-portfolio-track"
+          ref={mobileTrackRef}
+          onScroll={(e) => {
+            const target = e.currentTarget;
+            const cardWidth = target.clientWidth * 0.85;
+            const newIdx = Math.round(target.scrollLeft / cardWidth);
+            if (newIdx !== mobileIdx && newIdx >= 0 && newIdx < CASE_STUDIES.length) {
+              setMobileIdx(newIdx);
+            }
+          }}
+        >
+          {CASE_STUDIES.map((study, idx) => (
+            <div
+              key={`mob-p-${study.id}-${idx}`}
+              onClick={() => setSelectedStudy(study)}
+              style={{
+                background: study.cardBg,
+                borderRadius: '24px',
+                padding: '2rem 1.75rem',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                boxShadow: '0 12px 30px rgba(0, 0, 0, 0.08)',
+                border: '1px solid rgba(15, 23, 42, 0.08)',
+                cursor: 'pointer',
+                minHeight: '420px',
+              }}
+              className="mobile-portfolio-card-wrapper"
+            >
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.75rem', marginBottom: '0.75rem' }}>
+                  <h3 style={{ fontSize: '1.4rem', fontWeight: 900, color: study.textColor, lineHeight: 1.2 }}>
+                    {study.title}
+                  </h3>
+                  <ArrowUpRight size={24} color={study.arrowColor} />
+                </div>
+                <p style={{ fontSize: '0.9rem', color: study.subtextColor, lineHeight: 1.55 }}>
+                  {study.desc}
+                </p>
+              </div>
+
+              <div
+                style={{
+                  width: '100%',
+                  height: '200px',
+                  borderRadius: '18px',
+                  overflow: 'hidden',
+                  marginTop: '1.5rem',
+                }}
+              >
+                <img
+                  src={study.image}
+                  alt={study.title}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Mobile Bottom Navigation Controls */}
+        <div className="mobile-portfolio-controls">
+          <button onClick={handleMobilePrev} disabled={mobileIdx === 0} className="mob-ctrl-btn">
+            <ChevronLeft size={20} />
+          </button>
+          <div className="mob-dots-row">
+            {CASE_STUDIES.map((_, i) => (
+              <div
+                key={i}
+                onClick={() => {
+                  setMobileIdx(i);
+                  if (mobileTrackRef.current) {
+                    const cardWidth = mobileTrackRef.current.clientWidth * 0.85;
+                    mobileTrackRef.current.scrollTo({ left: i * cardWidth, behavior: 'smooth' });
+                  }
+                }}
+                className={`mob-dot ${mobileIdx === i ? 'is-active' : ''}`}
+              />
+            ))}
+          </div>
+          <button onClick={handleMobileNext} disabled={mobileIdx >= CASE_STUDIES.length - 1} className="mob-ctrl-btn mob-ctrl-next">
+            <ChevronRight size={20} />
+          </button>
+        </div>
+      </div>
+
       {/* Case Study Detail Modal */}
       {selectedStudy && (
         <div className="modal-backdrop" onClick={() => setSelectedStudy(null)}>
@@ -456,7 +569,46 @@ export const Portfolio: React.FC = () => {
         }
         .portfolio-card-item:hover .arrow-btn {
           transform: translate(2px, -2px);
-          color: #84cc16 !important;
+        }
+        .mobile-portfolio-controls {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 1rem;
+          margin-top: 1.5rem;
+        }
+        @media (max-width: 768px) {
+          .portfolio-desktop-wrapper {
+            display: none !important;
+          }
+          .mobile-portfolio-container {
+            display: block !important;
+          }
+          .mobile-portfolio-track {
+            display: flex !important;
+            overflow-x: auto !important;
+            scroll-snap-type: x mandatory !important;
+            padding: 1rem 8% !important;
+            gap: 1rem !important;
+            margin-left: -2rem !important;
+            margin-right: -2rem !important;
+            width: calc(100% + 4rem) !important;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+          }
+          .mobile-portfolio-track::-webkit-scrollbar {
+            display: none;
+          }
+          .mobile-portfolio-card-wrapper {
+            flex: 0 0 85% !important;
+            width: 85% !important;
+            scroll-snap-align: center !important;
+          }
+        }
+        @media (min-width: 769px) {
+          .mobile-portfolio-container {
+            display: none !important;
+          }
         }
       `}</style>
     </section>
