@@ -1,5 +1,5 @@
-import React from 'react';
-import { Sparkles, Play, Quote } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Sparkles, Play, Quote, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface QuoteCardData {
   type: 'quote';
@@ -73,49 +73,68 @@ const COLUMN_2: TestimonialCard[] = [
 
 const COLUMN_3: TestimonialCard[] = [
   {
-    type: 'quote',
-    name: 'Michael Tran',
-    role: 'Founder & CEO',
-    company: 'Skyline Realty Group',
-    avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=100&q=80',
-    text: 'We reduced admin work by nearly 50% and doubled our qualified appointment bookings. The ROI was faster than we expected — and the system continues to scale with us.',
-  },
-  {
     type: 'casestudy',
-    image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=800&q=80',
-    logo: 'Enterprise Scaling',
-    title: 'Scaling SaaS Operations with AI Automation',
+    image: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=80',
+    logo: 'Grow Big Case Study',
+    title: 'Scaled Customer Acquisition by 4.2x in 90 Days',
   },
   {
     type: 'quote',
-    name: 'Laura Martinez',
-    role: 'CMO',
-    company: 'Elevate Commerce Co.',
+    name: 'Elena Rostova',
+    role: 'VP of Growth',
+    company: 'Vanguard Global',
     avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=100&q=80',
-    text: 'Marketing automation always felt fragmented — too many tools, not enough cohesion. They unified everything into one intelligent ecosystem. Campaign triggers, abandoned cart flows, segmentation — all automated with precision.',
+    text: 'Working with Grow Big Marketers was seamless. Their data-driven PPC campaigns reduced our CAC by 28% while doubling qualified demo bookings within 60 days.',
   },
 ];
 
+const ALL_TESTIMONIALS = [...COLUMN_1, ...COLUMN_2, ...COLUMN_3];
+
 export const Testimonials: React.FC = () => {
+  const [mobIdx, setMobIdx] = useState(0);
+  const mobTrackRef = useRef<HTMLDivElement>(null);
+
+  const handleMobPrev = () => {
+    if (mobIdx > 0) {
+      const nextIdx = mobIdx - 1;
+      setMobIdx(nextIdx);
+      if (mobTrackRef.current) {
+        const cardWidth = mobTrackRef.current.clientWidth * 0.85;
+        mobTrackRef.current.scrollTo({ left: nextIdx * cardWidth, behavior: 'smooth' });
+      }
+    }
+  };
+
+  const handleMobNext = () => {
+    if (mobIdx < ALL_TESTIMONIALS.length - 1) {
+      const nextIdx = mobIdx + 1;
+      setMobIdx(nextIdx);
+      if (mobTrackRef.current) {
+        const cardWidth = mobTrackRef.current.clientWidth * 0.85;
+        mobTrackRef.current.scrollTo({ left: nextIdx * cardWidth, behavior: 'smooth' });
+      }
+    }
+  };
+
   return (
     <section
       id="testimonials"
       style={{
-        background: '#ffffff', // Clean light background matching screenshot
-        padding: '6.5rem 0 7.5rem 0',
+        background: '#ffffff',
+        padding: '6.5rem 0 8.5rem 0',
         borderBottom: '1px solid rgba(15, 23, 42, 0.08)',
         position: 'relative',
         overflow: 'hidden',
       }}
     >
-      {/* Background Subtle Dot Pattern Overlay */}
+      {/* Light Dot Grid Overlay */}
       <div
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundImage: 'radial-gradient(rgba(132, 204, 22, 0.18) 1px, transparent 1px)',
+          backgroundImage: 'radial-gradient(rgba(15, 23, 42, 0.08) 1px, transparent 1px)',
           backgroundSize: '28px 28px',
-          opacity: 0.5,
+          opacity: 0.6,
           pointerEvents: 'none',
         }}
       />
@@ -166,7 +185,7 @@ export const Testimonials: React.FC = () => {
           </h2>
         </div>
 
-        {/* 3 Vertical Scrolling Columns with Different Duration Times (28s, 40s, 34s) */}
+        {/* DESKTOP 3 VERTICAL SCROLLING COLUMNS */}
         <div
           style={{
             display: 'grid',
@@ -204,7 +223,7 @@ export const Testimonials: React.FC = () => {
             }}
           />
 
-          {/* COLUMN 1 (Speed 1: 30s) */}
+          {/* COLUMN 1 */}
           <div className="v-scroll-col col-1">
             <div className="v-scroll-track speed-1">
               {[...COLUMN_1, ...COLUMN_1].map((item, idx) => (
@@ -213,7 +232,7 @@ export const Testimonials: React.FC = () => {
             </div>
           </div>
 
-          {/* COLUMN 2 (Speed 2: 42s - Different Duration Time!) */}
+          {/* COLUMN 2 */}
           <div className="v-scroll-col col-2">
             <div className="v-scroll-track speed-2">
               {[...COLUMN_2, ...COLUMN_2].map((item, idx) => (
@@ -222,7 +241,7 @@ export const Testimonials: React.FC = () => {
             </div>
           </div>
 
-          {/* COLUMN 3 (Speed 3: 34s - Different Duration Time!) */}
+          {/* COLUMN 3 */}
           <div className="v-scroll-col col-3">
             <div className="v-scroll-track speed-3">
               {[...COLUMN_3, ...COLUMN_3].map((item, idx) => (
@@ -232,13 +251,52 @@ export const Testimonials: React.FC = () => {
           </div>
         </div>
 
-        {/* MOBILE HORIZONTAL SWIPE CAROUSEL (Mobile Only) */}
-        <div className="mobile-testimonials-track">
-          {[...COLUMN_1, ...COLUMN_2].map((item, idx) => (
-            <div key={`mob-t-${idx}`} className="mobile-testimonial-card-wrapper">
-              <RenderCard item={item} />
+        {/* MOBILE HORIZONTAL CAROUSEL */}
+        <div className="mobile-testimonials-container">
+
+          <div
+            className="mobile-testimonials-track"
+            ref={mobTrackRef}
+            onScroll={(e) => {
+              const target = e.currentTarget;
+              const cardWidth = target.clientWidth * 0.85;
+              const newIdx = Math.round(target.scrollLeft / cardWidth);
+              if (newIdx !== mobIdx && newIdx >= 0 && newIdx < ALL_TESTIMONIALS.length) {
+                setMobIdx(newIdx);
+              }
+            }}
+          >
+            {ALL_TESTIMONIALS.map((item, idx) => (
+              <div key={`mob-t-${idx}`} className="mobile-testimonial-card-wrapper">
+                <RenderCard item={item} />
+              </div>
+            ))}
+          </div>
+
+          {/* Mobile Bottom Navigation Controls */}
+          <div className="mobile-testimonials-controls">
+            <button onClick={handleMobPrev} disabled={mobIdx === 0} className="mob-ctrl-btn">
+              <ChevronLeft size={20} />
+            </button>
+            <div className="mob-dots-row">
+              {ALL_TESTIMONIALS.map((_, i) => (
+                <div
+                  key={i}
+                  onClick={() => {
+                    setMobIdx(i);
+                    if (mobTrackRef.current) {
+                      const cardWidth = mobTrackRef.current.clientWidth * 0.85;
+                      mobTrackRef.current.scrollTo({ left: i * cardWidth, behavior: 'smooth' });
+                    }
+                  }}
+                  className={`mob-dot ${mobIdx === i ? 'is-active' : ''}`}
+                />
+              ))}
             </div>
-          ))}
+            <button onClick={handleMobNext} disabled={mobIdx >= ALL_TESTIMONIALS.length - 1} className="mob-ctrl-btn mob-ctrl-next">
+              <ChevronRight size={20} />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -276,9 +334,81 @@ export const Testimonials: React.FC = () => {
           }
         }
 
+        @keyframes swipeHandWiggle {
+          0%, 100% { transform: translateX(0) rotate(0deg); }
+          50% { transform: translateX(-8px) rotate(-14deg); }
+        }
+        .animate-swipe-hand {
+          animation: swipeHandWiggle 1.4s ease-in-out infinite;
+          color: #FDD00B;
+        }
+        .mobile-swipe-gesture-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          background: #0f172a;
+          color: #ffffff;
+          font-size: 0.78rem;
+          font-weight: 800;
+          padding: 0.4rem 1rem;
+          border-radius: 9999px;
+          margin-bottom: 1.25rem;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+        }
+        .mobile-testimonials-controls {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 1rem;
+          margin-top: 1.5rem;
+        }
+        .mob-ctrl-btn {
+          width: 44px;
+          height: 44px;
+          border-radius: 50%;
+          background: #0f172a;
+          color: #ffffff;
+          border: 1px solid rgba(15, 23, 42, 0.15);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+        }
+        .mob-ctrl-btn:disabled {
+          background: #f1f5f9;
+          color: #94a3b8;
+          cursor: not-allowed;
+          box-shadow: none;
+        }
+        .mob-ctrl-next {
+          background: #FDD00B;
+          color: #0f172a;
+        }
+        .mob-dots-row {
+          display: flex;
+          gap: 6px;
+          align-items: center;
+        }
+        .mob-dot {
+          width: 7px;
+          height: 7px;
+          border-radius: 4px;
+          background: rgba(15, 23, 42, 0.2);
+          transition: all 0.3s ease;
+          cursor: pointer;
+        }
+        .mob-dot.is-active {
+          width: 24px;
+          background: #FDD00B;
+        }
+
         @media (max-width: 768px) {
           .testimonials-3-cols {
             display: none !important;
+          }
+          .mobile-testimonials-container {
+            display: block !important;
           }
           .mobile-testimonials-track {
             display: flex !important;
@@ -302,7 +432,7 @@ export const Testimonials: React.FC = () => {
           }
         }
         @media (min-width: 769px) {
-          .mobile-testimonials-track {
+          .mobile-testimonials-container {
             display: none !important;
           }
         }

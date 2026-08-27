@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronDown, ArrowRight, Sparkles } from 'lucide-react';
+import { Plus, Minus, ArrowRight, Sparkles } from 'lucide-react';
 
 interface FaqProps {
   onOpenBooking?: () => void;
@@ -162,6 +162,7 @@ export const Faq: React.FC<FaqProps> = ({ onOpenBooking }) => {
                 justifyContent: 'space-between',
                 boxShadow: '0 10px 30px rgba(0,0,0,0.03)',
               }}
+              className="faq-still-questions-card"
             >
               <div>
                 <h3
@@ -231,7 +232,7 @@ export const Faq: React.FC<FaqProps> = ({ onOpenBooking }) => {
           </div>
 
           {/* RIGHT COLUMN: SCROLLABLE ACCORDION LIST */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }} className="reveal-fade-up delay-100">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }} className="faq-questions-column reveal-fade-up delay-100">
             {FAQ_LIST.map((item) => {
               const isOpen = openId === item.id;
               return (
@@ -261,39 +262,32 @@ export const Faq: React.FC<FaqProps> = ({ onOpenBooking }) => {
                       padding: 0,
                     }}
                   >
-                    <h3
+                    <span
                       style={{
-                        fontSize: '1.25rem',
+                        fontSize: '1.15rem',
                         fontWeight: 800,
                         color: '#0f172a',
                         fontFamily: 'var(--font-heading)',
-                        lineHeight: 1.3,
                       }}
                     >
                       {item.question}
-                    </h3>
+                    </span>
 
                     <div
                       style={{
-                        width: '40px',
-                        height: '40px',
+                        width: '36px',
+                        height: '36px',
                         borderRadius: '50%',
-                        background: isOpen ? '#84cc16' : '#e7e0d5',
-                        color: isOpen ? '#0f172a' : '#1c1917',
+                        background: isOpen ? '#FDD00B' : 'rgba(28, 25, 23, 0.06)',
+                        color: '#0f172a',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         flexShrink: 0,
-                        transition: 'all 0.3s ease',
+                        transition: 'all 0.25s ease',
                       }}
                     >
-                      <ChevronDown
-                        size={20}
-                        style={{
-                          transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                          transition: 'transform 0.3s ease',
-                        }}
-                      />
+                      {isOpen ? <Minus size={18} /> : <Plus size={18} />}
                     </div>
                   </button>
 
@@ -325,7 +319,31 @@ export const Faq: React.FC<FaqProps> = ({ onOpenBooking }) => {
           transform: translateY(-2px);
           background: #d97706 !important;
         }
-        @media (max-width: 992px) {
+        @media (max-width: 768px) {
+          .faq-split-grid {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 2rem !important;
+          }
+          .faq-sticky-left {
+            position: relative !important;
+            top: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            order: 1 !important;
+          }
+          .faq-questions-column {
+            order: 2 !important;
+            width: 100% !important;
+          }
+          .faq-still-questions-card {
+            order: 3 !important;
+            margin-top: 1.5rem !important;
+            max-width: 100% !important;
+            width: 100% !important;
+          }
+        }
+        @media (max-width: 992px) and (min-width: 769px) {
           .faq-split-grid {
             grid-template-columns: 1fr !important;
             gap: 3rem !important;
