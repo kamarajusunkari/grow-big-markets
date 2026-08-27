@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, ArrowRight, CheckCircle2, ShieldCheck, Sparkles, Phone, Mail } from 'lucide-react';
+import { X, ArrowRight, CheckCircle2, ShieldCheck, Sparkles } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 interface BookingModalProps {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowUpRight, Play, Sparkles, ArrowRight, X, Users, Trophy, Smile, ShieldCheck } from 'lucide-react';
+import { ArrowUpRight, Play, Sparkles, X, Smile } from 'lucide-react';
 
 interface AboutUsProps {
   onOpenBooking?: () => void;
