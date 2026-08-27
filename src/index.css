@@ -284,4 +284,10 @@ p {
   .delay-100, .delay-200, .delay-300, .delay-400, .delay-500 {
     transition-delay: 0s !important;
   }
+
+  /* Compact Section Vertical Gaps on Mobile */
+  section {
+    padding-top: 3.25rem !important;
+    padding-bottom: 3.25rem !important;
+  }
 }

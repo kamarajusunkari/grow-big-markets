@@ -231,6 +231,15 @@ export const Testimonials: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* MOBILE HORIZONTAL SWIPE CAROUSEL (Mobile Only) */}
+        <div className="mobile-testimonials-track">
+          {[...COLUMN_1, ...COLUMN_2].map((item, idx) => (
+            <div key={`mob-t-${idx}`} className="mobile-testimonial-card-wrapper">
+              <RenderCard item={item} />
+            </div>
+          ))}
+        </div>
       </div>
 
       <style>{`
@@ -267,10 +276,34 @@ export const Testimonials: React.FC = () => {
           }
         }
 
-        @media (max-width: 992px) {
+        @media (max-width: 768px) {
           .testimonials-3-cols {
-            grid-template-columns: 1fr !important;
-            height: 600px !important;
+            display: none !important;
+          }
+          .mobile-testimonials-track {
+            display: flex !important;
+            overflow-x: auto !important;
+            scroll-snap-type: x mandatory !important;
+            padding: 1rem 8% !important;
+            gap: 1rem !important;
+            margin-left: -2rem !important;
+            margin-right: -2rem !important;
+            width: calc(100% + 4rem) !important;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+          }
+          .mobile-testimonials-track::-webkit-scrollbar {
+            display: none;
+          }
+          .mobile-testimonial-card-wrapper {
+            flex: 0 0 85% !important;
+            width: 85% !important;
+            scroll-snap-align: center !important;
+          }
+        }
+        @media (min-width: 769px) {
+          .mobile-testimonials-track {
+            display: none !important;
           }
         }
       `}</style>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight, Sparkles, ArrowUpRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 
 interface IndustryPillar {
   id: string;
@@ -56,8 +56,10 @@ const ALL_PILLARS: IndustryPillar[] = [
 export const Industries: React.FC = () => {
   const [startIndex, setStartIndex] = useState(0);
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+  const [mobileActiveIdx, setMobileActiveIdx] = useState(0);
+  const mobileTrackRef = React.useRef<HTMLDivElement>(null);
 
-  // 5 Pillars per view
+  // 5 Pillars per view on desktop
   const maxStart = Math.max(0, ALL_PILLARS.length - 5);
 
   const handlePrev = () => {
@@ -68,9 +70,31 @@ export const Industries: React.FC = () => {
     setStartIndex((prev) => Math.min(maxStart, prev + 1));
   };
 
+  const handleMobilePrev = () => {
+    if (mobileActiveIdx > 0) {
+      const nextIdx = mobileActiveIdx - 1;
+      setMobileActiveIdx(nextIdx);
+      if (mobileTrackRef.current) {
+        const cardWidth = mobileTrackRef.current.clientWidth * 0.82;
+        mobileTrackRef.current.scrollTo({ left: nextIdx * cardWidth, behavior: 'smooth' });
+      }
+    }
+  };
+
+  const handleMobileNext = () => {
+    if (mobileActiveIdx < ALL_PILLARS.length - 1) {
+      const nextIdx = mobileActiveIdx + 1;
+      setMobileActiveIdx(nextIdx);
+      if (mobileTrackRef.current) {
+        const cardWidth = mobileTrackRef.current.clientWidth * 0.82;
+        mobileTrackRef.current.scrollTo({ left: nextIdx * cardWidth, behavior: 'smooth' });
+      }
+    }
+  };
+
   const visiblePillars = ALL_PILLARS.slice(startIndex, startIndex + 5);
 
-  // The center card (index 2 in 5-pillar grid) is active by default
+  // The center card (index 2 in 5-pillar grid) is active by default on desktop
   const activeIndex = hoveredIdx !== null ? hoveredIdx : 2;
 
   return (
@@ -122,39 +146,56 @@ export const Industries: React.FC = () => {
           zIndex: 2,
         }}
       >
-        {/* Top Controls */}
+        {/* TOP SECTION HEADING: "INDUSTRIES WE SERVE" */}
         <div
           style={{
             display: 'flex',
             justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: '3rem',
+            alignItems: 'flex-end',
+            marginBottom: '2.5rem',
+            flexWrap: 'wrap',
+            gap: '1.5rem',
           }}
           className="reveal-fade-up"
         >
           <div>
-            <span
+            <div style={{ display: 'inline-block', marginBottom: '0.75rem' }} className="domain-verticals-badge">
+              <span
+                style={{
+                  fontSize: '0.8rem',
+                  fontWeight: 900,
+                  background: 'rgba(253, 208, 11, 0.2)',
+                  color: '#0f172a',
+                  padding: '0.4rem 1.1rem',
+                  borderRadius: 'var(--radius-full)',
+                  border: '1px solid rgba(253, 208, 11, 0.5)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.15em',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                }}
+              >
+                <Sparkles size={14} /> DOMAIN VERTICALS
+              </span>
+            </div>
+
+            <h2
               style={{
-                fontSize: '0.85rem',
+                fontSize: 'clamp(2.2rem, 5vw, 4.2rem)',
                 fontWeight: 900,
-                background: 'rgba(132, 204, 22, 0.18)',
-                color: '#4d7c0f',
-                padding: '0.45rem 1.25rem',
-                borderRadius: 'var(--radius-full)',
-                border: '1px solid rgba(132, 204, 22, 0.35)',
+                lineHeight: 1.05,
+                letterSpacing: '-0.03em',
                 textTransform: 'uppercase',
-                letterSpacing: '0.15em',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
+                margin: 0,
+                color: '#0f172a',
               }}
             >
-              <Sparkles size={14} /> DOMAIN VERTICALS
-            </span>
+              INDUSTRIES <span style={{ color: '#FDD00B', background: '#3E6AB3', padding: '0.1rem 0.5rem', borderRadius: '8px', fontStyle: 'italic', fontSize: '0.88em' }}>WE SERVE</span>
+            </h2>
           </div>
 
-          {/* Carousel Next/Prev Controls */}
-          <div style={{ display: 'flex', gap: '0.75rem' }}>
+          <div style={{ display: 'flex', gap: '0.75rem' }} className="desktop-carousel-controls">
             <button
               onClick={handlePrev}
               disabled={startIndex === 0}
@@ -183,14 +224,14 @@ export const Industries: React.FC = () => {
                 width: '46px',
                 height: '46px',
                 borderRadius: '50%',
-                background: startIndex >= maxStart ? '#f1f5f9' : '#84cc16',
+                background: startIndex >= maxStart ? '#f1f5f9' : '#FDD00B',
                 color: startIndex >= maxStart ? '#94a3b8' : '#0f172a',
                 border: '1px solid rgba(15, 23, 42, 0.12)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: startIndex >= maxStart ? 'not-allowed' : 'pointer',
-                boxShadow: '0 4px 12px rgba(132, 204, 22, 0.3)',
+                boxShadow: '0 4px 12px rgba(253, 208, 11, 0.3)',
                 transition: 'all 0.25s ease',
               }}
             >
@@ -199,13 +240,13 @@ export const Industries: React.FC = () => {
           </div>
         </div>
 
-        {/* 5 Vertical Slices Grid with CENTER CARD ACTIVE & BIGGER */}
-        <div style={{ position: 'relative', paddingBottom: '4.5rem' }}>
+        <div style={{ position: 'relative', paddingBottom: '2rem' }}>
           
+          {/* DESKTOP 5 PILLARS GRID */}
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(5, 1fr)', // 5 PILLARS PER VIEW
+              gridTemplateColumns: 'repeat(5, 1fr)',
               gap: '1.25rem',
               height: '530px',
               alignItems: 'center',
@@ -220,7 +261,7 @@ export const Industries: React.FC = () => {
                   onMouseEnter={() => setHoveredIdx(idx)}
                   onMouseLeave={() => setHoveredIdx(null)}
                   style={{
-                    height: isActive ? '530px' : '460px', // CENTER / ACTIVE CARD IS BIGGER!
+                    height: isActive ? '530px' : '460px',
                     borderRadius: '24px',
                     overflow: 'hidden',
                     position: 'relative',
@@ -236,7 +277,6 @@ export const Industries: React.FC = () => {
                   }}
                   className="single-pillar-slice reveal-scale-up"
                 >
-                  {/* Pillar Image */}
                   <img
                     src={pillar.image}
                     alt={pillar.name}
@@ -250,7 +290,6 @@ export const Industries: React.FC = () => {
                     }}
                   />
 
-                  {/* Dark Gradient Overlay for Crisp Text Contrast */}
                   <div
                     style={{
                       position: 'absolute',
@@ -260,124 +299,276 @@ export const Industries: React.FC = () => {
                     }}
                   />
 
-                  {/* Top Industry Title */}
                   <div
                     style={{
                       position: 'absolute',
-                      top: '1.65rem',
-                      left: 0,
-                      right: 0,
-                      textAlign: 'center',
+                      top: '1.25rem',
+                      left: '1.25rem',
+                      right: '1.25rem',
                       zIndex: 2,
-                      padding: '0 0.5rem',
                     }}
                   >
                     <span
                       style={{
-                        fontSize: '0.875rem',
+                        fontSize: '0.7rem',
                         fontWeight: 900,
-                        color: '#ffffff',
+                        background: isActive ? '#FDD00B' : 'rgba(255, 255, 255, 0.25)',
+                        color: '#0f172a',
+                        padding: '0.35rem 0.75rem',
+                        borderRadius: 'var(--radius-full)',
+                        backdropFilter: 'blur(8px)',
                         textTransform: 'uppercase',
-                        letterSpacing: '0.14em',
-                        textShadow: '0 2px 12px rgba(0, 0, 0, 0.9)',
-                        display: 'block',
+                        letterSpacing: '0.08em',
+                        display: 'inline-block',
                       }}
                     >
-                      {pillar.name}
+                      {pillar.category}
                     </span>
                   </div>
 
-                  {/* Active Pillar Tag at Bottom */}
-                  {isActive && (
-                    <div
+                  <div
+                    style={{
+                      position: 'absolute',
+                      bottom: '1.5rem',
+                      left: '1.25rem',
+                      right: '1.25rem',
+                      zIndex: 2,
+                      color: '#ffffff',
+                    }}
+                  >
+                    <h3
                       style={{
-                        position: 'absolute',
-                        bottom: '2rem',
-                        left: '1.25rem',
-                        right: '1.25rem',
-                        zIndex: 2,
-                        textAlign: 'center',
+                        fontSize: isActive ? '1.4rem' : '1.2rem',
+                        fontWeight: 900,
+                        lineHeight: 1.2,
+                        marginBottom: '0.35rem',
+                        color: '#ffffff',
+                        transition: 'all 0.3s ease',
                       }}
                     >
-                      <div
-                        style={{
-                          fontSize: '0.75rem',
-                          fontWeight: 800,
-                          color: '#FDD00B',
-                          background: 'rgba(15, 23, 42, 0.92)',
-                          padding: '0.35rem 0.75rem',
-                          borderRadius: 'var(--radius-full)',
-                          border: '1px solid rgba(253, 208, 11, 0.5)',
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '4px',
-                        }}
-                      >
-                        {pillar.category} <ArrowUpRight size={14} />
-                      </div>
-                    </div>
-                  )}
+                      {pillar.name}
+                    </h3>
+                  </div>
                 </div>
               );
             })}
           </div>
 
-          {/* GIANT BIG OVERLAY TYPOGRAPHY: "INDUSTRIES" IN WHITE & "WE SERVE" IN GOLD */}
+          {/* MOBILE CAROUSEL TRACK (Mapping ALL_PILLARS with 80% Center Card + 10% Peek on Left & Right) */}
+          <div className="mobile-pillars-track" ref={mobileTrackRef}>
+            {ALL_PILLARS.map((pillar, idx) => {
+              const isActive = mobileActiveIdx === idx;
+              return (
+                <div
+                  key={pillar.id}
+                  onClick={() => setMobileActiveIdx(idx)}
+                  style={{
+                    borderRadius: '24px',
+                    overflow: 'hidden',
+                    position: 'relative',
+                    background: '#ffffff',
+                    boxShadow: isActive
+                      ? '0 20px 45px rgba(253, 208, 11, 0.35)'
+                      : '0 12px 30px rgba(0, 0, 0, 0.08)',
+                    border: isActive ? '2.5px solid #FDD00B' : '1px solid rgba(15, 23, 42, 0.12)',
+                    transition: 'all 0.3s ease',
+                  }}
+                  className={`mobile-pillar-card ${isActive ? 'is-active' : ''}`}
+                >
+                  <img
+                    src={pillar.image}
+                    alt={pillar.name}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      display: 'block',
+                    }}
+                  />
+
+                  <div
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      background: 'linear-gradient(to bottom, rgba(15, 23, 42, 0.85) 0%, rgba(15, 23, 42, 0.15) 45%, rgba(15, 23, 42, 0.85) 100%)',
+                      zIndex: 1,
+                    }}
+                  />
+
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '1.25rem',
+                      left: '1.25rem',
+                      right: '1.25rem',
+                      zIndex: 2,
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: '0.7rem',
+                        fontWeight: 900,
+                        background: isActive ? '#FDD00B' : 'rgba(255, 255, 255, 0.25)',
+                        color: '#0f172a',
+                        padding: '0.35rem 0.75rem',
+                        borderRadius: 'var(--radius-full)',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.08em',
+                        display: 'inline-block',
+                      }}
+                    >
+                      {pillar.category}
+                    </span>
+                  </div>
+
+                  <div
+                    style={{
+                      position: 'absolute',
+                      bottom: '1.5rem',
+                      left: '1.25rem',
+                      right: '1.25rem',
+                      zIndex: 2,
+                      color: '#ffffff',
+                    }}
+                  >
+                    <h3
+                      style={{
+                        fontSize: '1.35rem',
+                        fontWeight: 900,
+                        lineHeight: 1.2,
+                        color: '#ffffff',
+                      }}
+                    >
+                      {pillar.name}
+                    </h3>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* MOBILE BOTTOM NAVIGATION CONTROLS BELOW */}
           <div
             style={{
-              position: 'absolute',
-              bottom: '-15px',
-              left: 0,
-              right: 0,
-              textAlign: 'center',
-              zIndex: 10,
-              pointerEvents: 'none',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '1rem',
+              marginTop: '2rem',
+              marginBottom: '1rem',
             }}
+            className="mobile-industries-controls"
           >
-            <h2
+            <button
+              onClick={handleMobilePrev}
+              disabled={mobileActiveIdx === 0}
               style={{
-                fontSize: 'clamp(3.8rem, 8.5vw, 7.5rem)',
-                fontWeight: 900,
-                lineHeight: 0.92,
-                letterSpacing: '-0.04em',
-                textTransform: 'uppercase',
-                margin: 0,
+                width: '46px',
+                height: '46px',
+                borderRadius: '50%',
+                background: mobileActiveIdx === 0 ? '#f1f5f9' : '#0f172a',
+                color: mobileActiveIdx === 0 ? '#94a3b8' : '#ffffff',
+                border: '1px solid rgba(15, 23, 42, 0.15)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: mobileActiveIdx === 0 ? 'not-allowed' : 'pointer',
+                boxShadow: '0 6px 18px rgba(0,0,0,0.15)',
               }}
             >
-              <span
-                style={{
-                  color: '#ffffff',
-                  display: 'block',
-                  textShadow: '0 4px 20px rgba(15, 23, 42, 0.8), 0 0 40px rgba(15, 23, 42, 0.9), -1px -1px 0 #0f172a, 1px -1px 0 #0f172a, -1px 1px 0 #0f172a, 1px 1px 0 #0f172a',
-                }}
-              >
-                INDUSTRIES
-              </span>
-              <span
-                style={{
-                  color: '#FDD00B', // Sunburst Gold Accent (#FDD00B)
-                  display: 'block',
-                  textShadow: '0 0 40px rgba(253, 208, 11, 0.7), 0 4px 20px rgba(15, 23, 42, 0.8)',
-                }}
-              >
-                WE SERVE
-              </span>
-            </h2>
+              <ChevronLeft size={22} />
+            </button>
+
+            {/* Pagination Indicators for All 7 Pillars */}
+            <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+              {ALL_PILLARS.map((_, i) => (
+                <div
+                  key={i}
+                  onClick={() => {
+                    setMobileActiveIdx(i);
+                    if (mobileTrackRef.current) {
+                      const cardWidth = mobileTrackRef.current.clientWidth * 0.82;
+                      mobileTrackRef.current.scrollTo({ left: i * cardWidth, behavior: 'smooth' });
+                    }
+                  }}
+                  style={{
+                    width: mobileActiveIdx === i ? '24px' : '7px',
+                    height: '7px',
+                    borderRadius: '4px',
+                    background: mobileActiveIdx === i ? '#FDD00B' : 'rgba(15, 23, 42, 0.25)',
+                    transition: 'all 0.3s ease',
+                    cursor: 'pointer',
+                  }}
+                />
+              ))}
+            </div>
+
+            <button
+              onClick={handleMobileNext}
+              disabled={mobileActiveIdx >= ALL_PILLARS.length - 1}
+              style={{
+                width: '46px',
+                height: '46px',
+                borderRadius: '50%',
+                background: mobileActiveIdx >= ALL_PILLARS.length - 1 ? '#f1f5f9' : '#FDD00B',
+                color: mobileActiveIdx >= ALL_PILLARS.length - 1 ? '#94a3b8' : '#0f172a',
+                border: '1px solid rgba(15, 23, 42, 0.15)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: mobileActiveIdx >= ALL_PILLARS.length - 1 ? 'not-allowed' : 'pointer',
+                boxShadow: '0 6px 18px rgba(253, 208, 11, 0.35)',
+              }}
+            >
+              <ChevronRight size={22} />
+            </button>
           </div>
 
         </div>
       </div>
 
       <style>{`
-        @media (max-width: 992px) {
+        @media (max-width: 768px) {
+          .domain-verticals-badge {
+            display: none !important;
+          }
+          .desktop-carousel-controls {
+            display: none !important;
+          }
           .pillars-5-grid {
-            grid-template-columns: repeat(3, 1fr) !important;
+            display: none !important;
+          }
+          .mobile-industries-controls {
+            display: flex !important;
+          }
+          .mobile-pillars-track {
+            display: flex !important;
+            overflow-x: auto !important;
+            scroll-snap-type: x mandatory !important;
+            padding: 1rem 10% !important;
+            gap: 1rem !important;
             height: 440px !important;
+            margin-left: -2rem !important;
+            margin-right: -2rem !important;
+            width: calc(100% + 4rem) !important;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+          }
+          .mobile-pillars-track::-webkit-scrollbar {
+            display: none;
+          }
+          .mobile-pillar-card {
+            flex: 0 0 80% !important;
+            width: 80% !important;
+            scroll-snap-align: center !important;
+            height: 420px !important;
           }
         }
-        @media (max-width: 640px) {
-          .pillars-5-grid {
-            grid-template-columns: repeat(2, 1fr) !important;
+        @media (min-width: 769px) {
+          .mobile-industries-controls {
+            display: none !important;
+          }
+          .mobile-pillars-track {
+            display: none !important;
           }
         }
       `}</style>
