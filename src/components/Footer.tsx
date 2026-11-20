@@ -1,174 +1,996 @@
-import React, { useState } from 'react';
-import { Send, CheckCircle2, Phone, Mail } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import growBigPrimary from '../assets/Growbig Primary.png';
 
-export const Footer: React.FC = () => {
-  const [newsletterEmail, setNewsletterEmail] = useState('');
+interface FooterProps {
+  onOpenBooking?: () => void;
+}
+
+export const Footer: React.FC<FooterProps> = ({ onOpenBooking }) => {
+  const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const [activeMobileTab, setActiveMobileTab] = useState<'industries' | 'insights' | 'company' | 'connect'>('industries');
+  const footerRef = useRef<HTMLElement>(null);
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSignupSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (newsletterEmail) {
+    if (email) {
       setSubscribed(true);
-      setNewsletterEmail('');
-      setTimeout(() => setSubscribed(false), 4000);
+      setEmail('');
+      setTimeout(() => setSubscribed(false), 4500);
     }
   };
 
+  // Entrance Web Animations sequence ~1.9s with 3s failsafe and gesture skip
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+
+    const container = footerRef.current;
+    if (!container) return;
+
+    let hasRun = false;
+    const runEntrance = () => {
+      if (hasRun) return;
+      hasRun = true;
+
+      const badge = container.querySelector('.note-badge');
+      const headline = container.querySelector('.hero-headline');
+      const lede = container.querySelector('.hero-lede');
+      const signup = container.querySelector('.hero-signup-wrap');
+      const brandLogo = container.querySelector('.brand-identity');
+      const brandHeadline = container.querySelector('.brand-headline');
+      const brandBtn = container.querySelector('.brand-touch-btn');
+      const linkCols = container.querySelectorAll('.link-col');
+      const bottomRow = container.querySelector('.card-bottom-row');
+
+      const easeOutCubic = 'cubic-bezier(0.215, 0.61, 0.355, 1)';
+
+      badge?.animate([
+        { opacity: 0, transform: 'translateY(-16px) scale(0.92)' },
+        { opacity: 1, transform: 'translateY(0) scale(1)' }
+      ], { duration: 280, easing: easeOutCubic, fill: 'forwards' });
+
+      setTimeout(() => {
+        headline?.animate([
+          { opacity: 0, clipPath: 'inset(0 0 100% 0)', transform: 'translateY(24px)' },
+          { opacity: 1, clipPath: 'inset(0 0 0% 0)', transform: 'translateY(0)' }
+        ], { duration: 480, easing: easeOutCubic, fill: 'forwards' });
+      }, 120);
+
+      setTimeout(() => {
+        lede?.animate([
+          { opacity: 0, transform: 'translateY(16px)' },
+          { opacity: 1, transform: 'translateY(0)' }
+        ], { duration: 420, easing: easeOutCubic, fill: 'forwards' });
+      }, 340);
+
+      setTimeout(() => {
+        signup?.animate([
+          { opacity: 0, transform: 'translateY(18px) scale(0.98)' },
+          { opacity: 1, transform: 'translateY(0) scale(1)' }
+        ], { duration: 420, easing: easeOutCubic, fill: 'forwards' });
+      }, 500);
+
+      setTimeout(() => {
+        brandLogo?.animate([
+          { opacity: 0, transform: 'translateY(12px)' },
+          { opacity: 1, transform: 'translateY(0)' }
+        ], { duration: 350, easing: easeOutCubic, fill: 'forwards' });
+      }, 660);
+
+      setTimeout(() => {
+        brandHeadline?.animate([
+          { opacity: 0, clipPath: 'inset(0 0 100% 0)', transform: 'translateY(18px)' },
+          { opacity: 1, clipPath: 'inset(0 0 0% 0)', transform: 'translateY(0)' }
+        ], { duration: 440, easing: easeOutCubic, fill: 'forwards' });
+      }, 760);
+
+      setTimeout(() => {
+        brandBtn?.animate([
+          { opacity: 0, transform: 'scale(0.95) translateY(10px)' },
+          { opacity: 1, transform: 'scale(1) translateY(0)' }
+        ], { duration: 380, easing: easeOutCubic, fill: 'forwards' });
+      }, 880);
+
+      linkCols.forEach((col, idx) => {
+        setTimeout(() => {
+          col.animate([
+            { opacity: 0, transform: 'translateY(16px)' },
+            { opacity: 1, transform: 'translateY(0)' }
+          ], { duration: 400, easing: easeOutCubic, fill: 'forwards' });
+        }, 980 + (idx * 90));
+      });
+
+      setTimeout(() => {
+        bottomRow?.animate([
+          { opacity: 0 },
+          { opacity: 1 }
+        ], { duration: 400, easing: 'ease', fill: 'forwards' });
+      }, 1380);
+    };
+
+    const failsafe = setTimeout(runEntrance, 3000);
+    const skip = () => {
+      clearTimeout(failsafe);
+      runEntrance();
+    };
+
+    window.addEventListener('pointerdown', skip, { once: true });
+    window.addEventListener('keydown', skip, { once: true });
+
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(runEntrance);
+    } else {
+      window.addEventListener('load', runEntrance);
+    }
+
+    return () => {
+      clearTimeout(failsafe);
+      window.removeEventListener('pointerdown', skip);
+      window.removeEventListener('keydown', skip);
+    };
+  }, []);
+
   return (
     <footer
-      style={{
-        background: 'var(--bg-primary)',
-        borderTop: '1px solid var(--border-color)',
-        paddingTop: '5rem',
-        paddingBottom: '3rem',
-        position: 'relative',
-      }}
+      ref={footerRef}
+      className="nimbus-footer-section"
+      aria-label="Grow Big Marketers Footer"
     >
-      {/* Main Container Aligned Parallel to Navbar Header */}
-      <div
-        style={{
-          width: '100%',
-          maxWidth: '1440px',
-          margin: '0 auto',
-          padding: '0 2rem',
-        }}
-      >
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-            gap: '3rem',
-            marginBottom: '4rem',
-          }}
-        >
-          {/* Col 1: Brand Info */}
-          <div>
-            <a href="#" style={{ display: 'inline-flex', alignItems: 'center', textDecoration: 'none', marginBottom: '1.25rem' }}>
-              <div
-                style={{
-                  background: '#ffffff',
-                  padding: '6px 14px',
-                  borderRadius: '12px',
-                  border: '1px solid rgba(15, 23, 42, 0.08)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.04)',
-                }}
-              >
+      {/* Background Photographic Sky Layer */}
+      <div className="sky-layer" aria-hidden="true" />
+
+      {/* Background Striped Floor Layer */}
+      <div className="floor-layer" aria-hidden="true" />
+
+      {/* Fine SVG Noise Grain Overlay */}
+      <svg className="grain-layer" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+        <filter id="nimbus-noise-react">
+          <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 0
+                    0 0 0 0 0
+                    0 0 0 0 0
+                    0 0 0 0.07 0"
+          />
+        </filter>
+        <rect width="100%" height="100%" filter="url(#nimbus-noise-react)" />
+      </svg>
+
+      {/* =====================================================================
+          HERO (Top Left: 47u in, 35u down)
+          ===================================================================== */}
+      <div className="hero-container">
+        {/* 43u White Note Badge with folded top-right corner and logo-blue notes glyph */}
+        <div className="note-badge" aria-hidden="true">
+          <svg viewBox="0 0 43 43" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 0 H31 L43 12 V43 H0 Z" fill="#ffffff" />
+            <path d="M31 0 V12 H43 Z" fill="#E0E1E9" />
+            <path d="M10 16 H24" stroke="#3d6ab3" strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M10 22 H28" stroke="#3d6ab3" strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M10 28 H20" stroke="#fdcf09" strokeWidth="2.5" strokeLinecap="round" />
+          </svg>
+        </div>
+
+        {/* Headline */}
+        <div className="hero-headline-wrap">
+          <h2 className="hero-headline">
+            Stop Guessing With Your Marketing.<br />
+            We Scale High-ROAS Revenue.
+          </h2>
+        </div>
+
+        {/* Lede */}
+        <p className="hero-lede">
+          Grow Big Marketers builds high-converting Meta & Google PPC ads, search engine dominance (SEO),<br />
+          and viral social scaling strategies engineered to take your business to the next level.
+        </p>
+
+        {/* Signup Row */}
+        <form onSubmit={handleSignupSubmit} className="hero-signup-wrap">
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="signup-field"
+            placeholder="Enter Work Email For Free Audit..."
+            required
+            aria-label="Enter your email"
+          />
+          <button type="submit" className="signup-btn">
+            <span>Free Audit</span>
+            <span className="signup-btn-cap" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M10 8l4 4-4 4" />
+              </svg>
+            </span>
+          </button>
+          {subscribed && (
+            <div className="signup-feedback">
+              ✓ Thanks — our marketing strategists will audit your brand shortly.
+            </div>
+          )}
+        </form>
+      </div>
+
+      {/* Flexible Spacer absorbing extra screen height without blank bands */}
+      <div className="flexible-spacer" aria-hidden="true" />
+
+      {/* =====================================================================
+          FOOTER CARD (Square-cornered white, 48u margins, sitting right on floor)
+          ===================================================================== */}
+      <div className="card-outer-wrap">
+        <div className="footer-card">
+          {/* Top Row: Grid columns (Brand + 4 Link Columns) */}
+          <div className="card-top-row">
+
+            {/* Brand Column */}
+            <div className="brand-col">
+              <a href="#hero" className="brand-identity" title="Grow Big Marketers">
                 <img
-                  src="/d52ab5cc-5257-47d0-a3c2-2478d0403f2b.jpg"
-                  alt="Grow Big Marketers Logo"
-                  style={{
-                    height: '34px',
-                    width: 'auto',
-                    objectFit: 'contain',
-                  }}
+                  src={growBigPrimary}
+                  alt="Grow Big Marketers"
+                  className="brand-logo-mark"
                 />
+              </a>
+
+              <div className="brand-headline-wrap">
+                <h3 className="brand-headline">
+                  The Performance Agency For<br />
+                  High-Growth Digital Brands.
+                </h3>
               </div>
-            </a>
 
-            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '1.5rem' }}>
-              Premier digital marketing & performance agency. High-converting Meta & Google PPC ads, search engine optimization (SEO), and brand scaling strategies.
-            </p>
+              <button
+                type="button"
+                onClick={onOpenBooking}
+                className="brand-touch-btn"
+              >
+                <span>Book Strategy Call</span>
+                <span className="brand-touch-cap" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M5 12h14" />
+                    <path d="M12 5l7 7-7 7" />
+                  </svg>
+                </span>
+              </button>
+            </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-              <a href="tel:+919493898990" style={{ color: '#ffcc00', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700 }}>
-                <Phone size={15} /> +91 9493898990
-              </a>
-              <a href="mailto:info@growbigmarketers.com" style={{ color: 'var(--text-secondary)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Mail size={15} /> info@growbigmarketers.com
-              </a>
+            {/* Mobile Tab Buttons (for phones ≤768px) */}
+            <div className="mobile-tab-nav" role="tablist" aria-label="Footer Navigation Tabs">
+              <button
+                type="button"
+                role="tab"
+                id="tab-services"
+                aria-controls="panel-services"
+                aria-selected={activeMobileTab === 'industries'}
+                className={`mobile-tab-btn ${activeMobileTab === 'industries' ? 'active' : ''}`}
+                onClick={() => setActiveMobileTab('industries')}
+              >
+                Services
+              </button>
+              <button
+                type="button"
+                role="tab"
+                id="tab-industries"
+                aria-controls="panel-industries"
+                aria-selected={activeMobileTab === 'insights'}
+                className={`mobile-tab-btn ${activeMobileTab === 'insights' ? 'active' : ''}`}
+                onClick={() => setActiveMobileTab('insights')}
+              >
+                Industries
+              </button>
+              <button
+                type="button"
+                role="tab"
+                id="tab-company"
+                aria-controls="panel-company"
+                aria-selected={activeMobileTab === 'company'}
+                className={`mobile-tab-btn ${activeMobileTab === 'company' ? 'active' : ''}`}
+                onClick={() => setActiveMobileTab('company')}
+              >
+                Company
+              </button>
+              <button
+                type="button"
+                role="tab"
+                id="tab-connect"
+                aria-controls="panel-connect"
+                aria-selected={activeMobileTab === 'connect'}
+                className={`mobile-tab-btn ${activeMobileTab === 'connect' ? 'active' : ''}`}
+                onClick={() => setActiveMobileTab('connect')}
+              >
+                Contact
+              </button>
+            </div>
+
+            {/* Column 1: Core Marketing Services */}
+            <div
+              id="panel-services"
+              className={`link-col ${activeMobileTab === 'industries' ? 'active' : ''}`}
+              role="tabpanel"
+              aria-labelledby="tab-services"
+            >
+              <h4 className="col-title">Services</h4>
+              <ul className="link-list">
+                <li className="link-item"><a href="#services">Performance Marketing (PPC)</a></li>
+                <li className="link-item"><a href="#services">Search Engine Optimization (SEO)</a></li>
+                <li className="link-item"><a href="#services">Social Media & Reels Scaling</a></li>
+                <li className="link-item"><a href="#services">Conversion Rate Optimization (CRO)</a></li>
+                <li className="link-item"><a href="#services">High-Converting Sales Funnels</a></li>
+              </ul>
+            </div>
+
+            {/* Column 2: Industries */}
+            <div
+              id="panel-industries"
+              className={`link-col ${activeMobileTab === 'insights' ? 'active' : ''}`}
+              role="tabpanel"
+              aria-labelledby="tab-industries"
+            >
+              <h4 className="col-title">Industries</h4>
+              <ul className="link-list">
+                <li className="link-item"><a href="#industries">Real Estate & PropTech</a></li>
+                <li className="link-item"><a href="#industries">eCommerce & D2C Brands</a></li>
+                <li className="link-item"><a href="#industries">Healthcare & MedTech</a></li>
+                <li className="link-item"><a href="#industries">FinTech & Financial Services</a></li>
+                <li className="link-item"><a href="#industries">Hospitality & Tourism</a></li>
+              </ul>
+            </div>
+
+            {/* Column 3: Company & Process */}
+            <div
+              id="panel-company"
+              className={`link-col ${activeMobileTab === 'company' ? 'active' : ''}`}
+              role="tabpanel"
+              aria-labelledby="tab-company"
+            >
+              <h4 className="col-title">Company</h4>
+              <ul className="link-list">
+                <li className="link-item"><a href="#hero">About Grow Big</a></li>
+                <li className="link-item"><a href="#process">Our 4-Step Process</a></li>
+                <li className="link-item"><a href="#portfolio">Client Case Studies</a></li>
+                <li className="link-item">
+                  <a
+                    href="#faq"
+                    onClick={(e) => {
+                      if (onOpenBooking) {
+                        e.preventDefault();
+                        onOpenBooking();
+                      }
+                    }}
+                  >
+                    Schedule Strategy Call ↗
+                  </a>
+                </li>
+                <li className="link-item"><a href="#faq">Frequently Asked Questions</a></li>
+              </ul>
+            </div>
+
+            {/* Column 4: Direct Contact & Socials */}
+            <div
+              id="panel-connect"
+              className={`link-col ${activeMobileTab === 'connect' ? 'active' : ''}`}
+              role="tabpanel"
+              aria-labelledby="tab-connect"
+            >
+              <h4 className="col-title">Contact</h4>
+              <ul className="link-list">
+                <li className="link-item">
+                  <a href="tel:+919493898990">
+                    <svg className="social-icon-glyph" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" /></svg>
+                    <span>+91 9493898990</span>
+                  </a>
+                </li>
+                <li className="link-item">
+                  <a href="mailto:info@growbigmarketers.com">
+                    <svg className="social-icon-glyph" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
+                    <span>info@growbigmarketers.com</span>
+                  </a>
+                </li>
+                <li className="link-item">
+                  <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">
+                    <svg className="social-icon-glyph" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect x="2" y="9" width="4" height="12" /><circle cx="4" cy="4" r="2" /></svg>
+                    <span>LinkedIn</span>
+                  </a>
+                </li>
+                <li className="link-item">
+                  <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+                    <svg className="social-icon-glyph" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" /><circle cx="12" cy="12" r="4" /><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" /></svg>
+                    <span>Instagram</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+
+          {/* Card Bottom Row: 62u tall above a hairline */}
+          <div className="card-bottom-row">
+            <div className="bottom-legal-links">
+              <a href="#">Privacy Policy</a>
+              <span>·</span>
+              <a href="#">Terms of Service</a>
+              <span>·</span>
+              <a href="#services">Free Marketing Audit</a>
+              <span>·</span>
+              <a href="tel:+919493898990">+91 9493898990</a>
+            </div>
+            <div className="bottom-copyright">
+              © 2025 Grow Big Marketers. All rights reserved. Premier Digital Marketing & Scaling Agency.
             </div>
           </div>
 
-          {/* Col 2: Marketing Services */}
-          <div>
-            <h4 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '1.25rem', color: 'var(--text-primary)' }}>
-              Marketing Services
-            </h4>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.65rem', fontSize: '0.875rem' }}>
-              <li><a href="#services" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Performance Marketing (PPC)</a></li>
-              <li><a href="#services" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Search Engine Optimization (SEO)</a></li>
-              <li><a href="#services" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Social Media & Reels Growth</a></li>
-              <li><a href="#services" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Conversion Rate Optimization (CRO)</a></li>
-              <li><a href="#services" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Lead Generation & Funnels</a></li>
-              <li><a href="#services" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Brand Strategy & Copywriting</a></li>
-            </ul>
-          </div>
-
-          {/* Col 3: Key Industries */}
-          <div>
-            <h4 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '1.25rem', color: 'var(--text-primary)' }}>
-              Industries Served
-            </h4>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.65rem', fontSize: '0.875rem' }}>
-              <li><a href="#industries" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Healthcare & Pharma</a></li>
-              <li><a href="#industries" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Finance & FinTech</a></li>
-              <li><a href="#industries" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Real Estate & Construction</a></li>
-              <li><a href="#industries" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Retail & eCommerce</a></li>
-              <li><a href="#industries" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Food & Beverage</a></li>
-              <li><a href="#industries" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Manufacturing</a></li>
-            </ul>
-          </div>
-
-          {/* Col 4: Newsletter */}
-          <div>
-            <h4 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '1.25rem', color: 'var(--text-primary)' }}>
-              Build Your Digital Future
-            </h4>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
-              Subscribe to get industry trend reports and actionable growth insights.
-            </p>
-
-            <form onSubmit={handleSubscribe} style={{ display: 'flex', gap: '0.5rem' }}>
-              <input
-                type="email"
-                required
-                value={newsletterEmail}
-                onChange={(e) => setNewsletterEmail(e.target.value)}
-                placeholder="your@email.com"
-                className="form-input"
-                style={{ padding: '0.65rem 0.85rem', fontSize: '0.85rem' }}
-              />
-              <button type="submit" className="btn btn-gold" style={{ padding: '0.65rem 1rem' }}>
-                <Send size={16} />
-              </button>
-            </form>
-
-            {subscribed && (
-              <div style={{ fontSize: '0.8rem', color: '#ffcc00', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '0.5rem' }}>
-                <CheckCircle2 size={14} /> Subscribed successfully!
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Bottom Copyright & Links */}
-        <div
-          style={{
-            paddingTop: '2rem',
-            borderTop: '1px solid var(--border-color)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-            gap: '1rem',
-            fontSize: '0.85rem',
-            color: 'var(--text-muted)',
-          }}
-        >
-          <div>
-            © {new Date().getFullYear()} Grow Big Marketers Pvt Ltd. All rights reserved.
-          </div>
-
-          <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-            <a href="#" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Terms and Conditions</a>
-            <a href="#" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Privacy Policy</a>
-            <a href="#" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Security</a>
-          </div>
         </div>
       </div>
+
+      {/* NimbusOS Scoped Footer Styles */}
+      <style>{`
+        :root {
+          --u: min(100vw / 1433, max(0.68px, 100vh / 1098));
+          --brand-blue: #3d6ab3;
+          --brand-blue-hover: #294f8d;
+          --brand-yellow: #fdcf09;
+          --bg-deep: #03063A;
+          --ink: #000000;
+          --muted-1: #4E4E51;
+          --muted-2: #59595C;
+          --border-rule: #E0E1E9;
+          --card-bg: #FEFEFE;
+        }
+
+        .nimbus-footer-section {
+          position: relative;
+          width: 100%;
+          min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          overflow: hidden;
+          background-color: var(--bg-deep);
+          font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+          color: var(--ink);
+          -webkit-font-smoothing: antialiased;
+        }
+
+        .sky-layer {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          background-image: url('https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/4ec0de15-9d60-43b1-a76e-7d721f094fd6.jpg');
+          background-size: cover;
+          background-position: center bottom;
+          background-repeat: no-repeat;
+          pointer-events: none;
+          z-index: 0;
+        }
+
+        .floor-layer {
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          width: 100%;
+          height: calc(157.5 * var(--u));
+          background-image: url('https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/cadf77d3-d2b1-45a2-800b-5f96d6ec3f18.jpg');
+          background-size: 100% 100%;
+          background-position: bottom center;
+          background-repeat: no-repeat;
+          pointer-events: none;
+          z-index: 1;
+          mask-image: linear-gradient(to bottom, transparent 0, black calc(8 * var(--u)), black 100%);
+          -webkit-mask-image: linear-gradient(to bottom, transparent 0, black calc(8 * var(--u)), black 100%);
+        }
+
+        .grain-layer {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          opacity: 0.07;
+          mix-blend-mode: soft-light;
+          background-size: calc(220 * var(--u)) calc(220 * var(--u));
+          z-index: 2;
+        }
+
+        .hero-container {
+          position: relative;
+          z-index: 5;
+          width: 100%;
+          max-width: 1400px;
+          margin: 0 auto;
+          padding-top: calc(35 * var(--u));
+          padding-left: calc(48 * var(--u));
+          padding-right: calc(48 * var(--u));
+        }
+
+        .note-badge {
+          width: calc(43 * var(--u));
+          height: calc(43 * var(--u));
+          display: inline-block;
+          filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
+          transition: transform 0.2s ease;
+        }
+
+        .note-badge:hover {
+          transform: translateY(-2px);
+        }
+
+        .note-badge svg {
+          width: 100%;
+          height: 100%;
+          display: block;
+        }
+
+        .hero-headline-wrap {
+          margin-top: calc(41 * var(--u));
+          overflow: hidden;
+        }
+
+        .hero-headline {
+          font-size: calc(53.8 * var(--u));
+          line-height: calc(66 * var(--u));
+          color: rgba(255, 255, 255, 0.90);
+          font-weight: 400;
+          letter-spacing: -0.025em;
+          -webkit-text-stroke: 0.25px rgba(255, 255, 255, 0.90);
+        }
+
+        .hero-lede {
+          margin-top: calc(18 * var(--u));
+          font-size: calc(18.6 * var(--u));
+          line-height: calc(29.5 * var(--u));
+          color: rgba(255, 255, 255, 0.69);
+          font-weight: 400;
+          letter-spacing: -0.01em;
+        }
+
+        .hero-signup-wrap {
+          margin-top: calc(35.7 * var(--u));
+          display: flex;
+          align-items: stretch;
+          max-width: calc(724 * var(--u));
+          position: relative;
+        }
+
+        .signup-field {
+          width: calc(530 * var(--u));
+          height: calc(55.5 * var(--u));
+          background: rgba(255, 255, 255, 0.20);
+          backdrop-filter: blur(4px);
+          -webkit-backdrop-filter: blur(4px);
+          border: none;
+          outline: none;
+          padding: 0 calc(22 * var(--u));
+          font-family: inherit;
+          font-size: calc(16 * var(--u));
+          font-weight: 400;
+          color: #ffffff;
+          border-radius: 0;
+          transition: background 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .signup-field::placeholder {
+          color: rgba(255, 255, 255, 0.65);
+        }
+
+        .signup-field:focus {
+          background: rgba(255, 255, 255, 0.26);
+          box-shadow: inset 0 0 0 calc(1.5 * var(--u)) rgba(255, 255, 255, 0.85);
+        }
+
+        .signup-btn {
+          width: calc(194 * var(--u));
+          height: calc(55.5 * var(--u));
+          background: linear-gradient(135deg, #fdcf09 0%, #ffde59 100%);
+          border: none;
+          padding: 0 0 0 calc(24 * var(--u));
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          cursor: pointer;
+          font-family: inherit;
+          font-size: calc(16 * var(--u));
+          font-weight: 700;
+          color: #03063A;
+          letter-spacing: -0.01em;
+          transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease;
+          border-radius: 0;
+          box-shadow: 0 calc(4 * var(--u)) calc(16 * var(--u)) rgba(253, 207, 9, 0.28);
+        }
+
+        .signup-btn-cap {
+          width: calc(48 * var(--u));
+          height: calc(48 * var(--u));
+          margin-right: calc(3.75 * var(--u));
+          background: var(--brand-blue);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: background-color 0.2s ease, transform 0.15s ease;
+        }
+
+        .signup-btn-cap svg {
+          width: calc(20 * var(--u));
+          height: calc(20 * var(--u));
+          stroke: #ffffff;
+          fill: none;
+          stroke-width: 2.2;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+        }
+
+        .signup-btn:hover {
+          background: linear-gradient(135deg, #ffde59 0%, #fdcf09 100%);
+          box-shadow: 0 calc(6 * var(--u)) calc(22 * var(--u)) rgba(253, 207, 9, 0.45), 0 0 14px rgba(61, 106, 179, 0.35);
+          transform: translateY(-1px);
+        }
+
+        .signup-btn:hover .signup-btn-cap {
+          background: #1e3b6e;
+          transform: translateX(calc(1.5 * var(--u)));
+        }
+
+        .signup-feedback {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          margin-top: calc(8 * var(--u));
+          font-size: calc(14 * var(--u));
+          color: #ffffff;
+          font-weight: 500;
+        }
+
+        .flexible-spacer {
+          flex: 1;
+          min-height: calc(40 * var(--u));
+        }
+
+        .card-outer-wrap {
+          position: relative;
+          z-index: 5;
+          padding: 0 calc(48 * var(--u)) calc(48 * var(--u));
+          width: 100%;
+          max-width: 1400px;
+          margin: 0 auto;
+        }
+
+        .footer-card {
+          background: var(--card-bg);
+          position: relative;
+          width: 100%;
+          border-radius: 0;
+          border: 1px solid var(--border-rule);
+          box-shadow:
+            inset 0 0 0 calc(1.5 * var(--u)) #ffffff,
+            inset 0 0 0 calc(3 * var(--u)) rgba(224, 225, 233, 0.6),
+            0 calc(2 * var(--u)) 0 0 var(--brand-blue),
+            0 calc(16 * var(--u)) calc(36 * var(--u)) rgba(3, 6, 58, 0.35);
+        }
+
+        .card-top-row {
+          min-height: calc(360 * var(--u));
+          padding: calc(62 * var(--u)) calc(48 * var(--u)) calc(48 * var(--u)) calc(58 * var(--u));
+          display: grid;
+          grid-template-columns: minmax(calc(340 * var(--u)), calc(440 * var(--u))) repeat(4, 1fr);
+          gap: 0;
+          align-items: start;
+        }
+
+        .brand-col {
+          padding-right: calc(48 * var(--u));
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+        }
+
+        .brand-identity {
+          display: flex;
+          align-items: center;
+          gap: calc(12 * var(--u));
+          text-decoration: none;
+          color: var(--ink);
+        }
+
+        .brand-logo-mark {
+          height: calc(34 * var(--u));
+          max-height: 40px;
+          width: auto;
+          object-fit: contain;
+          display: block;
+        }
+
+        .brand-headline-wrap {
+          margin-top: calc(60 * var(--u));
+          overflow: hidden;
+        }
+
+        .brand-headline {
+          font-size: calc(30.6 * var(--u));
+          line-height: calc(38 * var(--u));
+          color: var(--ink);
+          font-weight: 400;
+          letter-spacing: -0.02em;
+          -webkit-text-stroke: 0.2px var(--ink);
+        }
+
+        .brand-touch-btn {
+          margin-top: calc(36 * var(--u));
+          width: calc(186 * var(--u));
+          height: calc(48 * var(--u));
+          background: linear-gradient(135deg, #3d6ab3 0%, #1e4587 100%);
+          color: #ffffff;
+          border: 1px solid rgba(253, 207, 9, 0.35);
+          border-radius: 0;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0 0 0 calc(20 * var(--u));
+          font-family: inherit;
+          font-size: calc(15 * var(--u));
+          font-weight: 600;
+          cursor: pointer;
+          text-decoration: none;
+          transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease;
+          box-shadow: 0 calc(4 * var(--u)) calc(14 * var(--u)) rgba(61, 106, 179, 0.25);
+        }
+
+        .brand-touch-cap {
+          width: calc(38 * var(--u));
+          height: calc(38 * var(--u));
+          margin-right: calc(4 * var(--u));
+          background: var(--brand-yellow);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: background-color 0.2s ease, transform 0.15s ease;
+        }
+
+        .brand-touch-cap svg {
+          width: calc(16 * var(--u));
+          height: calc(16 * var(--u));
+          stroke: #03063A;
+          fill: none;
+          stroke-width: 2.4;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+        }
+
+        .brand-touch-btn:hover {
+          background: linear-gradient(135deg, #2a589e 0%, #163669 100%);
+          border-color: rgba(253, 207, 9, 0.85);
+          box-shadow: 0 calc(6 * var(--u)) calc(20 * var(--u)) rgba(61, 106, 179, 0.4), 0 0 14px rgba(253, 207, 9, 0.3);
+          transform: translateY(-1px);
+        }
+
+        .brand-touch-btn:hover .brand-touch-cap {
+          background: #ffffff;
+          transform: translateX(calc(1.5 * var(--u)));
+        }
+
+        .link-col {
+          border-left: calc(2.4 * var(--u)) solid var(--border-rule);
+          padding-left: calc(26 * var(--u));
+          padding-right: calc(12 * var(--u));
+        }
+
+        .col-title {
+          font-size: calc(19.8 * var(--u));
+          line-height: 1.2;
+          color: var(--ink);
+          font-weight: 500;
+          margin-bottom: calc(24 * var(--u));
+          letter-spacing: -0.01em;
+          -webkit-text-stroke: 0.18px var(--ink);
+        }
+
+        .link-list {
+          list-style: none;
+          display: flex;
+          flex-direction: column;
+          gap: calc(19.5 * var(--u));
+        }
+
+        .link-item a {
+          font-size: calc(15.8 * var(--u));
+          line-height: 1.35;
+          color: var(--muted-2);
+          text-decoration: none;
+          display: inline-flex;
+          align-items: center;
+          gap: calc(8 * var(--u));
+          transition: color 0.2s ease, transform 0.15s ease;
+        }
+
+        .link-item a:hover {
+          color: var(--brand-blue);
+          transform: translateX(calc(2 * var(--u)));
+        }
+
+        .social-icon-glyph {
+          width: calc(16 * var(--u));
+          height: calc(16 * var(--u));
+          stroke: currentColor;
+          fill: none;
+          stroke-width: 1.8;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+        }
+
+        .card-bottom-row {
+          height: calc(62 * var(--u));
+          border-top: 1px solid var(--border-rule);
+          padding: 0 calc(58 * var(--u));
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          font-size: calc(13.8 * var(--u));
+          color: var(--muted-1);
+        }
+
+        .bottom-legal-links {
+          display: flex;
+          align-items: center;
+          gap: calc(12 * var(--u));
+        }
+
+        .bottom-legal-links a {
+          color: var(--muted-1);
+          text-decoration: none;
+          transition: color 0.15s ease;
+        }
+
+        .bottom-legal-links a:hover {
+          color: var(--brand-blue);
+        }
+
+        .bottom-copyright {
+          color: var(--muted-1);
+        }
+
+        .mobile-tab-nav {
+          display: none;
+        }
+
+        @media (max-width: 1024px) {
+          .card-top-row {
+            grid-template-columns: 1fr 1fr;
+            gap: 36px;
+            padding: 40px 32px;
+            min-height: auto;
+          }
+
+          .brand-col {
+            grid-column: span 2;
+            padding-right: 0;
+          }
+
+          .brand-headline-wrap {
+            margin-top: 24px;
+          }
+
+          .link-col {
+            border-left: none;
+            padding-left: 0;
+            border-top: 2px solid var(--border-rule);
+            padding-top: 20px;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .nimbus-footer-section {
+            min-height: auto;
+            height: auto;
+          }
+
+          .hero-container {
+            padding: 32px 24px 0;
+            max-width: 100%;
+          }
+
+          .hero-headline {
+            font-size: 34px;
+            line-height: 42px;
+          }
+
+          .hero-lede {
+            font-size: 16px;
+            line-height: 24px;
+          }
+
+          .hero-signup-wrap {
+            flex-direction: column;
+            width: 100%;
+            gap: 10px;
+          }
+
+          .signup-field {
+            width: 100%;
+            height: 50px;
+          }
+
+          .signup-btn {
+            width: 100%;
+            height: 50px;
+          }
+
+          .card-outer-wrap {
+            padding: 40px 16px 24px;
+          }
+
+          .mobile-tab-nav {
+            display: flex;
+            overflow-x: auto;
+            gap: 8px;
+            border-bottom: 2px solid var(--border-rule);
+            padding-bottom: 12px;
+            margin-bottom: 24px;
+          }
+
+          .mobile-tab-btn {
+            padding: 8px 14px;
+            background: transparent;
+            border: none;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--muted-2);
+            cursor: pointer;
+            border-radius: 6px;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+          }
+
+          .mobile-tab-btn.active {
+            background: var(--brand-blue);
+            color: #ffffff;
+          }
+
+          .card-top-row {
+            display: flex;
+            flex-direction: column;
+            padding: 28px 20px;
+            gap: 24px;
+          }
+
+          .link-col {
+            display: none;
+            border-top: none;
+            padding-top: 0;
+          }
+
+          .link-col.active {
+            display: block;
+          }
+
+          .link-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+          }
+
+          .card-bottom-row {
+            height: auto;
+            padding: 20px;
+            flex-direction: column;
+            gap: 12px;
+            align-items: flex-start;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          *, *::before, *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+          }
+        }
+      `}</style>
     </footer>
   );
 };

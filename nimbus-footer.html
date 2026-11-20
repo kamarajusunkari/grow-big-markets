@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grow Big Marketers — NimbusOS Digital Growth Footer</title>
+  <link rel="icon" type="image/png" href="Growbig blue.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      /* Reference resolution 1433x1098 */
+      --u: min(100vw / 1433, max(0.68px, 100vh / 1098));
+
+      /* Brand logo colors */
+      --brand-blue: #3d6ab3;
+      --brand-blue-hover: #294f8d;
+      --brand-yellow: #fdcf09;
+      --brand-dark-blue: #111884;
+      --bg-deep: #03063A;
+
+      --ink: #000000;
+      --muted-1: #4E4E51;
+      --muted-2: #59595C;
+      --border-rule: #E0E1E9;
+      --card-bg: #FEFEFE;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-weight: 400;
+      color: var(--ink);
+      background-color: var(--bg-deep);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* =========================================================================
+       PAGE WRAPPER & BACKGROUND LAYERS
+       ========================================================================= */
+    .nimbus-footer-section {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      background-color: var(--bg-deep);
+    }
+
+    /* Photographic Sky Layer */
+    .sky-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/4ec0de15-9d60-43b1-a76e-7d721f094fd6.jpg');
+      background-size: cover;
+      background-position: center bottom;
+      background-repeat: no-repeat;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Striped Floor Layer */
+    .floor-layer {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: calc(157.5 * var(--u));
+      background-image: url('https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/cadf77d3-d2b1-45a2-800b-5f96d6ec3f18.jpg');
+      background-size: 100% 100%;
+      background-position: bottom center;
+      background-repeat: no-repeat;
+      pointer-events: none;
+      z-index: 1;
+      mask-image: linear-gradient(to bottom, transparent 0, black calc(8 * var(--u)), black 100%);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0, black calc(8 * var(--u)), black 100%);
+    }
+
+    /* Fine SVG Noise Grain Overlay (7% soft-light tiled at 220u) */
+    .grain-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0.07;
+      mix-blend-mode: soft-light;
+      background-size: calc(220 * var(--u)) calc(220 * var(--u));
+      z-index: 2;
+    }
+
+    /* =========================================================================
+       HERO (Top Left: 1400px centered inner container, 35u down)
+       ========================================================================= */
+    .hero-container {
+      position: relative;
+      z-index: 5;
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding-top: calc(35 * var(--u));
+      padding-left: calc(48 * var(--u));
+      padding-right: calc(48 * var(--u));
+    }
+
+    /* Folded Note Badge (43u white with folded top-right corner) */
+    .note-badge {
+      width: calc(43 * var(--u));
+      height: calc(43 * var(--u));
+      display: inline-block;
+      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
+      transition: transform 0.2s ease;
+    }
+
+    .note-badge:hover {
+      transform: translateY(-2px);
+    }
+
+    .note-badge svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Headline (53.8u on 66u line, white at 90%) */
+    .hero-headline-wrap {
+      margin-top: calc(41 * var(--u));
+      overflow: hidden;
+    }
+
+    .hero-headline {
+      font-size: calc(53.8 * var(--u));
+      line-height: calc(66 * var(--u));
+      color: rgba(255, 255, 255, 0.90);
+      font-weight: 400;
+      letter-spacing: -0.025em;
+      -webkit-text-stroke: 0.25px rgba(255, 255, 255, 0.90);
+    }
+
+    /* Lede (18.6u on 29.5u line, white at 69%) */
+    .hero-lede {
+      margin-top: calc(18 * var(--u));
+      font-size: calc(18.6 * var(--u));
+      line-height: calc(29.5 * var(--u));
+      color: rgba(255, 255, 255, 0.69);
+      font-weight: 400;
+      letter-spacing: -0.01em;
+    }
+
+    /* Signup Row (35.7u below, 530x55.5u field, 193.5u button) */
+    .hero-signup-wrap {
+      margin-top: calc(35.7 * var(--u));
+      display: flex;
+      align-items: stretch;
+      max-width: calc(724 * var(--u));
+      position: relative;
+    }
+
+    .signup-field {
+      width: calc(530 * var(--u));
+      height: calc(55.5 * var(--u));
+      background: rgba(255, 255, 255, 0.20);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border: none;
+      outline: none;
+      padding: 0 calc(22 * var(--u));
+      font-family: inherit;
+      font-size: calc(16 * var(--u));
+      font-weight: 400;
+      color: #ffffff;
+      border-radius: 0;
+      transition: background 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .signup-field::placeholder {
+      color: rgba(255, 255, 255, 0.65);
+    }
+
+    .signup-field:focus {
+      background: rgba(255, 255, 255, 0.26);
+      box-shadow: inset 0 0 0 calc(1.5 * var(--u)) rgba(255, 255, 255, 0.85);
+    }
+
+    .signup-btn {
+      width: calc(194 * var(--u));
+      height: calc(55.5 * var(--u));
+      background: linear-gradient(135deg, #fdcf09 0%, #ffde59 100%);
+      border: none;
+      padding: 0 0 0 calc(24 * var(--u));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: calc(16 * var(--u));
+      font-weight: 700;
+      color: #03063A;
+      letter-spacing: -0.01em;
+      transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease;
+      border-radius: 0;
+      box-shadow: 0 calc(4 * var(--u)) calc(16 * var(--u)) rgba(253, 207, 9, 0.28);
+    }
+
+    .signup-btn-cap {
+      width: calc(48 * var(--u));
+      height: calc(48 * var(--u));
+      margin-right: calc(3.75 * var(--u));
+      background: var(--brand-blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s ease, transform 0.15s ease;
+    }
+
+    .signup-btn-cap svg {
+      width: calc(20 * var(--u));
+      height: calc(20 * var(--u));
+      stroke: #ffffff;
+      fill: none;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .signup-btn:hover {
+      background: linear-gradient(135deg, #ffde59 0%, #fdcf09 100%);
+      box-shadow: 0 calc(6 * var(--u)) calc(22 * var(--u)) rgba(253, 207, 9, 0.45), 0 0 14px rgba(61, 106, 179, 0.35);
+      transform: translateY(-1px);
+    }
+
+    .signup-btn:hover .signup-btn-cap {
+      background: #1e3b6e;
+      transform: translateX(calc(1.5 * var(--u)));
+    }
+
+    .signup-feedback {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      margin-top: calc(8 * var(--u));
+      font-size: calc(14 * var(--u));
+      color: #ffffff;
+      font-weight: 500;
+      display: none;
+    }
+
+    .signup-feedback.visible {
+      display: block;
+    }
+
+    /* Flexible Spacer absorbing extra height */
+    .flexible-spacer {
+      flex: 1;
+      min-height: calc(40 * var(--u));
+    }
+
+    /* =========================================================================
+       FOOTER CARD (1400px centered inner width, square-cornered white)
+       ========================================================================= */
+    .card-outer-wrap {
+      position: relative;
+      z-index: 5;
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 calc(48 * var(--u)) calc(48 * var(--u));
+    }
+
+    .footer-card {
+      background: var(--card-bg);
+      position: relative;
+      width: 100%;
+      border-radius: 0;
+      /* Fine double inner border and crisp 1u dark outline with tiny drop line */
+      border: 1px solid var(--border-rule);
+      box-shadow:
+        inset 0 0 0 calc(1.5 * var(--u)) #ffffff,
+        inset 0 0 0 calc(3 * var(--u)) rgba(224, 225, 233, 0.6),
+        0 calc(2 * var(--u)) 0 0 var(--brand-blue),
+        0 calc(16 * var(--u)) calc(36 * var(--u)) rgba(3, 6, 58, 0.35);
+    }
+
+    /* Card Top Row: 360u tall, 62u top padding, 58u left padding */
+    .card-top-row {
+      min-height: calc(360 * var(--u));
+      padding: calc(62 * var(--u)) calc(48 * var(--u)) calc(48 * var(--u)) calc(58 * var(--u));
+      display: grid;
+      grid-template-columns: minmax(calc(360 * var(--u)), calc(469 * var(--u))) calc(236 * var(--u)) calc(207.5 * var(--u)) calc(199.5 * var(--u)) calc(165 * var(--u));
+      gap: 0;
+      align-items: start;
+    }
+
+    /* Brand Column */
+    .brand-col {
+      padding-right: calc(48 * var(--u));
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .brand-identity {
+      display: flex;
+      align-items: center;
+      gap: calc(12 * var(--u));
+      text-decoration: none;
+      color: var(--ink);
+    }
+
+    .brand-logo-mark {
+      height: calc(34 * var(--u));
+      width: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    .brand-headline-wrap {
+      margin-top: calc(60 * var(--u));
+      overflow: hidden;
+    }
+
+    .brand-headline {
+      font-size: calc(30.6 * var(--u));
+      line-height: calc(38 * var(--u));
+      color: var(--ink);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      -webkit-text-stroke: 0.2px var(--ink);
+    }
+
+    .brand-touch-btn {
+      margin-top: calc(36 * var(--u));
+      width: calc(186 * var(--u));
+      height: calc(48 * var(--u));
+      background: linear-gradient(135deg, #3d6ab3 0%, #1e4587 100%);
+      color: #ffffff;
+      border: 1px solid rgba(253, 207, 9, 0.35);
+      border-radius: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 0 0 calc(20 * var(--u));
+      font-family: inherit;
+      font-size: calc(15 * var(--u));
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease;
+      box-shadow: 0 calc(4 * var(--u)) calc(14 * var(--u)) rgba(61, 106, 179, 0.25);
+    }
+
+    .brand-touch-cap {
+      width: calc(38 * var(--u));
+      height: calc(38 * var(--u));
+      margin-right: calc(4 * var(--u));
+      background: var(--brand-yellow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s ease, transform 0.15s ease;
+    }
+
+    .brand-touch-cap svg {
+      width: calc(16 * var(--u));
+      height: calc(16 * var(--u));
+      stroke: #03063A;
+      fill: none;
+      stroke-width: 2.4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .brand-touch-btn:hover {
+      background: linear-gradient(135deg, #2a589e 0%, #163669 100%);
+      border-color: rgba(253, 207, 9, 0.85);
+      box-shadow: 0 calc(6 * var(--u)) calc(20 * var(--u)) rgba(61, 106, 179, 0.4), 0 0 14px rgba(253, 207, 9, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .brand-touch-btn:hover .brand-touch-cap {
+      background: #ffffff;
+      transform: translateX(calc(1.5 * var(--u)));
+    }
+
+    /* Link Columns */
+    .link-col {
+      border-left: calc(2.4 * var(--u)) solid var(--border-rule);
+      padding-left: calc(28 * var(--u));
+      padding-right: calc(16 * var(--u));
+    }
+
+    .col-title {
+      font-size: calc(19.8 * var(--u));
+      line-height: 1.2;
+      color: var(--ink);
+      font-weight: 500;
+      margin-bottom: calc(24 * var(--u));
+      letter-spacing: -0.01em;
+      -webkit-text-stroke: 0.18px var(--ink);
+    }
+
+    .link-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: calc(19.5 * var(--u));
+    }
+
+    .link-item a {
+      font-size: calc(15.8 * var(--u));
+      line-height: 1.35;
+      color: var(--muted-2);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: calc(8 * var(--u));
+      transition: color 0.2s ease, transform 0.15s ease;
+    }
+
+    .link-item a:hover {
+      color: var(--brand-blue);
+      transform: translateX(calc(2 * var(--u)));
+    }
+
+    .social-icon-glyph {
+      width: calc(16 * var(--u));
+      height: calc(16 * var(--u));
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Card Bottom Row: 62u tall above a hairline */
+    .card-bottom-row {
+      height: calc(62 * var(--u));
+      border-top: 1px solid var(--border-rule);
+      padding: 0 calc(58 * var(--u));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: calc(13.8 * var(--u));
+      color: var(--muted-1);
+    }
+
+    .bottom-legal-links {
+      display: flex;
+      align-items: center;
+      gap: calc(12 * var(--u));
+    }
+
+    .bottom-legal-links a {
+      color: var(--muted-1);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    .bottom-legal-links a:hover {
+      color: var(--brand-blue);
+    }
+
+    .bottom-copyright {
+      color: var(--muted-1);
+    }
+
+    /* Mobile Tabs (hidden on desktop) */
+    .mobile-tab-nav {
+      display: none;
+    }
+
+    /* =========================================================================
+       ENTRANCE MOTION (Web Animations API ~1.9s)
+       ========================================================================= */
+    .entrance-pending .note-badge,
+    .entrance-pending .hero-headline,
+    .entrance-pending .hero-lede,
+    .entrance-pending .hero-signup-wrap,
+    .entrance-pending .brand-identity,
+    .entrance-pending .brand-headline,
+    .entrance-pending .brand-touch-btn,
+    .entrance-pending .link-col,
+    .entrance-pending .card-bottom-row {
+      opacity: 0;
+    }
+
+    /* =========================================================================
+       RESPONSIVE BREAKPOINTS (Tablet 768px, Phone 390px)
+       ========================================================================= */
+    @media (max-width: 1024px) {
+      .card-top-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 36px;
+        padding: 40px 32px;
+        min-height: auto;
+      }
+
+      .brand-col {
+        grid-column: span 2;
+        padding-right: 0;
+      }
+
+      .brand-headline-wrap {
+        margin-top: 24px;
+      }
+
+      .link-col {
+        border-left: none;
+        padding-left: 0;
+        border-top: 2px solid var(--border-rule);
+        padding-top: 20px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nimbus-footer-section {
+        min-height: auto;
+        height: auto;
+      }
+
+      .hero-container {
+        padding: 32px 24px 0;
+        max-width: 100%;
+      }
+
+      .hero-headline {
+        font-size: 34px;
+        line-height: 42px;
+      }
+
+      .hero-lede {
+        font-size: 16px;
+        line-height: 24px;
+      }
+
+      .hero-signup-wrap {
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+      }
+
+      .signup-field {
+        width: 100%;
+        height: 50px;
+      }
+
+      .signup-btn {
+        width: 100%;
+        height: 50px;
+      }
+
+      .card-outer-wrap {
+        padding: 40px 16px 24px;
+      }
+
+      /* Mobile Tabs Navigation */
+      .mobile-tab-nav {
+        display: flex;
+        overflow-x: auto;
+        gap: 8px;
+        border-bottom: 2px solid var(--border-rule);
+        padding-bottom: 12px;
+        margin-bottom: 24px;
+      }
+
+      .mobile-tab-btn {
+        padding: 8px 14px;
+        background: transparent;
+        border: none;
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--muted-2);
+        cursor: pointer;
+        border-radius: 6px;
+        white-space: nowrap;
+        transition: all 0.2s ease;
+      }
+
+      .mobile-tab-btn.active {
+        background: var(--brand-blue);
+        color: #ffffff;
+      }
+
+      .card-top-row {
+        display: flex;
+        flex-direction: column;
+        padding: 28px 20px;
+        gap: 24px;
+      }
+
+      .mobile-link-panels {
+        width: 100%;
+      }
+
+      .link-col {
+        display: none;
+        border-top: none;
+        padding-top: 0;
+      }
+
+      .link-col.active {
+        display: block;
+      }
+
+      .link-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+
+      .card-bottom-row {
+        height: auto;
+        padding: 20px;
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body class="entrance-pending">
+
+  <section class="nimbus-footer-section" aria-label="NimbusOS Digital Growth Footer">
+    <!-- Background Photographic Sky Layer -->
+    <div class="sky-layer" aria-hidden="true"></div>
+
+    <!-- Background Striped Floor Layer -->
+    <div class="floor-layer" aria-hidden="true"></div>
+
+    <!-- Fine SVG Noise Grain Overlay -->
+    <svg class="grain-layer" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <filter id="nimbus-noise">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
+        <feColorMatrix type="matrix" values="0 0 0 0 0
+                                            0 0 0 0 0
+                                            0 0 0 0 0
+                                            0 0 0 0.07 0" />
+      </filter>
+      <rect width="100%" height="100%" filter="url(#nimbus-noise)" />
+    </svg>
+
+    <!-- =====================================================================
+         HERO SECTION (Top Left: 47u in, 35u down)
+         ===================================================================== -->
+    <div class="hero-container">
+      <!-- 43u White Note Badge with folded top-right corner and logo-blue notes glyph -->
+      <div class="note-badge" aria-hidden="true">
+        <svg viewBox="0 0 43 43" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Main white note shape with folded corner cutout -->
+          <path d="M0 0 H31 L43 12 V43 H0 Z" fill="#ffffff" />
+          <!-- Fold flap -->
+          <path d="M31 0 V12 H43 Z" fill="#E0E1E9" />
+          <!-- Notes glyph in brand blue (#3d6ab3) -->
+          <path d="M10 16 H24" stroke="#3d6ab3" stroke-width="2.5" stroke-linecap="round" />
+          <path d="M10 22 H28" stroke="#3d6ab3" stroke-width="2.5" stroke-linecap="round" />
+          <path d="M10 28 H20" stroke="#fdcf09" stroke-width="2.5" stroke-linecap="round" />
+        </svg>
+      </div>
+
+      <!-- Headline -->
+      <div class="hero-headline-wrap">
+        <h2 class="hero-headline">
+          Stop Guessing With Your Marketing.<br />
+          We Scale High-ROAS Revenue.
+        </h2>
+      </div>
+
+      <!-- Lede -->
+      <p class="hero-lede">
+        Grow Big Marketers builds high-converting Meta & Google PPC ads, search engine dominance (SEO),<br />
+        and viral social scaling strategies engineered to take your business to the next level.
+      </p>
+
+      <!-- Signup Row -->
+      <form id="nimbusSignupForm" class="hero-signup-wrap" onsubmit="event.preventDefault(); handleSignupSubmit();">
+        <input
+          type="email"
+          id="nimbusEmailInput"
+          class="signup-field"
+          placeholder="Enter Work Email For Free Audit..."
+          required
+          aria-label="Enter your email"
+        />
+        <button type="submit" class="signup-btn">
+          <span>Free Audit</span>
+          <span class="signup-btn-cap" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M10 8l4 4-4 4" />
+            </svg>
+          </span>
+        </button>
+        <div id="signupFeedback" class="signup-feedback">
+          ✓ Thanks — our marketing strategists will audit your brand shortly.
+        </div>
+      </form>
+    </div>
+
+    <!-- Flexible Spacer absorbing extra screen height without blank bands -->
+    <div class="flexible-spacer" aria-hidden="true"></div>
+
+    <!-- =====================================================================
+         FOOTER CARD (Square-cornered white, 48u margins, sitting right on floor)
+         ===================================================================== -->
+    <div class="card-outer-wrap">
+      <div class="footer-card">
+        <!-- Top Row: Grid columns (Brand + 4 Link Columns) -->
+        <div class="card-top-row">
+
+          <!-- Brand Column -->
+          <div class="brand-col">
+            <a href="#hero" class="brand-identity" title="Grow Big Marketers">
+              <img
+                src="Growbig Primary.png"
+                alt="Grow Big Marketers"
+                class="brand-logo-mark"
+              />
+            </a>
+
+            <div class="brand-headline-wrap">
+              <h3 class="brand-headline">
+                The Performance Agency For<br />
+                High-Growth Digital Brands.
+              </h3>
+            </div>
+
+            <a href="#faq" class="brand-touch-btn">
+              <span>Book Strategy Call</span>
+              <span class="brand-touch-cap" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M5 12h14" />
+                  <path d="M12 5l7 7-7 7" />
+                </svg>
+              </span>
+            </a>
+          </div>
+
+          <!-- Mobile Tab Buttons (for phones ≤768px) -->
+          <div class="mobile-tab-nav" role="tablist" aria-label="Footer Navigation Tabs">
+            <button role="tab" id="tab-services" aria-controls="panel-services" aria-selected="true" class="mobile-tab-btn active" onclick="switchMobileTab('services')">Services</button>
+            <button role="tab" id="tab-industries" aria-controls="panel-industries" aria-selected="false" class="mobile-tab-btn" onclick="switchMobileTab('industries')">Industries</button>
+            <button role="tab" id="tab-company" aria-controls="panel-company" aria-selected="false" class="mobile-tab-btn" onclick="switchMobileTab('company')">Company</button>
+            <button role="tab" id="tab-connect" aria-controls="panel-connect" aria-selected="false" class="mobile-tab-btn" onclick="switchMobileTab('connect')">Contact</button>
+          </div>
+
+          <!-- Column 1: Services -->
+          <div id="panel-services" class="link-col active" role="tabpanel" aria-labelledby="tab-services">
+            <h4 class="col-title">Services</h4>
+            <ul class="link-list">
+              <li class="link-item"><a href="#services">Performance Marketing (PPC)</a></li>
+              <li class="link-item"><a href="#services">Search Engine Optimization (SEO)</a></li>
+              <li class="link-item"><a href="#services">Social Media & Reels Scaling</a></li>
+              <li class="link-item"><a href="#services">Conversion Rate Optimization (CRO)</a></li>
+              <li class="link-item"><a href="#services">High-Converting Sales Funnels</a></li>
+            </ul>
+          </div>
+
+          <!-- Column 2: Industries -->
+          <div id="panel-industries" class="link-col" role="tabpanel" aria-labelledby="tab-industries">
+            <h4 class="col-title">Industries</h4>
+            <ul class="link-list">
+              <li class="link-item"><a href="#industries">Real Estate & PropTech</a></li>
+              <li class="link-item"><a href="#industries">eCommerce & D2C Brands</a></li>
+              <li class="link-item"><a href="#industries">Healthcare & MedTech</a></li>
+              <li class="link-item"><a href="#industries">FinTech & Financial Services</a></li>
+              <li class="link-item"><a href="#industries">Hospitality & Tourism</a></li>
+            </ul>
+          </div>
+
+          <!-- Column 3: Company -->
+          <div id="panel-company" class="link-col" role="tabpanel" aria-labelledby="tab-company">
+            <h4 class="col-title">Company</h4>
+            <ul class="link-list">
+              <li class="link-item"><a href="#hero">About Grow Big</a></li>
+              <li class="link-item"><a href="#process">Our 4-Step Process</a></li>
+              <li class="link-item"><a href="#portfolio">Client Case Studies</a></li>
+              <li class="link-item"><a href="#faq">Schedule Strategy Call ↗</a></li>
+              <li class="link-item"><a href="#faq">Frequently Asked Questions</a></li>
+            </ul>
+          </div>
+
+          <!-- Column 4: Contact -->
+          <div id="panel-connect" class="link-col" role="tabpanel" aria-labelledby="tab-connect">
+            <h4 class="col-title">Contact</h4>
+            <ul class="link-list">
+              <li class="link-item">
+                <a href="tel:+919493898990">
+                  <svg class="social-icon-glyph" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" /></svg>
+                  <span>+91 9493898990</span>
+                </a>
+              </li>
+              <li class="link-item">
+                <a href="mailto:info@growbigmarketers.com">
+                  <svg class="social-icon-glyph" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
+                  <span>info@growbigmarketers.com</span>
+                </a>
+              </li>
+              <li class="link-item">
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">
+                  <svg class="social-icon-glyph" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect x="2" y="9" width="4" height="12" /><circle cx="4" cy="4" r="2" /></svg>
+                  <span>LinkedIn</span>
+                </a>
+              </li>
+              <li class="link-item">
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+                  <svg class="social-icon-glyph" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" /><circle cx="12" cy="12" r="4" /><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" /></svg>
+                  <span>Instagram</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+        <!-- Card Bottom Row: 62u tall above a hairline -->
+        <div class="card-bottom-row">
+          <div class="bottom-legal-links">
+            <a href="#">Privacy Policy</a>
+            <span>·</span>
+            <a href="#">Terms of Service</a>
+            <span>·</span>
+            <a href="#services">Free Marketing Audit</a>
+            <span>·</span>
+            <a href="tel:+919493898990">+91 9493898990</a>
+          </div>
+          <div class="bottom-copyright">
+            © 2025 Grow Big Marketers. All rights reserved. Premier Digital Marketing & Scaling Agency.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       ENTRANCE MOTION & INTERACTION JAVASCRIPT
+       ========================================================================= -->
+  <script>
+    // Form submission handler
+    function handleSignupSubmit() {
+      const input = document.getElementById('nimbusEmailInput');
+      const feedback = document.getElementById('signupFeedback');
+      if (input && feedback) {
+        input.value = '';
+        feedback.classList.add('visible');
+        setTimeout(() => {
+          feedback.classList.remove('visible');
+        }, 4000);
+      }
+    }
+
+    // Accessible Mobile Tab Switching
+    function switchMobileTab(tabKey) {
+      const tabs = ['services', 'industries', 'company', 'connect'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`tab-${t}`);
+        const panel = document.getElementById(`panel-${t}`);
+        if (btn && panel) {
+          if (t === tabKey) {
+            btn.classList.add('active');
+            btn.setAttribute('aria-selected', 'true');
+            panel.classList.add('active');
+          } else {
+            btn.classList.remove('active');
+            btn.setAttribute('aria-selected', 'false');
+            panel.classList.remove('active');
+          }
+        }
+      });
+    }
+
+    // Keyboard navigation for ARIA tabs
+    const tabList = document.querySelector('.mobile-tab-nav');
+    if (tabList) {
+      tabList.addEventListener('keydown', (e) => {
+        const tabs = Array.from(tabList.querySelectorAll('[role="tab"]'));
+        const index = tabs.indexOf(document.activeElement);
+        if (index !== -1) {
+          if (e.key === 'ArrowRight') {
+            const next = tabs[(index + 1) % tabs.length];
+            next.focus();
+            next.click();
+          } else if (e.key === 'ArrowLeft') {
+            const prev = tabs[(index - 1 + tabs.length) % tabs.length];
+            prev.focus();
+            prev.click();
+          }
+        }
+      });
+    }
+
+    // Single Web Animations API sequence ~1.9s with 3s failsafe
+    (function initEntranceMotion() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.body.classList.remove('entrance-pending');
+        return;
+      }
+
+      let animationStarted = false;
+      const skipAnimation = () => {
+        document.body.classList.remove('entrance-pending');
+      };
+
+      // Failsafe 3s timeout
+      const failsafe = setTimeout(skipAnimation, 3000);
+
+      // Skip on any user gesture
+      window.addEventListener('pointerdown', skipAnimation, { once: true });
+      window.addEventListener('keydown', skipAnimation, { once: true });
+
+      const runSequence = () => {
+        if (animationStarted) return;
+        animationStarted = true;
+        clearTimeout(failsafe);
+
+        document.body.classList.remove('entrance-pending');
+
+        const badge = document.querySelector('.note-badge');
+        const heroHeadline = document.querySelector('.hero-headline');
+        const heroLede = document.querySelector('.hero-lede');
+        const signup = document.querySelector('.hero-signup-wrap');
+        const brandLogo = document.querySelector('.brand-identity');
+        const brandHeadline = document.querySelector('.brand-headline');
+        const brandBtn = document.querySelector('.brand-touch-btn');
+        const linkCols = document.querySelectorAll('.link-col');
+        const bottomRow = document.querySelector('.card-bottom-row');
+
+        const easeOutCubic = 'cubic-bezier(0.215, 0.61, 0.355, 1)';
+
+        // 1. Badge settles (80ms)
+        badge?.animate([
+          { opacity: 0, transform: 'translateY(-16px) scale(0.92)' },
+          { opacity: 1, transform: 'translateY(0) scale(1)' }
+        ], { duration: 280, easing: easeOutCubic, fill: 'forwards' });
+
+        // 2. Headline wipes up out of clip (220ms after badge)
+        setTimeout(() => {
+          heroHeadline?.animate([
+            { opacity: 0, clipPath: 'inset(0 0 100% 0)', transform: 'translateY(24px)' },
+            { opacity: 1, clipPath: 'inset(0 0 0% 0)', transform: 'translateY(0)' }
+          ], { duration: 480, easing: easeOutCubic, fill: 'forwards' });
+        }, 120);
+
+        // 3. Lede fades up
+        setTimeout(() => {
+          heroLede?.animate([
+            { opacity: 0, transform: 'translateY(16px)' },
+            { opacity: 1, transform: 'translateY(0)' }
+          ], { duration: 420, easing: easeOutCubic, fill: 'forwards' });
+        }, 340);
+
+        // 4. Signup row fades & expands
+        setTimeout(() => {
+          signup?.animate([
+            { opacity: 0, transform: 'translateY(18px) scale(0.98)' },
+            { opacity: 1, transform: 'translateY(0) scale(1)' }
+          ], { duration: 420, easing: easeOutCubic, fill: 'forwards' });
+        }, 500);
+
+        // 5. In Card: Logo & Brand elements
+        setTimeout(() => {
+          brandLogo?.animate([
+            { opacity: 0, transform: 'translateY(12px)' },
+            { opacity: 1, transform: 'translateY(0)' }
+          ], { duration: 350, easing: easeOutCubic, fill: 'forwards' });
+        }, 660);
+
+        setTimeout(() => {
+          brandHeadline?.animate([
+            { opacity: 0, clipPath: 'inset(0 0 100% 0)', transform: 'translateY(18px)' },
+            { opacity: 1, clipPath: 'inset(0 0 0% 0)', transform: 'translateY(0)' }
+          ], { duration: 440, easing: easeOutCubic, fill: 'forwards' });
+        }, 760);
+
+        setTimeout(() => {
+          brandBtn?.animate([
+            { opacity: 0, transform: 'scale(0.95) translateY(10px)' },
+            { opacity: 1, transform: 'scale(1) translateY(0)' }
+          ], { duration: 380, easing: easeOutCubic, fill: 'forwards' });
+        }, 880);
+
+        // 6. Link columns staggered 90ms apart
+        linkCols.forEach((col, idx) => {
+          setTimeout(() => {
+            col.animate([
+              { opacity: 0, transform: 'translateY(16px)' },
+              { opacity: 1, transform: 'translateY(0)' }
+            ], { duration: 400, easing: easeOutCubic, fill: 'forwards' });
+          }, 980 + (idx * 90));
+        });
+
+        // 7. Bottom row fades in last
+        setTimeout(() => {
+          bottomRow?.animate([
+            { opacity: 0 },
+            { opacity: 1 }
+          ], { duration: 400, easing: 'ease', fill: 'forwards' });
+        }, 1380);
+      };
+
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(runSequence);
+      } else {
+        window.addEventListener('load', runSequence);
+      }
+    })();
+  </script>
+</body>
+</html>

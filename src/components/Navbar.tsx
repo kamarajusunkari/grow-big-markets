@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Sun, Moon, Menu, X, ArrowUpRight, Grid } from 'lucide-react';
+import growBigPrimary from '../assets/Growbig Primary.png';
 
 interface NavbarProps {
   onOpenBooking: () => void;
@@ -13,9 +14,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, theme, onToggleTh
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      // Reveal fixed navbar smoothly once scrolled past the full-screen hero section
+      setScrolled(window.scrollY > window.innerHeight * 0.7);
     };
-    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -27,18 +30,20 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, theme, onToggleTh
         left: 0,
         right: 0,
         zIndex: 950,
-        transition: 'all 0.3s ease',
-        background: scrolled ? 'rgba(255, 255, 255, 0.95)' : '#ffffff',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
-        borderBottom: '1px solid rgba(15, 23, 42, 0.08)',
-        padding: '0.75rem 0',
+        transition: 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease, border-color 0.3s ease',
+        transform: scrolled ? 'translateY(0)' : 'translateY(-105%)',
+        background: theme === 'dark' ? 'rgba(10, 22, 44, 0.88)' : 'rgba(255, 255, 255, 0.92)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        borderBottom: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid rgba(15, 23, 42, 0.08)',
+        padding: '0.85rem 0',
       }}
+      className="navbar-header"
     >
       <div
         style={{
           width: '100%',
-          maxWidth: '1440px',
+          maxWidth: '1360px',
           margin: '0 auto',
           padding: '0 2rem',
           display: 'flex',
@@ -46,29 +51,28 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, theme, onToggleTh
           justifyContent: 'space-between',
         }}
       >
-        {/* Brand Logo */}
-        <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}>
-          <div
+        {/* Brand Logo Container */}
+        <a
+          href="#hero"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            textDecoration: 'none',
+            transition: 'opacity 0.2s ease',
+          }}
+          className="hover:opacity-80"
+          title="Grow Big Marketers"
+        >
+          <img
+            src={growBigPrimary}
+            alt="Grow Big Marketers Logo"
             style={{
-              background: '#ffffff',
-              padding: '6px 14px',
-              borderRadius: '12px',
-              border: '1px solid rgba(15, 23, 42, 0.08)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              height: '46px',
+              width: 'auto',
+              objectFit: 'contain',
+              display: 'block',
             }}
-          >
-            <img
-              src="/d52ab5cc-5257-47d0-a3c2-2478d0403f2b.jpg"
-              alt="Grow Big Marketers Logo"
-              style={{
-                height: '32px',
-                width: 'auto',
-                objectFit: 'contain',
-              }}
-            />
-          </div>
+          />
         </a>
 
         {/* Center Navigation Links */}
@@ -80,15 +84,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, theme, onToggleTh
           }}
           className="desktop-nav"
         >
-          <a href="#hero" className="nav-link">Home</a>
-          <a href="#services" className="nav-link">Services</a>
-          <a href="#process" className="nav-link">Our Process</a>
-          <a href="#industries" className="nav-link">Industries</a>
-          <a href="#portfolio" className="nav-link">Portfolio</a>
-          <a href="#faq" className="nav-link">Contact</a>
+          <a href="#hero" className={`nav-link ${theme === 'dark' ? 'text-white/80 hover:text-[#fdcf09]' : 'text-slate-700 hover:text-[#3d6ab3]'}`}>Home</a>
+          <a href="#services" className={`nav-link ${theme === 'dark' ? 'text-white/80 hover:text-[#fdcf09]' : 'text-slate-700 hover:text-[#3d6ab3]'}`}>Services</a>
+          <a href="#process" className={`nav-link ${theme === 'dark' ? 'text-white/80 hover:text-[#fdcf09]' : 'text-slate-700 hover:text-[#3d6ab3]'}`}>Our Process</a>
+          <a href="#industries" className={`nav-link ${theme === 'dark' ? 'text-white/80 hover:text-[#fdcf09]' : 'text-slate-700 hover:text-[#3d6ab3]'}`}>Industries</a>
+          <a href="#portfolio" className={`nav-link ${theme === 'dark' ? 'text-white/80 hover:text-[#fdcf09]' : 'text-slate-700 hover:text-[#3d6ab3]'}`}>Portfolio</a>
+          <a href="#faq" className={`nav-link ${theme === 'dark' ? 'text-white/80 hover:text-[#fdcf09]' : 'text-slate-700 hover:text-[#3d6ab3]'}`}>Contact</a>
         </nav>
 
-        {/* Action Controls - Placed in Header with Hero Lime Green Color (#84cc16) */}
+        {/* Action Controls */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           {/* Theme Toggle Button */}
           <button
@@ -98,9 +102,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, theme, onToggleTh
               width: '40px',
               height: '40px',
               borderRadius: '50%',
-              background: '#f1f5f9',
-              border: '1px solid rgba(15, 23, 42, 0.08)',
-              color: '#0f172a',
+              background: theme === 'dark' ? 'rgba(255, 255, 255, 0.08)' : '#f1f5f9',
+              border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid rgba(15, 23, 42, 0.08)',
+              color: theme === 'dark' ? '#ffffff' : '#0f172a',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
@@ -108,48 +112,45 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, theme, onToggleTh
               transition: 'all 0.2s ease',
             }}
           >
-            {theme === 'dark' ? <Sun size={19} color="#84cc16" /> : <Moon size={19} color="#2563eb" />}
+            {theme === 'dark' ? <Sun size={19} color="#fdcf09" /> : <Moon size={19} color="#3d6ab3" />}
           </button>
 
-          {/* Header Contact Container (#3E6AB3) containing Contact Button (#FDD00B) & Grid Icon */}
+          {/* Contact Container */}
           <div
             style={{
-              background: '#3E6AB3', // Royal Blue Background (#3E6AB3)
+              background: '#3d6ab3',
               padding: '0.4rem 0.65rem',
-              borderRadius: 'var(--radius-full)',
+              borderRadius: '9999px',
               display: 'flex',
               alignItems: 'center',
               gap: '0.6rem',
-              boxShadow: '0 6px 20px rgba(62, 106, 179, 0.35)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
+              boxShadow: '0 6px 20px rgba(61, 106, 179, 0.45)',
+              border: '1px solid rgba(255, 255, 255, 0.25)',
             }}
             className="desktop-cta"
           >
-            {/* Contact Button in Sunburst Yellow Gold (#FDD00B) */}
             <button
               onClick={onOpenBooking}
               style={{
-                borderRadius: 'var(--radius-full)',
+                borderRadius: '9999px',
                 padding: '0.6rem 1.4rem',
                 fontSize: '0.875rem',
-                fontWeight: 900,
-                fontFamily: 'var(--font-heading)',
+                fontWeight: 800,
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',
-                background: '#FDD00B', // Sunburst Yellow Gold (#FDD00B)
+                background: '#fdcf09',
                 color: '#0f172a',
                 border: 'none',
                 cursor: 'pointer',
-                boxShadow: '0 4px 15px rgba(253, 208, 11, 0.4)',
+                boxShadow: '0 4px 15px rgba(253, 207, 9, 0.4)',
                 transition: 'all 0.25s ease',
               }}
-              className="navbar-contact-btn"
+              className="navbar-contact-btn hover:brightness-105 active:scale-95"
             >
               Contact Now <ArrowUpRight size={16} color="#0f172a" />
             </button>
 
-            {/* Grid App Icon */}
             <div
               style={{
                 width: '36px',
@@ -164,6 +165,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, theme, onToggleTh
                 transition: 'all 0.2s ease',
               }}
               onClick={onOpenBooking}
+              className="hover:bg-white/30"
+              title="Open Services Menu"
             >
               <Grid size={18} />
             </div>
@@ -174,14 +177,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, theme, onToggleTh
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="mobile-toggle"
             style={{
-              background: 'none',
-              border: 'none',
-              color: '#0f172a',
+              background: 'rgba(255, 255, 255, 0.08)',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              color: theme === 'dark' ? '#ffffff' : '#0f172a',
               cursor: 'pointer',
               padding: '0.5rem',
+              borderRadius: '10px',
             }}
+            aria-label="Toggle navigation menu"
           >
-            {mobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
       </div>
@@ -194,13 +199,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, theme, onToggleTh
             top: '100%',
             left: 0,
             right: 0,
-            background: '#ffffff',
-            borderBottom: '1px solid rgba(15, 23, 42, 0.08)',
+            background: theme === 'dark' ? 'rgba(10, 22, 44, 0.96)' : 'rgba(255, 255, 255, 0.98)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
             padding: '1.5rem',
             display: 'flex',
             flexDirection: 'column',
             gap: '1rem',
-            boxShadow: 'var(--shadow-md)',
+            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)',
           }}
         >
           <a href="#hero" onClick={() => setMobileMenuOpen(false)} className="nav-link-mobile">Home</a>
@@ -214,8 +221,23 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, theme, onToggleTh
               setMobileMenuOpen(false);
               onOpenBooking();
             }}
-            className="btn btn-dark"
-            style={{ width: '100%', marginTop: '0.5rem', background: '#84cc16', color: '#0f172a' }}
+            style={{
+              width: '100%',
+              marginTop: '0.5rem',
+              background: '#fdcf09',
+              color: '#0f172a',
+              borderRadius: '9999px',
+              padding: '0.75rem',
+              fontWeight: 800,
+              fontSize: '0.95rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
+              border: 'none',
+              cursor: 'pointer',
+              boxShadow: '0 4px 15px rgba(253, 207, 9, 0.35)',
+            }}
           >
             Contact Now <ArrowUpRight size={17} />
           </button>
@@ -224,22 +246,21 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, theme, onToggleTh
 
       <style>{`
         .nav-link {
-          color: #334155;
           text-decoration: none;
-          font-weight: 600;
+          font-weight: 500;
           font-size: 0.95rem;
-          transition: color 0.2s ease;
-        }
-        .nav-link:hover {
-          color: #84cc16;
+          transition: all 0.2s ease;
+          position: relative;
+          padding: 0.25rem 0;
         }
         .nav-link-mobile {
-          color: #0f172a;
+          color: inherit;
           text-decoration: none;
           font-size: 1.1rem;
           font-weight: 600;
           padding: 0.5rem 0;
           border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+          transition: color 0.2s ease;
         }
         .mobile-toggle {
           display: none;
@@ -256,3 +277,5 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, theme, onToggleTh
     </header>
   );
 };
+
+export default Navbar;

@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grow Big Marketers — Performance Marketing Agency Footer</title>
+  <link rel="icon" type="image/png" href="Growbig blue.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #ffffff;
+      padding: 48px 24px;
+      font-family: 'DM Sans', sans-serif;
+      color: #2d3148;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .footer-section {
+      width: 100%;
+      position: relative;
+    }
+
+    .footer-wrapper {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 20px;
+      align-items: stretch;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* =========================================================================
+       LEFT CARD (Video Background, Logo, Tagline, Socials)
+       ========================================================================= */
+    .footer-left {
+      position: relative;
+      min-height: 340px;
+      border-radius: 28px;
+      padding: 32px;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(21, 76, 189, 0.25);
+      background-color: #1e4fc0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .footer-left-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .footer-logo {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+      text-decoration: none;
+    }
+
+    .footer-logo-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1.5px solid rgba(255, 255, 255, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      overflow: hidden;
+    }
+
+    .footer-logo-mark img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .footer-logo-primary-img {
+      height: 28px;
+      max-height: 32px;
+      width: auto;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+      opacity: 0.95;
+    }
+
+    .footer-tagline-container {
+      margin-top: auto;
+      margin-bottom: 28px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-tagline {
+      font-size: 19px;
+      font-weight: 400;
+      color: #ffffff;
+      line-height: 1.45;
+    }
+
+    .footer-tagline span {
+      color: rgba(255, 255, 255, 0.65);
+    }
+
+    .footer-social-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-social-label {
+      font-family: 'Caveat', cursive;
+      font-size: 17px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+      letter-spacing: 0.3px;
+    }
+
+    .footer-social-icons {
+      display: flex;
+      flex-direction: row;
+      gap: 7px;
+    }
+
+    .social-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
+      background: #0e1014;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35), 0 2px 6px rgba(0, 0, 0, 0.2);
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+    }
+
+    .social-icon svg {
+      width: 15px;
+      height: 15px;
+      fill: #ffffff;
+    }
+
+    .social-icon:hover {
+      background: #000000;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45), 0 3px 8px rgba(0, 0, 0, 0.25);
+    }
+
+    /* =========================================================================
+       RIGHT CARD (Light Gray, Lucky Graphic, Navigation, Mini CTA)
+       ========================================================================= */
+    .footer-right {
+      background: #f0f1f5;
+      border-radius: 28px;
+      padding: 40px;
+      overflow: visible;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    /* Floating "Feeling lucky?" / "Ready to scale?" badge */
+    .footer-lucky-graphic {
+      position: absolute;
+      top: -36px;
+      right: 40px;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .lucky-cube {
+      width: 96px;
+      height: 96px;
+      border-radius: 22px;
+      transform: rotate(-10deg);
+      background: linear-gradient(135deg, #5b9ffb 0%, #1e5dd7 55%, #1448be 100%);
+      box-shadow:
+        inset 3px 3px 8px rgba(255, 255, 255, 0.35),
+        inset -3px -3px 12px rgba(0, 0, 0, 0.18),
+        8px 14px 28px rgba(20, 72, 200, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lucky-cube-mark {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 42px;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -0.04em;
+      transform: rotate(10deg);
+      text-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
+      line-height: 1;
+    }
+
+    .lucky-text-row {
+      display: flex;
+      flex-direction: row;
+      gap: 6px;
+      align-items: center;
+      transform: rotate(-4deg);
+      margin-top: 4px;
+    }
+
+    .lucky-arrow {
+      width: 22px;
+      height: 22px;
+      color: #9ca3af;
+    }
+
+    .lucky-arrow path {
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .lucky-text {
+      font-family: 'Caveat', cursive;
+      font-size: 20px;
+      font-weight: 600;
+      color: #9ca3af;
+      white-space: nowrap;
+    }
+
+    /* Top Navigation Columns */
+    .footer-right-top {
+      padding-top: 8px;
+    }
+
+    .footer-nav-cols {
+      display: flex;
+      flex-direction: row;
+      gap: 72px;
+    }
+
+    .footer-col-title {
+      font-family: 'Caveat', cursive;
+      font-size: 24px;
+      font-weight: 600;
+      font-style: italic;
+      color: #9ca3af;
+      margin-bottom: 18px;
+    }
+
+    .footer-col a {
+      display: block;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 14px;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .footer-col a:hover {
+      color: #1f65d6;
+    }
+
+    /* Bottom Copyright & Mini CTA */
+    .footer-bottom {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-top: 48px;
+      gap: 20px;
+    }
+
+    .footer-copyright {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: #9ca3af;
+      line-height: 1.6;
+    }
+
+    .footer-contact-links {
+      margin-top: 6px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .footer-contact-links a {
+      color: #111827;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .footer-contact-links a:hover {
+      color: #1f65d6;
+    }
+
+    .footer-cta-mini {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .footer-cta-mini h4 {
+      font-size: 15px;
+      font-weight: 400;
+      color: #6b7280;
+      line-height: 1.45;
+    }
+
+    .footer-cta-mini h4 strong {
+      display: block;
+      font-size: 19px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .footer-subscribe-row {
+      display: flex;
+      flex-direction: row;
+      width: 310px;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 5px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    }
+
+    .footer-subscribe-row input {
+      flex: 1;
+      padding: 11px 14px;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13.5px;
+      color: #111827;
+    }
+
+    .footer-subscribe-row input::placeholder {
+      color: #9ca3af;
+    }
+
+    .footer-subscribe-row button {
+      padding: 11px 22px;
+      background: #111214;
+      color: #ffffff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13.5px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28), 0 2px 8px rgba(0, 0, 0, 0.15);
+      transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+    }
+
+    .footer-subscribe-row button:hover {
+      background: #000000;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 3px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* =========================================================================
+       WATERMARK (Scaled Fluidly to Match Container Edges)
+       ========================================================================= */
+    .footer-watermark {
+      max-width: 1400px;
+      margin: -60px auto 0;
+      pointer-events: none;
+      user-select: none;
+      position: relative;
+      z-index: 0;
+      line-height: 0;
+    }
+
+    .footer-watermark svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+
+    .footer-watermark text {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      fill: rgba(0, 0, 0, 0.04);
+    }
+
+    /* =========================================================================
+       RESPONSIVE BREAKPOINTS
+       ========================================================================= */
+    @media (max-width: 860px) {
+      .footer-wrapper {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-left {
+        min-height: auto;
+        gap: 40px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      body {
+        padding: 32px 16px;
+      }
+
+      .footer-right {
+        padding: 24px;
+      }
+
+      .footer-nav-cols {
+        gap: 40px;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 24px;
+      }
+
+      .footer-subscribe-row {
+        width: 100%;
+      }
+
+      .footer-lucky-graphic {
+        right: 12px;
+        top: -28px;
+      }
+
+      .lucky-cube {
+        width: 72px;
+        height: 72px;
+      }
+
+      .lucky-cube-mark {
+        font-size: 32px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="footer-section">
+    <div class="footer-wrapper">
+
+      <!-- LEFT CARD: Video Background -->
+      <div class="footer-left">
+        <video class="footer-left-video" autoplay muted loop playsinline preload="auto">
+          <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260503_104800_bc43ae09-f494-43e3-97d7-2f8c1692cfd7.mp4" type="video/mp4" />
+        </video>
+
+        <!-- Logo -->
+        <a href="#hero" class="footer-logo">
+          <div class="footer-logo-mark">
+            <img src="Growbig blue.png" alt="Grow Big Icon" />
+          </div>
+          <img src="Growbig Primary.png" alt="Grow Big Marketers" class="footer-logo-primary-img" />
+        </a>
+
+        <!-- Tagline -->
+        <div class="footer-tagline-container">
+          <p class="footer-tagline">
+            High-performance marketing,<br>
+            <span>engineered to scale.</span>
+          </p>
+        </div>
+
+        <!-- Social Row -->
+        <div class="footer-social-row">
+          <div class="footer-social-label">Stay in touch!</div>
+          <div class="footer-social-icons">
+            <!-- LinkedIn -->
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24">
+                <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
+              </svg>
+            </a>
+
+            <!-- X (Twitter) -->
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="X">
+              <svg viewBox="0 0 24 24">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+              </svg>
+            </a>
+
+            <!-- Instagram -->
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Instagram">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+              </svg>
+            </a>
+
+            <!-- YouTube -->
+            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="YouTube">
+              <svg viewBox="0 0 24 24">
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT CARD: Light Gray, Lucky Graphic, Navigation, Mini CTA -->
+      <div class="footer-right">
+
+        <!-- Floating "Feeling lucky?" / "Ready to scale?" badge -->
+        <div class="footer-lucky-graphic">
+          <div class="lucky-cube">
+            <span class="lucky-cube-mark">G</span>
+          </div>
+          <div class="lucky-text-row">
+            <svg class="lucky-arrow" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 20 C 6 14, 10 9, 18 5" />
+              <path d="M18 5 L 12 5" />
+              <path d="M18 5 L 18 11" />
+            </svg>
+            <span class="lucky-text">Ready to scale?</span>
+          </div>
+        </div>
+
+        <!-- Top: Navigation Columns -->
+        <div class="footer-right-top">
+          <div class="footer-nav-cols">
+            <!-- Services Column -->
+            <div class="footer-col">
+              <div class="footer-col-title">Services</div>
+              <a href="#services">Performance Marketing (PPC)</a>
+              <a href="#services">Search Engine Optimization (SEO)</a>
+              <a href="#services">Social Media & Reels Growth</a>
+              <a href="#services">Conversion Rate Optimization (CRO)</a>
+              <a href="#services">Lead Gen & Sales Funnels</a>
+            </div>
+
+            <!-- Company Column -->
+            <div class="footer-col">
+              <div class="footer-col-title">Company</div>
+              <a href="#hero">About Grow Big</a>
+              <a href="#process">Our Process</a>
+              <a href="#industries">Industries Served</a>
+              <a href="#portfolio">Client Portfolio</a>
+              <a href="#faq">Contact & Free Audit</a>
+              <a href="#">Privacy Policy</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom: Copyright & Mini CTA -->
+        <div class="footer-bottom">
+          <div class="footer-copyright">
+            © 2025 Grow Big Marketers. All rights reserved.
+            <div class="footer-contact-links">
+              <a href="tel:+919493898990">+91 9493898990</a>
+              <span>•</span>
+              <a href="mailto:info@growbigmarketers.com">info@growbigmarketers.com</a>
+            </div>
+          </div>
+
+          <div class="footer-cta-mini">
+            <h4>
+              Markets move fast.<br>
+              <strong>Scale faster with Grow Big.</strong>
+            </h4>
+            <div class="footer-subscribe-row">
+              <input type="email" placeholder="Enter email address" required />
+              <button type="button">Subscribe</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Massive Fluid SVG Watermark -->
+    <div class="footer-watermark" aria-hidden="true">
+      <svg id="watermarkSvg" viewBox="0 0 1000 200" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+        <text id="watermarkText" x="500" y="150" text-anchor="middle" font-size="220">Grow Big</text>
+      </svg>
+    </div>
+
+    <!-- ViewBox fitWatermark script -->
+    <script>
+      function fitWatermark() {
+        const svg = document.getElementById('watermarkSvg');
+        const text = document.getElementById('watermarkText');
+        if (!svg || !text) return;
+        try {
+          const bbox = text.getBBox();
+          svg.setAttribute('viewBox',
+            `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`);
+        } catch (e) {}
+      }
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(fitWatermark);
+      } else {
+        window.addEventListener('load', fitWatermark);
+      }
+      window.addEventListener('resize', fitWatermark);
+    </script>
+  </section>
+
+</body>
+</html>

@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grow Big Marketers — in your terms</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/Growbig blue.png">
+  
+  <!-- Inter Tight Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       RESET & BASE SCALING
+       ========================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      /* 1440x960 reference unit */
+      --u: min(100vw / 1440, 100vh / 960);
+
+      /* Colors */
+      --ink: #0D0D0C;
+      --ink-secondary: rgba(13, 13, 12, 0.56);
+      --ink-hint: rgba(13, 13, 12, 0.42);
+      --cream: #FBF6EF;
+
+      /* Word Icon Tints */
+      --tint-message: #E9C22E;
+      --tint-browse: #F2772F;
+      --tint-transact: #3FB874;
+      --tint-build: #C564C4;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: var(--cream);
+      color: var(--ink);
+      font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      user-select: none;
+    }
+
+    /* Outer Viewport Wrapper */
+    .viewport {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background-color: var(--cream);
+    }
+
+    /* ==========================================================================
+       HERO PANEL (TOP 75%)
+       ========================================================================== */
+    .hero-panel {
+      position: relative;
+      width: 100%;
+      height: 75vh;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    /* Stacked Gradient Layers */
+    .gradient-stack {
+      position: absolute;
+      inset: -5%;
+      width: 110%;
+      height: 110%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .gradient-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      will-change: opacity, transform;
+      transform-origin: center center;
+    }
+
+    /* 1. Scale (Peach & Apricot) */
+    .layer-browse {
+      background:
+        radial-gradient(circle 52vw at 86% 76%, rgba(249, 150, 84, 0.88) 0%, rgba(249, 150, 84, 0) 65%),
+        radial-gradient(circle 46vw at 32% 105%, rgba(249, 150, 84, 0.45) 0%, rgba(249, 150, 84, 0) 55%),
+        linear-gradient(180deg, #F8DCC7 0%, #F9CBA9 100%);
+    }
+
+    /* 2. Convert (Warm Sage Mint) */
+    .layer-transact {
+      background:
+        radial-gradient(circle 52vw at 86% 76%, rgba(150, 206, 150, 0.88) 0%, rgba(150, 206, 150, 0) 65%),
+        radial-gradient(circle 46vw at 32% 105%, rgba(150, 206, 150, 0.45) 0%, rgba(150, 206, 150, 0) 55%),
+        linear-gradient(180deg, #E9EBE0 0%, #DFE9D4 100%);
+    }
+
+    /* 3. Engage (Lemon Cream) */
+    .layer-message {
+      background:
+        radial-gradient(circle 52vw at 86% 76%, rgba(246, 222, 104, 0.88) 0%, rgba(246, 222, 104, 0) 65%),
+        radial-gradient(circle 46vw at 32% 105%, rgba(246, 222, 104, 0.45) 0%, rgba(246, 222, 104, 0) 55%),
+        linear-gradient(180deg, #F2ECDF 0%, #F4EBC6 100%);
+    }
+
+    /* 4. Rank (Rose Lilac) */
+    .layer-build {
+      background:
+        radial-gradient(circle 52vw at 86% 76%, rgba(222, 150, 200, 0.88) 0%, rgba(222, 150, 200, 0) 65%),
+        radial-gradient(circle 46vw at 32% 105%, rgba(222, 150, 200, 0.45) 0%, rgba(222, 150, 200, 0) 55%),
+        linear-gradient(180deg, #F0E4E6 0%, #ECD6E2 100%);
+    }
+
+    /* SVG Fine Fractal-Noise Grain */
+    .grain-overlay {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0.18;
+      mix-blend-mode: multiply;
+      z-index: 1;
+    }
+
+    /* ==========================================================================
+       NAVIGATION BAR (80u tall) - WITH OUR LOGO & MENU
+       ========================================================================== */
+    .nav {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: calc(80 * var(--u));
+      padding: 0 calc(112 * var(--u));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(13, 13, 12, 0.08);
+      z-index: 10;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .nav-left:hover {
+      opacity: 0.8;
+    }
+
+    .nav-logo-img {
+      height: calc(52 * var(--u));
+      max-height: 60px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: calc(38 * var(--u));
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: calc(32 * var(--u));
+    }
+
+    .nav-item {
+      display: inline-flex;
+      align-items: center;
+      gap: calc(6 * var(--u));
+      font-size: calc(17 * var(--u));
+      font-weight: 500;
+      color: var(--ink);
+      text-decoration: none;
+      cursor: pointer;
+      transition: opacity 0.2s ease, transform 0.15s ease;
+    }
+
+    .nav-item:hover {
+      opacity: 0.65;
+    }
+
+    .nav-chevron {
+      width: calc(8 * var(--u));
+      height: calc(8 * var(--u));
+      stroke: var(--ink);
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      transform: translateY(calc(1 * var(--u)));
+    }
+
+    .btn-contact {
+      height: calc(48 * var(--u));
+      padding: 0 calc(22 * var(--u));
+      border: 1.4px solid var(--ink);
+      border-radius: calc(8 * var(--u));
+      background: transparent;
+      color: var(--ink);
+      font-size: calc(16 * var(--u));
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background-color 0.22s ease, color 0.22s ease, transform 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: calc(6 * var(--u));
+      text-decoration: none;
+    }
+
+    .btn-contact:hover {
+      background-color: var(--ink);
+      color: var(--cream);
+      transform: translateY(-1px);
+    }
+
+    .nav-arrow-icon {
+      width: calc(16 * var(--u));
+      height: calc(16 * var(--u));
+    }
+
+    /* ==========================================================================
+       HEADLINE SECTION
+       ========================================================================== */
+    .hero-content {
+      position: absolute;
+      left: calc(112 * var(--u));
+      top: calc(190 * var(--u));
+      z-index: 5;
+    }
+
+    .headline {
+      font-size: calc(172 * var(--u));
+      line-height: 0.86;
+      font-weight: 500;
+      letter-spacing: -0.032em;
+      color: var(--ink);
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Cycling Slot: Icon + Word */
+    .cycle-slot {
+      display: flex;
+      align-items: center;
+      gap: calc(28 * var(--u));
+      white-space: nowrap;
+      height: 1em;
+    }
+
+    /* Icon Tint Container */
+    .icon-wrapper {
+      position: relative;
+      width: 1.02em;
+      height: 1.02em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      isolation: isolate;
+      vertical-align: middle;
+      transform-origin: center center;
+    }
+
+    .icon-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: grayscale(1) brightness(1.1) contrast(1.08);
+      display: block;
+      pointer-events: none;
+    }
+
+    .icon-tint {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--tint-current, var(--tint-browse));
+      mix-blend-mode: color;
+      pointer-events: none;
+      mask-size: contain;
+      mask-position: center;
+      mask-repeat: no-repeat;
+      -webkit-mask-size: contain;
+      -webkit-mask-position: center;
+      -webkit-mask-repeat: no-repeat;
+    }
+
+    .word-text {
+      display: inline-block;
+      will-change: transform, opacity, filter;
+    }
+
+    .headline-fixed {
+      display: block;
+      white-space: nowrap;
+    }
+
+    /* ==========================================================================
+       HERO BOTTOM ROW (top: 578u) - MARKETING ACTION BUTTONS
+       ========================================================================== */
+    .hero-row {
+      position: absolute;
+      left: calc(112 * var(--u));
+      top: calc(578 * var(--u));
+      display: flex;
+      align-items: center;
+      gap: calc(48 * var(--u));
+      z-index: 5;
+    }
+
+    .store-buttons {
+      display: flex;
+      align-items: center;
+      gap: calc(14 * var(--u));
+    }
+
+    .store-btn {
+      height: calc(58 * var(--u));
+      padding: 0 calc(24 * var(--u));
+      border: 1.4px solid var(--ink);
+      border-radius: calc(10 * var(--u));
+      background: transparent;
+      color: var(--ink);
+      font-size: calc(17 * var(--u));
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: calc(8 * var(--u));
+      text-decoration: none;
+      transition: background-color 0.25s cubic-bezier(0.2, 0, 0, 1),
+                  color 0.25s cubic-bezier(0.2, 0, 0, 1),
+                  transform 0.15s ease,
+                  box-shadow 0.2s ease;
+    }
+
+    .store-btn:hover {
+      background-color: var(--ink);
+      color: var(--cream);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(13, 13, 12, 0.12);
+    }
+
+    .store-btn.flash-active {
+      background-color: var(--ink) !important;
+      color: var(--cream) !important;
+      transform: translateY(-2px);
+    }
+
+    .store-btn svg {
+      width: calc(18 * var(--u));
+      height: calc(18 * var(--u));
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: stroke 0.2s ease;
+    }
+
+    .hero-caption {
+      font-size: calc(18.5 * var(--u));
+      line-height: 1.38;
+      color: var(--ink-secondary);
+      font-weight: 400;
+      letter-spacing: -0.01em;
+    }
+
+    /* ==========================================================================
+       STATS STRIP (BOTTOM 25%) - MARKETING PERFORMANCE METRICS
+       ========================================================================== */
+    .stats-strip {
+      position: relative;
+      width: 100%;
+      height: 25vh;
+      background-color: var(--cream);
+      z-index: 4;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    /* S-Curve Notch */
+    .notch-wrapper {
+      position: absolute;
+      bottom: 100%;
+      left: 0;
+      width: 100%;
+      height: calc(62 * var(--u));
+      pointer-events: none;
+      line-height: 0;
+    }
+
+    .notch-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Scroll Hint placed on the raised shelf */
+    .scroll-hint {
+      position: absolute;
+      right: calc(112 * var(--u));
+      bottom: calc(18 * var(--u));
+      font-size: calc(15 * var(--u));
+      font-weight: 500;
+      color: var(--ink-hint);
+      letter-spacing: -0.01em;
+      pointer-events: auto;
+    }
+
+    /* Stats Content Bar */
+    .stats-content {
+      position: relative;
+      width: 100%;
+      padding: 0 calc(112 * var(--u)) calc(44 * var(--u)) calc(112 * var(--u));
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: calc(40 * var(--u));
+    }
+
+    .stats-lead {
+      font-size: calc(29 * var(--u));
+      font-weight: 500;
+      line-height: 1.15;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+      min-width: calc(240 * var(--u));
+    }
+
+    .stats-metrics {
+      display: flex;
+      align-items: flex-end;
+      gap: calc(64 * var(--u));
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      gap: calc(4 * var(--u));
+    }
+
+    .stat-num {
+      font-size: calc(54 * var(--u));
+      font-weight: 500;
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+    }
+
+    .stat-label {
+      font-size: calc(16.5 * var(--u));
+      color: var(--ink-secondary);
+      font-weight: 400;
+      letter-spacing: -0.01em;
+    }
+
+    /* Sprout Line-Art Icon */
+    .sprout-container {
+      display: flex;
+      align-items: flex-end;
+      padding-bottom: calc(6 * var(--u));
+    }
+
+    .sprout-svg {
+      width: calc(44 * var(--u));
+      height: calc(44 * var(--u));
+      stroke: var(--ink);
+      stroke-width: 1.6;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+
+    /* ==========================================================================
+       RESPONSIVE ADAPTATIONS (≤ 860px)
+       ========================================================================== */
+    @media (max-width: 1024px) {
+      .nav-links {
+        gap: 18px;
+      }
+      .nav-item {
+        font-size: 15px;
+      }
+    }
+
+    @media (max-width: 860px) {
+      :root {
+        --u: 1px;
+      }
+
+      html, body {
+        overflow-y: auto;
+        height: auto;
+      }
+
+      .viewport {
+        height: auto;
+        min-height: 100vh;
+      }
+
+      .hero-panel {
+        height: auto;
+        min-height: 580px;
+        padding-bottom: 60px;
+      }
+
+      .nav {
+        position: relative;
+        height: 70px;
+        padding: 0 20px;
+      }
+
+      .nav-links, .nav-right .btn-contact {
+        display: none;
+      }
+
+      .hero-content {
+        position: relative;
+        left: 0;
+        top: 0;
+        padding: 40px 20px 0 20px;
+      }
+
+      .headline {
+        font-size: clamp(52px, 15.5vw, 88px);
+        line-height: 0.92;
+      }
+
+      .cycle-slot {
+        gap: 16px;
+      }
+
+      .hero-row {
+        position: relative;
+        left: 0;
+        top: 0;
+        padding: 32px 20px 0 20px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+      }
+
+      .store-buttons {
+        flex-wrap: wrap;
+        width: 100%;
+        gap: 12px;
+      }
+
+      .store-btn {
+        height: 52px;
+        font-size: 16px;
+        flex: 1 1 160px;
+        justify-content: center;
+      }
+
+      .hero-caption {
+        font-size: 16px;
+        line-height: 1.45;
+      }
+
+      .stats-strip {
+        height: auto;
+        padding-top: 20px;
+      }
+
+      .notch-wrapper {
+        display: none;
+      }
+
+      .scroll-hint {
+        display: none;
+      }
+
+      .stats-content {
+        padding: 30px 20px 40px 20px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 32px;
+      }
+
+      .stats-lead {
+        font-size: 24px;
+      }
+
+      .stats-metrics {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px 20px;
+      }
+
+      .stat-num {
+        font-size: 42px;
+      }
+
+      .stat-label {
+        font-size: 14px;
+      }
+
+      .sprout-container {
+        align-self: flex-end;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hidden SVG Filter for Fractal Noise Grain -->
+  <svg class="grain-overlay" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <filter id="grain-filter">
+      <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="3" stitchTiles="stitch" />
+      <feColorMatrix type="matrix" values="0 0 0 0 0
+                                          0 0 0 0 0
+                                          0 0 0 0 0
+                                          0 0 0 0.18 0" />
+    </filter>
+    <rect width="100%" height="100%" filter="url(#grain-filter)" />
+  </svg>
+
+  <div class="viewport">
+    
+    <!-- =======================================================================
+         HERO PANEL (Top 75%)
+         ======================================================================= -->
+    <section class="hero-panel" id="heroPanel">
+      
+      <!-- Four Stacked Drifting Gradient Layers -->
+      <div class="gradient-stack" id="gradientStack">
+        <div class="gradient-layer layer-browse" id="layer0"></div>
+        <div class="gradient-layer layer-transact" id="layer1"></div>
+        <div class="gradient-layer layer-message" id="layer2"></div>
+        <div class="gradient-layer layer-build" id="layer3"></div>
+      </div>
+
+      <!-- Navigation Bar (80u) - With Our Brand Logo & Menu -->
+      <nav class="nav" aria-label="Main Navigation">
+        <!-- Left: Our Brand Logo -->
+        <a href="#hero" class="nav-left" title="Grow Big Marketers">
+          <img
+            src="/Growbig Primary.png"
+            alt="Grow Big Marketers Logo"
+            class="nav-logo-img"
+          />
+        </a>
+
+        <!-- Right: Our Menu Links + Contact CTA -->
+        <div class="nav-right">
+          <div class="nav-links">
+            <a href="#hero" class="nav-item">
+              Home
+            </a>
+            <a href="#services" class="nav-item">
+              Services
+              <svg class="nav-chevron" viewBox="0 0 8 5"><path d="M1 1l3 3 3-3"/></svg>
+            </a>
+            <a href="#process" class="nav-item">
+              Our Process
+              <svg class="nav-chevron" viewBox="0 0 8 5"><path d="M1 1l3 3 3-3"/></svg>
+            </a>
+            <a href="#industries" class="nav-item">
+              Industries
+              <svg class="nav-chevron" viewBox="0 0 8 5"><path d="M1 1l3 3 3-3"/></svg>
+            </a>
+            <a href="#portfolio" class="nav-item">
+              Portfolio
+              <svg class="nav-chevron" viewBox="0 0 8 5"><path d="M1 1l3 3 3-3"/></svg>
+            </a>
+            <a href="#faq" class="nav-item">
+              Contact
+              <svg class="nav-chevron" viewBox="0 0 8 5"><path d="M1 1l3 3 3-3"/></svg>
+            </a>
+          </div>
+
+          <a href="#faq" class="btn-contact">
+            Book a Call
+            <svg class="nav-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
+            </svg>
+          </a>
+        </div>
+      </nav>
+
+      <!-- Headline (left: 112u, top: 190u) -->
+      <div class="hero-content">
+        <h1 class="headline">
+          <div class="cycle-slot" id="cycleSlot">
+            <!-- 3D Icon with Hue Tint Overlay -->
+            <div class="icon-wrapper" id="iconWrapper">
+              <img id="iconImg" class="icon-img" alt="" src="" />
+              <div id="iconTint" class="icon-tint"></div>
+            </div>
+
+            <!-- Cycling Word -->
+            <span class="word-text" id="wordText">Scale</span>
+          </div>
+          
+          <span class="headline-fixed">in your terms</span>
+        </h1>
+      </div>
+
+      <!-- Hero Bottom Row (top: 578u) - Marketing Action Buttons -->
+      <div class="hero-row">
+        <div class="store-buttons">
+          <a href="#faq" class="store-btn" id="primaryBtn">
+            <span>Book Strategy Call</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
+            </svg>
+          </a>
+
+          <a href="#services" class="store-btn">
+            <span>Explore Services</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <polyline points="19 12 12 19 5 12"></polyline>
+            </svg>
+          </a>
+        </div>
+
+        <p class="hero-caption">
+          Grow Big Marketers accelerates revenue with data-driven SEO, high-ROI<br>
+          Google & Meta PPC ads, and full-funnel scaling strategies.
+        </p>
+      </div>
+
+    </section>
+
+    <!-- =======================================================================
+         STATS STRIP (Bottom 25%) - MARKETING PERFORMANCE METRICS
+         ======================================================================= -->
+    <footer class="stats-strip">
+      
+      <!-- S-Curve Notch Header -->
+      <div class="notch-wrapper">
+        <svg class="notch-svg" viewBox="0 0 1440 62" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0 62 H1062 C1092 62 1098 54 1116 34 C1138 9 1146 1 1178 1 H1440 V62 Z" fill="#FBF6EF" />
+        </svg>
+        <div class="scroll-hint">↓ Scroll to explore services</div>
+      </div>
+
+      <!-- Stats Metrics Content -->
+      <div class="stats-content">
+        <div class="stats-lead">
+          Revenue growth<br>engineered to scale
+        </div>
+
+        <div class="stats-metrics">
+          <div class="stat-item">
+            <span class="stat-num">150+</span>
+            <span class="stat-label">Brands Scaled</span>
+          </div>
+
+          <div class="stat-item">
+            <span class="stat-num">4.8x</span>
+            <span class="stat-label">Average ROAS on PPC</span>
+          </div>
+
+          <div class="stat-item">
+            <span class="stat-num">$25M+</span>
+            <span class="stat-label">Revenue Driven</span>
+          </div>
+        </div>
+
+        <!-- Sprout Line-Art Icon -->
+        <div class="sprout-container">
+          <svg class="sprout-svg" viewBox="0 0 44 44" aria-label="Organic Growth Icon">
+            <path d="M7 40 H37" />
+            <path d="M22 40 V18" />
+            <path d="M22 26 C22 26 12 24 12 14 C18 14 22 20 22 26 Z" />
+            <path d="M22 20 C22 20 32 18 32 8 C26 8 22 14 22 20 Z" />
+          </svg>
+        </div>
+      </div>
+
+    </footer>
+
+  </div>
+
+  <!-- =========================================================================
+       ONE-CLOCK MOTION & RENDER DRIVER
+       ========================================================================= -->
+  <script>
+    (function () {
+      'use strict';
+
+      // 4 Marketing Cycles Configuration
+      const SLOTS = [
+        {
+          word: 'Scale',
+          icon: 'https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/4d952211-0474-48cc-af48-58f68b3b7525.webp',
+          tint: '#F2772F'
+        },
+        {
+          word: 'Convert',
+          icon: 'https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/e2e91fca-5b3f-4e0e-a437-8a581592e407.webp',
+          tint: '#3FB874'
+        },
+        {
+          word: 'Engage',
+          icon: 'https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/83de7c35-dd91-4e56-bfb8-0ffafc83d0e0.webp',
+          tint: '#E9C22E'
+        },
+        {
+          word: 'Rank',
+          icon: 'https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/6b32bb47-4ad6-4938-a637-c997b373c68b.webp',
+          tint: '#C564C4'
+        }
+      ];
+
+      // Preload all 4 3D icons to eliminate flicker
+      SLOTS.forEach(slot => {
+        const img = new Image();
+        img.src = slot.icon;
+      });
+
+      // DOM Elements
+      const iconWrapper = document.getElementById('iconWrapper');
+      const iconImg = document.getElementById('iconImg');
+      const iconTint = document.getElementById('iconTint');
+      const wordText = document.getElementById('wordText');
+      const primaryBtn = document.getElementById('primaryBtn');
+      const layers = [
+        document.getElementById('layer0'),
+        document.getElementById('layer1'),
+        document.getElementById('layer2'),
+        document.getElementById('layer3')
+      ];
+
+      // Master Clock: Single 7.0s Web Animation
+      const TOTAL_PERIOD = 7000;
+      const SLOT_DURATION = 1750;
+      const CROSSFADE_WINDOW = 770;
+
+      const clockAnim = document.documentElement.animate(
+        [{ opacity: 1 }, { opacity: 1 }],
+        { duration: TOTAL_PERIOD, iterations: Infinity }
+      );
+
+      let currentActiveSlotIndex = -1;
+
+      function easeOutCubic(x) {
+        return 1 - Math.pow(1 - x, 3);
+      }
+
+      function easeInCubic(x) {
+        return x * x * x;
+      }
+
+      function smoothStep(x) {
+        const c = Math.max(0, Math.min(1, x));
+        return c * c * (3 - 2 * c);
+      }
+
+      function renderFrame() {
+        const rawTime = clockAnim.currentTime ? Number(clockAnim.currentTime) : 0;
+        const tGlobal = rawTime % TOTAL_PERIOD;
+
+        const slotIndex = Math.floor(tGlobal / SLOT_DURATION);
+        const tLocal = tGlobal % SLOT_DURATION;
+        const currentSlot = SLOTS[slotIndex];
+
+        if (currentActiveSlotIndex !== slotIndex) {
+          currentActiveSlotIndex = slotIndex;
+          wordText.textContent = currentSlot.word;
+          iconImg.src = currentSlot.icon;
+          iconTint.style.setProperty('--tint-current', currentSlot.tint);
+          iconTint.style.maskImage = `url("${currentSlot.icon}")`;
+          iconTint.style.webkitMaskImage = `url("${currentSlot.icon}")`;
+        }
+
+        let wordOpacity = 1;
+        let wordY = 0;
+        let wordBlur = 0;
+        let wordScale = 1;
+
+        let iconOpacity = 1;
+        let iconScale = 1;
+        let iconRot = 0;
+
+        if (tLocal < 500) {
+          const p = easeOutCubic(tLocal / 500);
+          wordOpacity = p;
+          wordY = (1 - p) * 0.32;
+          wordBlur = (1 - p) * 10;
+          wordScale = 0.96 + 0.04 * p;
+
+          if (tLocal < 60) {
+            iconOpacity = 0;
+            iconScale = 0.7;
+            iconRot = -14;
+          } else {
+            const pIcon = easeOutCubic((tLocal - 60) / 440);
+            iconOpacity = pIcon;
+            iconScale = 0.7 + 0.3 * pIcon;
+            iconRot = -14 * (1 - pIcon);
+          }
+        } else if (tLocal >= 1330) {
+          const pLeave = easeInCubic((tLocal - 1330) / 420);
+          wordOpacity = 1 - pLeave;
+          wordY = -0.16 * pLeave;
+          wordBlur = pLeave * 8;
+          wordScale = 1;
+
+          iconOpacity = 1 - pLeave;
+          iconScale = 1;
+          iconRot = 0;
+        }
+
+        const floatY = Math.sin((tGlobal / 2800) * 2 * Math.PI) * 0.028;
+        const floatRot = Math.cos((tGlobal / 3200) * 2 * Math.PI) * 3;
+
+        wordText.style.opacity = wordOpacity.toFixed(4);
+        wordText.style.transform = `translate3d(0, ${wordY.toFixed(4)}em, 0) scale(${wordScale.toFixed(4)})`;
+        wordText.style.filter = wordBlur > 0.05 ? `blur(${wordBlur.toFixed(2)}px)` : 'none';
+
+        const totalIconY = wordY + floatY;
+        const totalIconRot = iconRot + floatRot;
+        iconWrapper.style.opacity = iconOpacity.toFixed(4);
+        iconWrapper.style.transform = `translate3d(0, ${totalIconY.toFixed(4)}em, 0) rotate(${totalIconRot.toFixed(2)}deg) scale(${iconScale.toFixed(4)})`;
+        iconWrapper.style.filter = wordBlur > 0.05 ? `blur(${wordBlur.toFixed(2)}px)` : 'none';
+
+        const halfWindow = CROSSFADE_WINDOW / 2;
+        const opacities = [0, 0, 0, 0];
+
+        if (tLocal < halfWindow) {
+          const prevSlot = (slotIndex - 1 + 4) % 4;
+          const progress = smoothStep((tLocal + halfWindow) / CROSSFADE_WINDOW);
+          opacities[prevSlot] = 1 - progress;
+          opacities[slotIndex] = progress;
+        } else if (tLocal > SLOT_DURATION - halfWindow) {
+          const nextSlot = (slotIndex + 1) % 4;
+          const progress = smoothStep((tLocal - (SLOT_DURATION - halfWindow)) / CROSSFADE_WINDOW);
+          opacities[slotIndex] = 1 - progress;
+          opacities[nextSlot] = progress;
+        } else {
+          opacities[slotIndex] = 1;
+        }
+
+        for (let i = 0; i < 4; i++) {
+          const phase = (i * Math.PI) / 2;
+          const driftX = Math.sin((tGlobal / 6000) * 2 * Math.PI + phase) * 2.2;
+          const driftY = Math.cos((tGlobal / 6000) * 2 * Math.PI + phase) * 1.6;
+
+          layers[i].style.opacity = opacities[i].toFixed(4);
+          layers[i].style.transform = `scale(1.08) translate3d(${driftX.toFixed(2)}%, ${driftY.toFixed(2)}%, 0)`;
+        }
+
+        const isHoldFlash = tGlobal >= 5780 && tGlobal <= 6460;
+        if (primaryBtn) {
+          if (isHoldFlash) {
+            if (!primaryBtn.classList.contains('flash-active')) {
+              primaryBtn.classList.add('flash-active');
+            }
+          } else {
+            if (primaryBtn.classList.contains('flash-active')) {
+              primaryBtn.classList.remove('flash-active');
+            }
+          }
+        }
+
+        requestAnimationFrame(renderFrame);
+      }
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          clockAnim.pause();
+        } else {
+          clockAnim.play();
+        }
+      });
+
+      const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+      function handleReducedMotion() {
+        if (reducedMotionQuery.matches) {
+          clockAnim.currentTime = 875;
+          clockAnim.pause();
+        } else {
+          clockAnim.play();
+        }
+      }
+      reducedMotionQuery.addEventListener('change', handleReducedMotion);
+      handleReducedMotion();
+
+      requestAnimationFrame(renderFrame);
+    })();
+  </script>
+</body>
+</html>
