@@ -442,9 +442,6 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
           {/* Stats Metrics Content */}
           <div className="stats-content">
             <div className="stats-lead-wrap">
-              <div className="stats-pill">
-                <span className="stats-dot" /> Verified Growth
-              </div>
               <div className="stats-lead">
                 Revenue growth<br />engineered to scale
               </div>
@@ -466,9 +463,9 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
                 <span className="stat-label">Revenue Driven</span>
               </div>
 
-              {/* 4th Item: Plant Logo in 2x2 Grid */}
+              {/* 4th Item: Desktop Sprout Logo in 2x2 Grid */}
               <div className="stat-item stat-item-plant">
-                <div className="plant-icon-box">
+                <div className="sprout-container">
                   <svg className="sprout-svg" viewBox="0 0 44 44" aria-label="Organic Growth Icon">
                     <path d="M7 40 H37" />
                     <path d="M22 40 V18" />
@@ -476,7 +473,6 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
                     <path d="M22 20 C22 20 32 18 32 8 C26 8 22 14 22 20 Z" />
                   </svg>
                 </div>
-                <span className="stat-label">Organic Growth</span>
               </div>
             </div>
 
@@ -1014,13 +1010,18 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
           .vela-viewport {
             height: auto;
             min-height: auto;
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
           }
 
           .vela-panel {
             height: auto;
             min-height: auto;
             padding-bottom: 24px;
-            overflow: visible;
+            overflow: hidden;
+            width: 100%;
+            max-width: 100%;
           }
 
           .vela-nav {
@@ -1179,34 +1180,18 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
             flex-direction: column;
             align-items: flex-start;
             gap: 20px;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
           }
 
           .stats-lead-wrap {
             gap: 8px;
+            width: 100%;
           }
 
           .stats-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            width: fit-content;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            color: #3d6ab3;
-            background: rgba(61, 106, 179, 0.08);
-            border: 1px solid rgba(61, 106, 179, 0.15);
-            padding: 4px 10px;
-            border-radius: 9999px;
-          }
-
-          .stats-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: #3FB874;
-            display: inline-block;
+            display: none !important;
           }
 
           .stats-lead {
@@ -1215,6 +1200,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
             line-height: 1.2;
             letter-spacing: -0.025em;
             color: var(--ink);
+            min-width: 0;
+            width: 100%;
           }
 
           /* 2x2 Grid with Plant Logo at 4th place */
@@ -1222,39 +1209,38 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
             width: 100%;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 14px 12px;
+            gap: 20px 16px;
           }
 
           .stat-item {
             gap: 4px;
-            background: rgba(255, 255, 255, 0.55);
-            padding: 14px 16px;
-            border-radius: 14px;
-            border: 1px solid rgba(13, 13, 12, 0.06);
+            background: transparent;
+            padding: 0;
+            border: none;
+            box-shadow: none;
           }
 
           .stat-item-plant {
             display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            gap: 6px;
+            align-items: flex-start;
+            justify-content: flex-start;
+            padding-top: 4px;
           }
 
-          .plant-icon-box {
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            background: rgba(63, 184, 116, 0.14);
+          .stat-item-plant .sprout-container {
             display: flex;
             align-items: center;
-            justify-content: center;
+            padding: 0;
           }
 
-          .plant-icon-box .sprout-svg {
-            width: 22px;
-            height: 22px;
-            stroke: #2e965b;
-            stroke-width: 2;
+          .stat-item-plant .sprout-svg {
+            width: 40px;
+            height: 40px;
+            stroke: var(--ink);
+            stroke-width: 1.6;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
           }
 
           .stat-num {

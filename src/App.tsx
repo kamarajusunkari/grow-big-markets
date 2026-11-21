@@ -14,18 +14,18 @@ export const App: React.FC = () => {
   const [isBookingOpen, setIsBookingOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FBF6EF] text-[#0D0D0C]">
+    <div className="min-h-screen flex flex-col bg-[#FBF6EF] text-[#0D0D0C] w-full max-w-full overflow-x-hidden">
       {/* Slide-in Sticky Header (appears when scrolling past the hero) */}
       <Navbar
         onOpenBooking={() => setIsBookingOpen(true)}
       />
 
       {/* Main Single-Page Content */}
-      <main className="flex-1">
+      <main className="flex-1 w-full max-w-full overflow-x-hidden">
         {/* Vela Hero Section */}
         <Hero onOpenBooking={() => setIsBookingOpen(true)} />
 
-        <div className="bg-[#f8fafc] text-slate-800">
+        <div className="bg-[#f8fafc] text-slate-800 w-full max-w-full overflow-x-hidden">
           <AboutUs onOpenBooking={() => setIsBookingOpen(true)} />
           <Services onOpenBooking={() => setIsBookingOpen(true)} />
           <Process onOpenBooking={() => setIsBookingOpen(true)} />

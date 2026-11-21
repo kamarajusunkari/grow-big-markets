@@ -29,6 +29,7 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
           position: 'relative',
           zIndex: 2,
         }}
+        className="about-section-container"
       >
         {/* TOP PART: 2-COLUMN HEADER (Exact Screenshot Layout) */}
         <div
@@ -70,6 +71,7 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
                 lineHeight: 1.1,
                 letterSpacing: '-0.03em',
               }}
+              className="about-main-heading"
             >
               Digital Expertise You <br />
               Can Count On
@@ -86,6 +88,7 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
                 marginBottom: '2rem',
                 fontWeight: 500,
               }}
+              className="about-main-desc"
             >
               We empower ambitious businesses, healthcare clinics, e-commerce brands, and financial institutions with ROI-focused digital marketing campaigns, high-converting Google & Meta ads, search engine optimization (SEO), and performance marketing strategies engineered for rapid revenue growth.
             </p>
@@ -151,7 +154,7 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
               border: '1px solid rgba(15, 23, 42, 0.08)',
               height: '320px',
             }}
-            className="reveal-scale-up delay-100"
+            className="about-card-img reveal-scale-up delay-100"
           >
             <img
               src="/about (1).webp"
@@ -178,15 +181,15 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
               border: '1px solid rgba(62, 106, 179, 0.3)',
               height: '320px',
             }}
-            className="reveal-scale-up delay-200"
+            className="about-stat-card reveal-scale-up delay-200"
           >
-            <div style={{ fontSize: '3.2rem', fontWeight: 900, color: '#0f172a', lineHeight: 1, marginBottom: '0.4rem' }}>
+            <div className="about-stat-num" style={{ fontSize: '3.2rem', fontWeight: 900, color: '#0f172a', lineHeight: 1, marginBottom: '0.4rem' }}>
               10+
             </div>
-            <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#3E6AB3', marginBottom: '0.85rem' }}>
+            <div className="about-stat-label" style={{ fontSize: '0.85rem', fontWeight: 800, color: '#3E6AB3', marginBottom: '0.85rem' }}>
               Years Experience
             </div>
-            <p style={{ fontSize: '0.875rem', color: '#475569', lineHeight: 1.5, fontWeight: 500 }}>
+            <p className="about-stat-desc" style={{ fontSize: '0.875rem', color: '#475569', lineHeight: 1.5, fontWeight: 500 }}>
               Delivering high-performance IT solutions and scaling enterprise operations across global markets.
             </p>
           </div>
@@ -205,7 +208,7 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
               height: '320px',
               position: 'relative',
             }}
-            className="reveal-scale-up delay-300"
+            className="about-stat-card reveal-scale-up delay-300"
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div
@@ -227,13 +230,13 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
             </div>
 
             <div>
-              <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#3E6AB3', marginBottom: '0.2rem' }}>
+              <div className="about-stat-label" style={{ fontSize: '0.8rem', fontWeight: 800, color: '#3E6AB3', marginBottom: '0.2rem' }}>
                 Happy Clients
               </div>
-              <div style={{ fontSize: '2.8rem', fontWeight: 900, color: '#0f172a', lineHeight: 1.05, marginBottom: '0.5rem' }}>
+              <div className="about-stat-num" style={{ fontSize: '2.8rem', fontWeight: 900, color: '#0f172a', lineHeight: 1.05, marginBottom: '0.5rem' }}>
                 150+
               </div>
-              <p style={{ fontSize: '0.825rem', color: '#64748b', lineHeight: 1.4 }}>
+              <p className="about-stat-desc" style={{ fontSize: '0.825rem', color: '#64748b', lineHeight: 1.4 }}>
                 Trusted growth partners & leading brands.
               </p>
             </div>
@@ -252,15 +255,15 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
               border: '1px solid rgba(253, 208, 11, 0.5)',
               height: '320px',
             }}
-            className="reveal-scale-up delay-400"
+            className="about-stat-card reveal-scale-up delay-400"
           >
-            <div style={{ fontSize: '3.2rem', fontWeight: 900, color: '#0f172a', lineHeight: 1, marginBottom: '0.4rem' }}>
+            <div className="about-stat-num" style={{ fontSize: '3.2rem', fontWeight: 900, color: '#0f172a', lineHeight: 1, marginBottom: '0.4rem' }}>
               50+
             </div>
-            <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#3E6AB3', marginBottom: '0.85rem' }}>
+            <div className="about-stat-label" style={{ fontSize: '0.85rem', fontWeight: 800, color: '#3E6AB3', marginBottom: '0.85rem' }}>
               Techwise Team
             </div>
-            <p style={{ fontSize: '0.875rem', color: '#475569', lineHeight: 1.5, fontWeight: 500 }}>
+            <p className="about-stat-desc" style={{ fontSize: '0.875rem', color: '#475569', lineHeight: 1.5, fontWeight: 500 }}>
               A dedicated squad of software architects, AI engineers, and performance marketers.
             </p>
           </div>
@@ -282,7 +285,7 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
               transition: 'all 0.3s ease',
               border: '1px solid rgba(253, 208, 11, 0.3)',
             }}
-            className="about-get-started-card reveal-scale-up delay-500"
+            className="about-get-started-card about-stat-card reveal-scale-up delay-500"
           >
             {/* Avatars Overlap Row */}
             <div style={{ display: 'flex' }}>
@@ -304,10 +307,10 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
             </div>
 
             <div>
-              <h3 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#FDD00B', marginBottom: '0.5rem', lineHeight: 1.2 }}>
+              <h3 className="about-get-started-title" style={{ fontSize: '1.4rem', fontWeight: 900, color: '#FDD00B', marginBottom: '0.5rem', lineHeight: 1.2 }}>
                 Get Started With Us
               </h3>
-              <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.9)', lineHeight: 1.45 }}>
+              <p className="about-get-started-desc" style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.9)', lineHeight: 1.45 }}>
                 Launch your digital transformation sprint with direct executive guidance.
               </p>
             </div>
@@ -388,9 +391,65 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
             grid-template-columns: 1fr 1fr !important;
           }
         }
-        @media (max-width: 640px) {
-          .about-bottom-5-cards {
+        @media (max-width: 768px) {
+          .about-section-container {
+            padding: 0 16px !important;
+            box-sizing: border-box !important;
+          }
+          .about-top-grid {
             grid-template-columns: 1fr !important;
+            gap: 1.5rem !important;
+            margin-bottom: 2rem !important;
+          }
+          .about-main-heading {
+            font-size: clamp(1.75rem, 6.5vw, 2.2rem) !important;
+            line-height: 1.15 !important;
+            margin-bottom: 1rem !important;
+          }
+          .about-main-desc {
+            font-size: 0.95rem !important;
+            line-height: 1.6 !important;
+            margin-bottom: 1.5rem !important;
+          }
+          /* 2x2 Grid for Mobile */
+          .about-bottom-5-cards {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 12px !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+          }
+          .about-card-img {
+            display: none !important;
+          }
+          .about-stat-card {
+            height: auto !important;
+            min-height: 190px !important;
+            padding: 1.25rem 1rem !important;
+            border-radius: 18px !important;
+            box-sizing: border-box !important;
+            justify-content: space-between !important;
+          }
+          .about-stat-num {
+            font-size: clamp(2.1rem, 7.5vw, 2.6rem) !important;
+            line-height: 1 !important;
+            margin-bottom: 0.25rem !important;
+          }
+          .about-stat-label {
+            font-size: 0.8rem !important;
+            margin-bottom: 0.35rem !important;
+          }
+          .about-stat-desc {
+            font-size: 0.775rem !important;
+            line-height: 1.35 !important;
+          }
+          .about-get-started-title {
+            font-size: 1.15rem !important;
+            margin-bottom: 0.25rem !important;
+          }
+          .about-get-started-desc {
+            font-size: 0.775rem !important;
+            line-height: 1.35 !important;
           }
         }
       `}</style>
