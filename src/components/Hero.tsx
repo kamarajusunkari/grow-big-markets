@@ -441,8 +441,13 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
 
           {/* Stats Metrics Content */}
           <div className="stats-content">
-            <div className="stats-lead">
-              Revenue growth<br />engineered to scale
+            <div className="stats-lead-wrap">
+              <div className="stats-pill">
+                <span className="stats-dot" /> Verified Growth
+              </div>
+              <div className="stats-lead">
+                Revenue growth<br />engineered to scale
+              </div>
             </div>
 
             <div className="stats-metrics">
@@ -460,10 +465,23 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
                 <span className="stat-num">$25M+</span>
                 <span className="stat-label">Revenue Driven</span>
               </div>
+
+              {/* 4th Item: Plant Logo in 2x2 Grid */}
+              <div className="stat-item stat-item-plant">
+                <div className="plant-icon-box">
+                  <svg className="sprout-svg" viewBox="0 0 44 44" aria-label="Organic Growth Icon">
+                    <path d="M7 40 H37" />
+                    <path d="M22 40 V18" />
+                    <path d="M22 26 C22 26 12 24 12 14 C18 14 22 20 22 26 Z" />
+                    <path d="M22 20 C22 20 32 18 32 8 C26 8 22 14 22 20 Z" />
+                  </svg>
+                </div>
+                <span className="stat-label">Organic Growth</span>
+              </div>
             </div>
 
             {/* Sprout Line-Art Icon (representing sustainable organic growth) */}
-            <div className="sprout-container">
+            <div className="sprout-container desktop-sprout">
               <svg className="sprout-svg" viewBox="0 0 44 44" aria-label="Organic Growth Icon">
                 <path d="M7 40 H37" />
                 <path d="M22 40 V18" />
@@ -913,6 +931,20 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
           gap: calc(40 * var(--u));
         }
 
+        .stats-lead-wrap {
+          display: flex;
+          flex-direction: column;
+          gap: calc(8 * var(--u));
+        }
+
+        .stats-pill {
+          display: none;
+        }
+
+        .stat-item-plant {
+          display: none;
+        }
+
         .stats-lead {
           font-size: calc(29 * var(--u));
           font-weight: 500;
@@ -1085,32 +1117,47 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
             left: 0;
             top: 0;
             padding: 24px 20px 0 20px;
+            display: flex;
             flex-direction: column;
             align-items: flex-start;
-            gap: 18px;
-          }
-
-          .store-buttons {
-            flex-wrap: wrap;
-            width: 100%;
-            gap: 12px;
-          }
-
-          .store-btn {
-            height: 50px;
-            font-size: 15.5px;
-            flex: 1 1 150px;
-            justify-content: center;
+            gap: 16px;
           }
 
           .vela-caption {
+            order: 1; /* Description comes FIRST */
             font-size: 15px;
             line-height: 1.5;
             color: var(--ink-secondary);
+            margin: 0;
           }
 
           .vela-caption br {
             display: none;
+          }
+
+          .store-buttons {
+            order: 2; /* Buttons come AFTER description */
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            gap: 10px;
+          }
+
+          .store-btn {
+            width: 100%;
+            height: 52px;
+            font-size: 15.5px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-align: left;
+            padding: 0 20px;
+            border-radius: 10px;
+          }
+
+          .store-btn span {
+            text-align: left;
           }
 
           .vela-stats-strip {
@@ -1128,42 +1175,105 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
           }
 
           .stats-content {
-            padding: 22px 20px 32px 20px;
+            padding: 24px 20px 36px 20px;
             flex-direction: column;
             align-items: flex-start;
             gap: 20px;
           }
 
-          .stats-lead {
-            font-size: 22px;
-            font-weight: 600;
-            line-height: 1.25;
+          .stats-lead-wrap {
+            gap: 8px;
           }
 
+          .stats-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            width: fit-content;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #3d6ab3;
+            background: rgba(61, 106, 179, 0.08);
+            border: 1px solid rgba(61, 106, 179, 0.15);
+            padding: 4px 10px;
+            border-radius: 9999px;
+          }
+
+          .stats-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #3FB874;
+            display: inline-block;
+          }
+
+          .stats-lead {
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.025em;
+            color: var(--ink);
+          }
+
+          /* 2x2 Grid with Plant Logo at 4th place */
           .stats-metrics {
             width: 100%;
             display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 12px 10px;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px 12px;
           }
 
           .stat-item {
             gap: 4px;
+            background: rgba(255, 255, 255, 0.55);
+            padding: 14px 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(13, 13, 12, 0.06);
+          }
+
+          .stat-item-plant {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 6px;
+          }
+
+          .plant-icon-box {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: rgba(63, 184, 116, 0.14);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .plant-icon-box .sprout-svg {
+            width: 22px;
+            height: 22px;
+            stroke: #2e965b;
+            stroke-width: 2;
           }
 
           .stat-num {
-            font-size: clamp(24px, 7vw, 36px);
+            font-size: clamp(28px, 8vw, 36px);
             font-weight: 700;
             line-height: 1;
+            letter-spacing: -0.03em;
+            color: var(--ink);
           }
 
           .stat-label {
-            font-size: 12px;
+            font-size: 13px;
             line-height: 1.3;
+            color: var(--ink-secondary);
+            font-weight: 500;
           }
 
-          .sprout-container {
-            display: none;
+          .desktop-sprout {
+            display: none !important;
           }
         }
       `}</style>
