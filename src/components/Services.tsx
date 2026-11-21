@@ -134,6 +134,7 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
           position: 'relative',
           zIndex: 2,
         }}
+        className="services-section-container"
       >
         {/* Section Header */}
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }} className="reveal-fade-up">
@@ -182,7 +183,7 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
           className="services-grid-container"
         >
           {/* LEFT COLUMN */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '3.5rem' }}>
+          <div className="services-col" style={{ display: 'flex', flexDirection: 'column', gap: '3.5rem' }}>
             
             {/* Service 1: Web & Mobile Application Development */}
             <div
@@ -203,27 +204,6 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
                   border: '1px solid rgba(234, 179, 8, 0.3)',
                 }}
               >
-                {/* Background Text With Respect to Image */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '18px',
-                    left: '22px',
-                    fontFamily: "'Anton', sans-serif",
-                    fontSize: 'clamp(2.2rem, 4.5vw, 3.8rem)',
-                    color: 'rgba(255, 255, 255, 0.45)',
-                    letterSpacing: '-0.02em',
-                    textTransform: 'uppercase',
-                    whiteSpace: 'nowrap',
-                    pointerEvents: 'none',
-                    zIndex: 2,
-                    lineHeight: 0.9,
-                    textShadow: '0 3px 14px rgba(0,0,0,0.45)',
-                  }}
-                >
-                  {FEATURED_SERVICES[0].bgText}
-                </div>
-
                 <img
                   src={FEATURED_SERVICES[0].imageSrc}
                   alt={FEATURED_SERVICES[0].imageAlt}
@@ -272,27 +252,6 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
                   border: '1px solid rgba(234, 179, 8, 0.3)',
                 }}
               >
-                {/* Background Text With Respect to Image */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '18px',
-                    left: '22px',
-                    fontFamily: "'Anton', sans-serif",
-                    fontSize: 'clamp(2.2rem, 4.5vw, 3.8rem)',
-                    color: 'rgba(255, 255, 255, 0.45)',
-                    letterSpacing: '-0.02em',
-                    textTransform: 'uppercase',
-                    whiteSpace: 'nowrap',
-                    pointerEvents: 'none',
-                    zIndex: 2,
-                    lineHeight: 0.9,
-                    textShadow: '0 3px 14px rgba(0,0,0,0.45)',
-                  }}
-                >
-                  {FEATURED_SERVICES[2].bgText}
-                </div>
-
                 <img
                   src={FEATURED_SERVICES[2].imageSrc}
                   alt={FEATURED_SERVICES[2].imageAlt}
@@ -325,7 +284,7 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
           </div>
 
           {/* RIGHT COLUMN */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '3.5rem', marginTop: '1rem' }} className="staggered-right-col">
+          <div className="services-col staggered-right-col" style={{ display: 'flex', flexDirection: 'column', gap: '3.5rem', marginTop: '1rem' }}>
             
             {/* Top Avatars & Client Stats Badge */}
             <div
@@ -341,7 +300,7 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
                 width: 'max-content',
                 marginBottom: '-0.5rem',
               }}
-              className="reveal-fade-up delay-100"
+              className="services-avatar-badge reveal-fade-up delay-100"
             >
               <div style={{ display: 'flex' }}>
                 <img
@@ -385,27 +344,6 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
                   border: '1px solid rgba(234, 179, 8, 0.3)',
                 }}
               >
-                {/* Background Text With Respect to Image */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '18px',
-                    left: '22px',
-                    fontFamily: "'Anton', sans-serif",
-                    fontSize: 'clamp(2.2rem, 4.5vw, 3.8rem)',
-                    color: 'rgba(255, 255, 255, 0.45)',
-                    letterSpacing: '-0.02em',
-                    textTransform: 'uppercase',
-                    whiteSpace: 'nowrap',
-                    pointerEvents: 'none',
-                    zIndex: 2,
-                    lineHeight: 0.9,
-                    textShadow: '0 3px 14px rgba(0,0,0,0.45)',
-                  }}
-                >
-                  {FEATURED_SERVICES[1].bgText}
-                </div>
-
                 <img
                   src={FEATURED_SERVICES[1].imageSrc}
                   alt={FEATURED_SERVICES[1].imageAlt}
@@ -454,27 +392,6 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
                   border: '1px solid rgba(234, 179, 8, 0.3)',
                 }}
               >
-                {/* Background Text With Respect to Image */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '18px',
-                    left: '22px',
-                    fontFamily: "'Anton', sans-serif",
-                    fontSize: 'clamp(2.2rem, 4.5vw, 3.8rem)',
-                    color: 'rgba(255, 255, 255, 0.45)',
-                    letterSpacing: '-0.02em',
-                    textTransform: 'uppercase',
-                    whiteSpace: 'nowrap',
-                    pointerEvents: 'none',
-                    zIndex: 2,
-                    lineHeight: 0.9,
-                    textShadow: '0 3px 14px rgba(0,0,0,0.45)',
-                  }}
-                >
-                  {FEATURED_SERVICES[3].bgText}
-                </div>
-
                 <img
                   src={FEATURED_SERVICES[3].imageSrc}
                   alt={FEATURED_SERVICES[3].imageAlt}
@@ -618,6 +535,75 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
           }
           .staggered-right-col {
             margin-top: 0 !important;
+          }
+        }
+        @media (max-width: 768px) {
+          .services-section-container {
+            padding: 0 16px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            overflow: hidden !important;
+          }
+          .services-grid-container {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 2.25rem !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 auto 3rem auto !important;
+            box-sizing: border-box !important;
+          }
+          .services-col {
+            width: 100% !important;
+            max-width: 100% !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 2.25rem !important;
+            box-sizing: border-box !important;
+          }
+          .zeniqs-card-container {
+            width: 100% !important;
+            max-width: 440px !important;
+            margin: 0 auto !important;
+            box-sizing: border-box !important;
+          }
+          .zeniqs-card-container > div:first-child {
+            border-radius: 20px !important;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08) !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+            overflow: hidden !important;
+          }
+          .card-img {
+            width: 100% !important;
+            height: auto !important;
+            max-height: 250px !important;
+            object-fit: cover !important;
+            border-radius: 20px !important;
+            display: block !important;
+          }
+          .services-avatar-badge {
+            width: auto !important;
+            max-width: 100% !important;
+            margin: 0 auto 0.5rem auto !important;
+            padding: 0.65rem 1rem !important;
+            justify-content: center !important;
+            box-sizing: border-box !important;
+          }
+          .services-gold-btn {
+            width: 100% !important;
+            max-width: 360px !important;
+            margin: 0 auto !important;
+            padding: 0.95rem 1.25rem !important;
+            font-size: 0.9rem !important;
+            line-height: 1.35 !important;
+            white-space: normal !important;
+            text-align: center !important;
+            justify-content: center !important;
+            box-sizing: border-box !important;
           }
         }
       `}</style>
