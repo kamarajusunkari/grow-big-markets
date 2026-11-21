@@ -6,19 +6,8 @@ interface FooterProps {
 }
 
 export const Footer: React.FC<FooterProps> = ({ onOpenBooking }) => {
-  const [email, setEmail] = useState('');
-  const [subscribed, setSubscribed] = useState(false);
   const [activeMobileTab, setActiveMobileTab] = useState<'industries' | 'insights' | 'company' | 'connect'>('industries');
   const footerRef = useRef<HTMLElement>(null);
-
-  const handleSignupSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) {
-      setSubscribed(true);
-      setEmail('');
-      setTimeout(() => setSubscribed(false), 4500);
-    }
-  };
 
   // Entrance Web Animations sequence ~1.9s with 3s failsafe and gesture skip
   useEffect(() => {
@@ -34,10 +23,6 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking }) => {
       if (hasRun) return;
       hasRun = true;
 
-      const badge = container.querySelector('.note-badge');
-      const headline = container.querySelector('.hero-headline');
-      const lede = container.querySelector('.hero-lede');
-      const signup = container.querySelector('.hero-signup-wrap');
       const brandLogo = container.querySelector('.brand-identity');
       const brandHeadline = container.querySelector('.brand-headline');
       const brandBtn = container.querySelector('.brand-touch-btn');
@@ -46,52 +31,24 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking }) => {
 
       const easeOutCubic = 'cubic-bezier(0.215, 0.61, 0.355, 1)';
 
-      badge?.animate([
-        { opacity: 0, transform: 'translateY(-16px) scale(0.92)' },
-        { opacity: 1, transform: 'translateY(0) scale(1)' }
-      ], { duration: 280, easing: easeOutCubic, fill: 'forwards' });
-
-      setTimeout(() => {
-        headline?.animate([
-          { opacity: 0, clipPath: 'inset(0 0 100% 0)', transform: 'translateY(24px)' },
-          { opacity: 1, clipPath: 'inset(0 0 0% 0)', transform: 'translateY(0)' }
-        ], { duration: 480, easing: easeOutCubic, fill: 'forwards' });
-      }, 120);
-
-      setTimeout(() => {
-        lede?.animate([
-          { opacity: 0, transform: 'translateY(16px)' },
-          { opacity: 1, transform: 'translateY(0)' }
-        ], { duration: 420, easing: easeOutCubic, fill: 'forwards' });
-      }, 340);
-
-      setTimeout(() => {
-        signup?.animate([
-          { opacity: 0, transform: 'translateY(18px) scale(0.98)' },
-          { opacity: 1, transform: 'translateY(0) scale(1)' }
-        ], { duration: 420, easing: easeOutCubic, fill: 'forwards' });
-      }, 500);
-
-      setTimeout(() => {
-        brandLogo?.animate([
-          { opacity: 0, transform: 'translateY(12px)' },
-          { opacity: 1, transform: 'translateY(0)' }
-        ], { duration: 350, easing: easeOutCubic, fill: 'forwards' });
-      }, 660);
+      brandLogo?.animate([
+        { opacity: 0, transform: 'translateY(12px)' },
+        { opacity: 1, transform: 'translateY(0)' }
+      ], { duration: 350, easing: easeOutCubic, fill: 'forwards' });
 
       setTimeout(() => {
         brandHeadline?.animate([
           { opacity: 0, clipPath: 'inset(0 0 100% 0)', transform: 'translateY(18px)' },
           { opacity: 1, clipPath: 'inset(0 0 0% 0)', transform: 'translateY(0)' }
         ], { duration: 440, easing: easeOutCubic, fill: 'forwards' });
-      }, 760);
+      }, 100);
 
       setTimeout(() => {
         brandBtn?.animate([
           { opacity: 0, transform: 'scale(0.95) translateY(10px)' },
           { opacity: 1, transform: 'scale(1) translateY(0)' }
         ], { duration: 380, easing: easeOutCubic, fill: 'forwards' });
-      }, 880);
+      }, 200);
 
       linkCols.forEach((col, idx) => {
         setTimeout(() => {
@@ -99,7 +56,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking }) => {
             { opacity: 0, transform: 'translateY(16px)' },
             { opacity: 1, transform: 'translateY(0)' }
           ], { duration: 400, easing: easeOutCubic, fill: 'forwards' });
-        }, 980 + (idx * 90));
+        }, 280 + (idx * 80));
       });
 
       setTimeout(() => {
@@ -107,7 +64,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking }) => {
           { opacity: 0 },
           { opacity: 1 }
         ], { duration: 400, easing: 'ease', fill: 'forwards' });
-      }, 1380);
+      }, 650);
     };
 
     const failsafe = setTimeout(runEntrance, 3000);
@@ -160,66 +117,6 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking }) => {
       </svg>
 
       {/* =====================================================================
-          HERO (Top Left: 47u in, 35u down)
-          ===================================================================== */}
-      <div className="hero-container">
-        {/* 43u White Note Badge with folded top-right corner and logo-blue notes glyph */}
-        <div className="note-badge" aria-hidden="true">
-          <svg viewBox="0 0 43 43" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 0 H31 L43 12 V43 H0 Z" fill="#ffffff" />
-            <path d="M31 0 V12 H43 Z" fill="#E0E1E9" />
-            <path d="M10 16 H24" stroke="#3d6ab3" strokeWidth="2.5" strokeLinecap="round" />
-            <path d="M10 22 H28" stroke="#3d6ab3" strokeWidth="2.5" strokeLinecap="round" />
-            <path d="M10 28 H20" stroke="#fdcf09" strokeWidth="2.5" strokeLinecap="round" />
-          </svg>
-        </div>
-
-        {/* Headline */}
-        <div className="hero-headline-wrap">
-          <h2 className="hero-headline">
-            Stop Guessing With Your Marketing.<br />
-            We Scale High-ROAS Revenue.
-          </h2>
-        </div>
-
-        {/* Lede */}
-        <p className="hero-lede">
-          Grow Big Marketers builds high-converting Meta & Google PPC ads, search engine dominance (SEO),<br />
-          and viral social scaling strategies engineered to take your business to the next level.
-        </p>
-
-        {/* Signup Row */}
-        <form onSubmit={handleSignupSubmit} className="hero-signup-wrap">
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="signup-field"
-            placeholder="Enter Work Email For Free Audit..."
-            required
-            aria-label="Enter your email"
-          />
-          <button type="submit" className="signup-btn">
-            <span>Free Audit</span>
-            <span className="signup-btn-cap" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="10" />
-                <path d="M10 8l4 4-4 4" />
-              </svg>
-            </span>
-          </button>
-          {subscribed && (
-            <div className="signup-feedback">
-              ✓ Thanks — our marketing strategists will audit your brand shortly.
-            </div>
-          )}
-        </form>
-      </div>
-
-      {/* Flexible Spacer absorbing extra screen height without blank bands */}
-      <div className="flexible-spacer" aria-hidden="true" />
-
-      {/* =====================================================================
           FOOTER CARD (Square-cornered white, 48u margins, sitting right on floor)
           ===================================================================== */}
       <div className="card-outer-wrap">
@@ -239,8 +136,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking }) => {
 
               <div className="brand-headline-wrap">
                 <h3 className="brand-headline">
-                  The Performance Agency For<br />
-                  High-Growth Digital Brands.
+                  The Performance Agency For High-Growth Digital Brands.
                 </h3>
               </div>
 
@@ -333,11 +229,11 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking }) => {
             >
               <h4 className="col-title">Industries</h4>
               <ul className="link-list">
-                <li className="link-item"><a href="#industries">Real Estate & PropTech</a></li>
-                <li className="link-item"><a href="#industries">eCommerce & D2C Brands</a></li>
-                <li className="link-item"><a href="#industries">Healthcare & MedTech</a></li>
-                <li className="link-item"><a href="#industries">FinTech & Financial Services</a></li>
-                <li className="link-item"><a href="#industries">Hospitality & Tourism</a></li>
+                <li className="link-item"><a href="#portfolio">Real Estate & PropTech</a></li>
+                <li className="link-item"><a href="#portfolio">eCommerce & D2C Brands</a></li>
+                <li className="link-item"><a href="#portfolio">Healthcare & MedTech</a></li>
+                <li className="link-item"><a href="#portfolio">FinTech & Financial Services</a></li>
+                <li className="link-item"><a href="#portfolio">Hospitality & Tourism</a></li>
               </ul>
             </div>
 
@@ -445,15 +341,16 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking }) => {
         .nimbus-footer-section {
           position: relative;
           width: 100%;
-          min-height: 100vh;
+          min-height: auto;
           display: flex;
           flex-direction: column;
-          justify-content: space-between;
+          justify-content: flex-end;
           overflow: hidden;
           background-color: var(--bg-deep);
           font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
           color: var(--ink);
           -webkit-font-smoothing: antialiased;
+          padding: calc(48 * var(--u)) 0 calc(48 * var(--u));
         }
 
         .sky-layer {
@@ -498,163 +395,10 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking }) => {
           z-index: 2;
         }
 
-        .hero-container {
-          position: relative;
-          z-index: 5;
-          width: 100%;
-          max-width: 1400px;
-          margin: 0 auto;
-          padding-top: calc(35 * var(--u));
-          padding-left: calc(48 * var(--u));
-          padding-right: calc(48 * var(--u));
-        }
-
-        .note-badge {
-          width: calc(43 * var(--u));
-          height: calc(43 * var(--u));
-          display: inline-block;
-          filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
-          transition: transform 0.2s ease;
-        }
-
-        .note-badge:hover {
-          transform: translateY(-2px);
-        }
-
-        .note-badge svg {
-          width: 100%;
-          height: 100%;
-          display: block;
-        }
-
-        .hero-headline-wrap {
-          margin-top: calc(41 * var(--u));
-          overflow: hidden;
-        }
-
-        .hero-headline {
-          font-size: calc(53.8 * var(--u));
-          line-height: calc(66 * var(--u));
-          color: rgba(255, 255, 255, 0.90);
-          font-weight: 400;
-          letter-spacing: -0.025em;
-          -webkit-text-stroke: 0.25px rgba(255, 255, 255, 0.90);
-        }
-
-        .hero-lede {
-          margin-top: calc(18 * var(--u));
-          font-size: calc(18.6 * var(--u));
-          line-height: calc(29.5 * var(--u));
-          color: rgba(255, 255, 255, 0.69);
-          font-weight: 400;
-          letter-spacing: -0.01em;
-        }
-
-        .hero-signup-wrap {
-          margin-top: calc(35.7 * var(--u));
-          display: flex;
-          align-items: stretch;
-          max-width: calc(724 * var(--u));
-          position: relative;
-        }
-
-        .signup-field {
-          width: calc(530 * var(--u));
-          height: calc(55.5 * var(--u));
-          background: rgba(255, 255, 255, 0.20);
-          backdrop-filter: blur(4px);
-          -webkit-backdrop-filter: blur(4px);
-          border: none;
-          outline: none;
-          padding: 0 calc(22 * var(--u));
-          font-family: inherit;
-          font-size: calc(16 * var(--u));
-          font-weight: 400;
-          color: #ffffff;
-          border-radius: 0;
-          transition: background 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .signup-field::placeholder {
-          color: rgba(255, 255, 255, 0.65);
-        }
-
-        .signup-field:focus {
-          background: rgba(255, 255, 255, 0.26);
-          box-shadow: inset 0 0 0 calc(1.5 * var(--u)) rgba(255, 255, 255, 0.85);
-        }
-
-        .signup-btn {
-          width: calc(194 * var(--u));
-          height: calc(55.5 * var(--u));
-          background: linear-gradient(135deg, #fdcf09 0%, #ffde59 100%);
-          border: none;
-          padding: 0 0 0 calc(24 * var(--u));
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          cursor: pointer;
-          font-family: inherit;
-          font-size: calc(16 * var(--u));
-          font-weight: 700;
-          color: #03063A;
-          letter-spacing: -0.01em;
-          transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease;
-          border-radius: 0;
-          box-shadow: 0 calc(4 * var(--u)) calc(16 * var(--u)) rgba(253, 207, 9, 0.28);
-        }
-
-        .signup-btn-cap {
-          width: calc(48 * var(--u));
-          height: calc(48 * var(--u));
-          margin-right: calc(3.75 * var(--u));
-          background: var(--brand-blue);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: background-color 0.2s ease, transform 0.15s ease;
-        }
-
-        .signup-btn-cap svg {
-          width: calc(20 * var(--u));
-          height: calc(20 * var(--u));
-          stroke: #ffffff;
-          fill: none;
-          stroke-width: 2.2;
-          stroke-linecap: round;
-          stroke-linejoin: round;
-        }
-
-        .signup-btn:hover {
-          background: linear-gradient(135deg, #ffde59 0%, #fdcf09 100%);
-          box-shadow: 0 calc(6 * var(--u)) calc(22 * var(--u)) rgba(253, 207, 9, 0.45), 0 0 14px rgba(61, 106, 179, 0.35);
-          transform: translateY(-1px);
-        }
-
-        .signup-btn:hover .signup-btn-cap {
-          background: #1e3b6e;
-          transform: translateX(calc(1.5 * var(--u)));
-        }
-
-        .signup-feedback {
-          position: absolute;
-          top: 100%;
-          left: 0;
-          margin-top: calc(8 * var(--u));
-          font-size: calc(14 * var(--u));
-          color: #ffffff;
-          font-weight: 500;
-        }
-
-        .flexible-spacer {
-          flex: 1;
-          min-height: calc(40 * var(--u));
-        }
-
         .card-outer-wrap {
           position: relative;
           z-index: 5;
-          padding: 0 calc(48 * var(--u)) calc(48 * var(--u));
+          padding: 0 calc(48 * var(--u));
           width: 100%;
           max-width: 1400px;
           margin: 0 auto;
@@ -677,7 +421,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking }) => {
           min-height: calc(360 * var(--u));
           padding: calc(62 * var(--u)) calc(48 * var(--u)) calc(48 * var(--u)) calc(58 * var(--u));
           display: grid;
-          grid-template-columns: minmax(calc(340 * var(--u)), calc(440 * var(--u))) repeat(4, 1fr);
+          grid-template-columns: minmax(calc(360 * var(--u)), calc(510 * var(--u))) repeat(4, 1fr);
           gap: 0;
           align-items: start;
         }
@@ -698,79 +442,95 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking }) => {
         }
 
         .brand-logo-mark {
-          height: calc(34 * var(--u));
-          max-height: 40px;
+          height: calc(62 * var(--u));
+          max-height: 72px;
+          min-height: 48px;
           width: auto;
           object-fit: contain;
           display: block;
+          transition: transform 0.2s ease;
+        }
+
+        .brand-identity:hover .brand-logo-mark {
+          transform: scale(1.02);
         }
 
         .brand-headline-wrap {
-          margin-top: calc(60 * var(--u));
+          margin-top: calc(24 * var(--u));
           overflow: hidden;
         }
 
         .brand-headline {
-          font-size: calc(30.6 * var(--u));
-          line-height: calc(38 * var(--u));
+          font-size: calc(19 * var(--u));
+          line-height: calc(27 * var(--u));
           color: var(--ink);
-          font-weight: 400;
-          letter-spacing: -0.02em;
-          -webkit-text-stroke: 0.2px var(--ink);
+          font-weight: 500;
+          letter-spacing: -0.015em;
         }
 
         .brand-touch-btn {
-          margin-top: calc(36 * var(--u));
-          width: calc(186 * var(--u));
-          height: calc(48 * var(--u));
+          margin-top: calc(34 * var(--u));
+          width: fit-content;
+          min-width: calc(248 * var(--u));
+          height: calc(56 * var(--u));
+          max-height: 62px;
+          min-height: 52px;
           background: linear-gradient(135deg, #3d6ab3 0%, #1e4587 100%);
           color: #ffffff;
-          border: 1px solid rgba(253, 207, 9, 0.35);
+          border: 1px solid rgba(253, 207, 9, 0.45);
           border-radius: 0;
-          display: flex;
+          display: inline-flex;
           align-items: center;
           justify-content: space-between;
-          padding: 0 0 0 calc(20 * var(--u));
+          padding: 0 calc(6 * var(--u)) 0 calc(24 * var(--u));
+          gap: calc(18 * var(--u));
           font-family: inherit;
-          font-size: calc(15 * var(--u));
-          font-weight: 600;
+          font-size: calc(16.5 * var(--u));
+          font-weight: 700;
+          letter-spacing: -0.01em;
+          white-space: nowrap;
           cursor: pointer;
           text-decoration: none;
           transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease;
-          box-shadow: 0 calc(4 * var(--u)) calc(14 * var(--u)) rgba(61, 106, 179, 0.25);
+          box-shadow: 0 calc(4 * var(--u)) calc(16 * var(--u)) rgba(61, 106, 179, 0.3), 0 0 calc(12 * var(--u)) rgba(253, 207, 9, 0.15);
+        }
+
+        .brand-touch-btn span {
+          white-space: nowrap;
         }
 
         .brand-touch-cap {
-          width: calc(38 * var(--u));
-          height: calc(38 * var(--u));
-          margin-right: calc(4 * var(--u));
+          width: calc(44 * var(--u));
+          height: calc(44 * var(--u));
+          margin-right: calc(2 * var(--u));
           background: var(--brand-yellow);
           display: flex;
           align-items: center;
           justify-content: center;
+          flex-shrink: 0;
           transition: background-color 0.2s ease, transform 0.15s ease;
         }
 
         .brand-touch-cap svg {
-          width: calc(16 * var(--u));
-          height: calc(16 * var(--u));
+          width: calc(18 * var(--u));
+          height: calc(18 * var(--u));
           stroke: #03063A;
           fill: none;
-          stroke-width: 2.4;
+          stroke-width: 2.5;
           stroke-linecap: round;
           stroke-linejoin: round;
         }
 
         .brand-touch-btn:hover {
           background: linear-gradient(135deg, #2a589e 0%, #163669 100%);
-          border-color: rgba(253, 207, 9, 0.85);
-          box-shadow: 0 calc(6 * var(--u)) calc(20 * var(--u)) rgba(61, 106, 179, 0.4), 0 0 14px rgba(253, 207, 9, 0.3);
+          border-color: rgba(253, 207, 9, 0.9);
+          box-shadow: 0 calc(6 * var(--u)) calc(22 * var(--u)) rgba(61, 106, 179, 0.45), 0 0 16px rgba(253, 207, 9, 0.35);
           transform: translateY(-1px);
         }
 
         .brand-touch-btn:hover .brand-touch-cap {
           background: #ffffff;
-          transform: translateX(calc(1.5 * var(--u)));
+          transform: translateX(calc(2 * var(--u)));
         }
 
         .link-col {
@@ -886,41 +646,42 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking }) => {
           .nimbus-footer-section {
             min-height: auto;
             height: auto;
-          }
-
-          .hero-container {
-            padding: 32px 24px 0;
-            max-width: 100%;
-          }
-
-          .hero-headline {
-            font-size: 34px;
-            line-height: 42px;
-          }
-
-          .hero-lede {
-            font-size: 16px;
-            line-height: 24px;
-          }
-
-          .hero-signup-wrap {
-            flex-direction: column;
-            width: 100%;
-            gap: 10px;
-          }
-
-          .signup-field {
-            width: 100%;
-            height: 50px;
-          }
-
-          .signup-btn {
-            width: 100%;
-            height: 50px;
+            padding: 24px 0;
           }
 
           .card-outer-wrap {
-            padding: 40px 16px 24px;
+            padding: 0 16px 24px;
+          }
+
+          .brand-logo-mark {
+            height: 48px;
+            max-height: 52px;
+          }
+
+          .brand-headline {
+            font-size: 18px;
+            line-height: 25px;
+          }
+
+          .brand-touch-btn {
+            width: fit-content;
+            min-width: 236px;
+            height: 52px;
+            padding: 0 6px 0 20px;
+            gap: 14px;
+            font-size: 15.5px;
+            white-space: nowrap;
+            margin-top: 24px;
+          }
+
+          .brand-touch-cap {
+            width: 40px;
+            height: 40px;
+          }
+
+          .brand-touch-cap svg {
+            width: 17px;
+            height: 17px;
           }
 
           .mobile-tab-nav {

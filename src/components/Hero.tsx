@@ -15,22 +15,22 @@ interface SlotData {
 // 4 Marketing verbs with matching 3D glossy icons and color tints
 const SLOTS: SlotData[] = [
   {
-    word: 'Scale',
+    word: 'Scale Faster',
     icon: 'https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/4d952211-0474-48cc-af48-58f68b3b7525.webp', // 4-pointed sparkle star
     tint: '#F2772F', // peach & apricot
   },
   {
-    word: 'Convert',
+    word: 'Convert Better',
     icon: 'https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/e2e91fca-5b3f-4e0e-a437-8a581592e407.webp', // $ coin with cycling arrows
     tint: '#3FB874', // warm sage mint
   },
   {
-    word: 'Engage',
+    word: 'Engage Deeper',
     icon: 'https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/83de7c35-dd91-4e56-bfb8-0ffafc83d0e0.webp', // chat bubble with embossed dots
     tint: '#E9C22E', // lemon cream
   },
   {
-    word: 'Rank',
+    word: 'Rank Higher',
     icon: 'https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/6b32bb47-4ad6-4938-a637-c997b373c68b.webp', // globe of rounded cells
     tint: '#C564C4', // rose lilac
   },
@@ -300,12 +300,6 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
                     <path d="M1 1l3 3 3-3" />
                   </svg>
                 </a>
-                <a href="#industries" className="vela-nav-item">
-                  Industries
-                  <svg className="vela-nav-chevron" viewBox="0 0 8 5">
-                    <path d="M1 1l3 3 3-3" />
-                  </svg>
-                </a>
                 <a href="#portfolio" className="vela-nav-item">
                   Portfolio
                   <svg className="vela-nav-chevron" viewBox="0 0 8 5">
@@ -326,7 +320,10 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
                 onClick={onOpenBooking}
                 className="btn-join-vela"
               >
-                Book a Call <ArrowUpRight className="vela-arrow-icon" />
+                <span>Book a Call</span>
+                <span className="btn-join-badge">
+                  <ArrowUpRight className="vela-arrow-icon" />
+                </span>
               </button>
 
               {/* Mobile Hamburger Button */}
@@ -347,7 +344,6 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
               <a href="#hero" onClick={() => setMobileMenuOpen(false)} className="vela-mobile-link">Home</a>
               <a href="#services" onClick={() => setMobileMenuOpen(false)} className="vela-mobile-link">Services</a>
               <a href="#process" onClick={() => setMobileMenuOpen(false)} className="vela-mobile-link">Our Process</a>
-              <a href="#industries" onClick={() => setMobileMenuOpen(false)} className="vela-mobile-link">Industries</a>
               <a href="#portfolio" onClick={() => setMobileMenuOpen(false)} className="vela-mobile-link">Portfolio</a>
               <a href="#faq" onClick={() => setMobileMenuOpen(false)} className="vela-mobile-link">Contact</a>
               <button
@@ -357,9 +353,12 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
                   onOpenBooking();
                 }}
                 className="btn-join-vela"
-                style={{ width: '100%', marginTop: '12px' }}
+                style={{ width: '100%', marginTop: '12px', justifyContent: 'center' }}
               >
-                Book a Call <ArrowUpRight size={16} />
+                <span>Book a Call</span>
+                <span className="btn-join-badge">
+                  <ArrowUpRight size={16} className="vela-arrow-icon" />
+                </span>
               </button>
             </div>
           )}
@@ -381,11 +380,11 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
 
                 {/* Cycling Marketing Verb */}
                 <span ref={wordTextRef} className="word-text">
-                  Scale
+                  Scale Faster
                 </span>
               </div>
 
-              <span className="headline-fixed">in your terms</span>
+              <span className="headline-fixed">than your competition</span>
             </h1>
           </div>
 
@@ -633,7 +632,12 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
         }
 
         .vela-nav-item:hover {
-          opacity: 0.65;
+          color: #3d6ab3;
+          opacity: 1;
+        }
+
+        .vela-nav-item:hover .vela-nav-chevron {
+          stroke: #3d6ab3;
         }
 
         .vela-nav-chevron {
@@ -645,36 +649,60 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
           stroke-linejoin: round;
           fill: none;
           transform: translateY(calc(1 * var(--u)));
+          transition: stroke 0.2s ease;
         }
 
         .btn-join-vela {
           height: calc(48 * var(--u));
-          padding: 0 calc(22 * var(--u));
-          border: 1.4px solid var(--ink);
-          border-radius: calc(8 * var(--u));
-          background: transparent;
-          color: var(--ink);
-          font-size: calc(16 * var(--u));
-          font-weight: 600;
+          padding: 0 calc(6 * var(--u)) 0 calc(20 * var(--u));
+          border: 1.5px solid #3d6ab3;
+          border-radius: calc(9999 * var(--u));
+          background: #3d6ab3;
+          color: #ffffff;
+          font-size: calc(15.5 * var(--u));
+          font-weight: 700;
           font-family: inherit;
           cursor: pointer;
-          transition: background-color 0.22s ease, color 0.22s ease, transform 0.15s ease;
+          transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          gap: calc(6 * var(--u));
+          gap: calc(10 * var(--u));
           text-decoration: none;
+          box-shadow: 0 calc(4 * var(--u)) calc(16 * var(--u)) rgba(61, 106, 179, 0.35);
+        }
+
+        .btn-join-badge {
+          width: calc(34 * var(--u));
+          height: calc(34 * var(--u));
+          border-radius: 50%;
+          background: #fdcf09;
+          color: #0f172a;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          transition: transform 0.2s ease, background-color 0.2s ease;
+          flex-shrink: 0;
+        }
+
+        .btn-join-vela .vela-arrow-icon {
+          width: calc(16 * var(--u));
+          height: calc(16 * var(--u));
+          stroke: #0f172a;
+          stroke-width: 2.5;
+          transition: transform 0.2s ease;
         }
 
         .btn-join-vela:hover {
-          background-color: var(--ink);
-          color: var(--cream);
-          transform: translateY(-1px);
+          background-color: #294f8d;
+          border-color: #294f8d;
+          transform: translateY(-2px);
+          box-shadow: 0 calc(6 * var(--u)) calc(22 * var(--u)) rgba(61, 106, 179, 0.45), 0 0 calc(12 * var(--u)) rgba(253, 207, 9, 0.3);
         }
 
-        .vela-arrow-icon {
-          width: calc(16 * var(--u));
-          height: calc(16 * var(--u));
+        .btn-join-vela:hover .btn-join-badge {
+          transform: scale(1.08) translate(1px, -1px);
+          background-color: #ffe043;
         }
 
         .vela-mobile-toggle {
@@ -698,9 +726,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
         }
 
         .vela-headline {
-          font-size: calc(172 * var(--u));
-          line-height: 0.86;
-          font-weight: 500;
+          font-size: calc(154 * var(--u));
+          line-height: 0.9;
           letter-spacing: -0.032em;
           color: var(--ink);
           margin: 0;
@@ -710,9 +737,12 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
         .cycle-slot {
           display: flex;
           align-items: center;
-          gap: calc(28 * var(--u));
+          gap: calc(22 * var(--u));
           white-space: nowrap;
-          height: 1em;
+          font-size: 0.98em; /* refined balanced size for changing content */
+          font-weight: 600;
+          letter-spacing: -0.035em;
+          margin-bottom: calc(8 * var(--u));
         }
 
         .icon-wrapper {
@@ -760,6 +790,10 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
         .headline-fixed {
           display: block;
           white-space: nowrap;
+          font-size: 0.9em;
+          font-weight: 450;
+          color: rgba(13, 13, 12, 0.9);
+          letter-spacing: -0.028em;
         }
 
         .vela-row {
@@ -996,12 +1030,17 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
           }
 
           .vela-headline {
-            font-size: clamp(52px, 15.5vw, 88px);
-            line-height: 0.92;
+            font-size: clamp(38px, 11vw, 76px);
+            line-height: 0.95;
           }
 
           .cycle-slot {
-            gap: 16px;
+            gap: 12px;
+            font-size: 0.96em;
+          }
+
+          .headline-fixed {
+            font-size: 0.9em;
           }
 
           .vela-row {

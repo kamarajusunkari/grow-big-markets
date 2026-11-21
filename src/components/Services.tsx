@@ -8,6 +8,7 @@ interface ServicesProps {
 interface ServiceCardData {
   id: string;
   category: string;
+  bgText: string;
   title: string;
   subtitle: string;
   desc: string;
@@ -21,6 +22,7 @@ const FEATURED_SERVICES: ServiceCardData[] = [
   {
     id: 'ppc-paid-ads',
     category: 'PAID MEDIA & PPC',
+    bgText: 'PAID ADS',
     title: 'Performance Marketing (Meta & Google PPC)',
     subtitle: "We Don't Just Run Ads. We Scale High-ROAS Revenue.",
     desc: 'High-converting ad campaigns across Google Search, Meta (Instagram/Facebook), YouTube & LinkedIn engineered to maximize ROAS.',
@@ -32,6 +34,7 @@ const FEATURED_SERVICES: ServiceCardData[] = [
   {
     id: 'seo-search-growth',
     category: 'ORGANIC SEARCH & RANKINGS',
+    bgText: 'ORGANIC SEO',
     title: 'Search Engine Optimization (SEO) & Organic Growth',
     subtitle: 'Dominate Google Rankings. Drive High-Intent Traffic.',
     desc: 'Propel your brand to the top of search engine results with technical SEO audits, high-authority backlink building, and keyword strategies.',
@@ -43,6 +46,7 @@ const FEATURED_SERVICES: ServiceCardData[] = [
   {
     id: 'social-media-branding',
     category: 'SOCIAL MEDIA & BRANDING',
+    bgText: 'VIRAL REELS',
     title: 'Social Media Marketing & Content Scaling',
     subtitle: 'Build Authentic Brand Authority & Engage Audience.',
     desc: 'Build a high-converting social media presence across Instagram, LinkedIn, YouTube, and TikTok with strategic reels and content calendars.',
@@ -54,6 +58,7 @@ const FEATURED_SERVICES: ServiceCardData[] = [
   {
     id: 'cro-funnel-scaling',
     category: 'CONVERSION & FUNNELS',
+    bgText: 'CRO FUNNELS',
     title: 'Conversion Rate Optimization (CRO) & Sales Funnels',
     subtitle: 'Turn Website Visitors Into Paying Loyal Customers.',
     desc: 'Optimize every step of your sales funnel through heatmap audits, landing page design, A/B testing, and persuasive copywriting.',
@@ -190,6 +195,7 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
             >
               <div
                 style={{
+                  position: 'relative',
                   borderRadius: '28px',
                   overflow: 'hidden',
                   boxShadow: '0 20px 45px rgba(0, 0, 0, 0.1), 0 0 25px rgba(234, 179, 8, 0.12)',
@@ -197,6 +203,27 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
                   border: '1px solid rgba(234, 179, 8, 0.3)',
                 }}
               >
+                {/* Background Text With Respect to Image */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '18px',
+                    left: '22px',
+                    fontFamily: "'Anton', sans-serif",
+                    fontSize: 'clamp(2.2rem, 4.5vw, 3.8rem)',
+                    color: 'rgba(255, 255, 255, 0.45)',
+                    letterSpacing: '-0.02em',
+                    textTransform: 'uppercase',
+                    whiteSpace: 'nowrap',
+                    pointerEvents: 'none',
+                    zIndex: 2,
+                    lineHeight: 0.9,
+                    textShadow: '0 3px 14px rgba(0,0,0,0.45)',
+                  }}
+                >
+                  {FEATURED_SERVICES[0].bgText}
+                </div>
+
                 <img
                   src={FEATURED_SERVICES[0].imageSrc}
                   alt={FEATURED_SERVICES[0].imageAlt}
@@ -237,6 +264,7 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
             >
               <div
                 style={{
+                  position: 'relative',
                   borderRadius: '28px',
                   overflow: 'hidden',
                   boxShadow: '0 20px 45px rgba(0, 0, 0, 0.1), 0 0 25px rgba(234, 179, 8, 0.12)',
@@ -244,6 +272,27 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
                   border: '1px solid rgba(234, 179, 8, 0.3)',
                 }}
               >
+                {/* Background Text With Respect to Image */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '18px',
+                    left: '22px',
+                    fontFamily: "'Anton', sans-serif",
+                    fontSize: 'clamp(2.2rem, 4.5vw, 3.8rem)',
+                    color: 'rgba(255, 255, 255, 0.45)',
+                    letterSpacing: '-0.02em',
+                    textTransform: 'uppercase',
+                    whiteSpace: 'nowrap',
+                    pointerEvents: 'none',
+                    zIndex: 2,
+                    lineHeight: 0.9,
+                    textShadow: '0 3px 14px rgba(0,0,0,0.45)',
+                  }}
+                >
+                  {FEATURED_SERVICES[2].bgText}
+                </div>
+
                 <img
                   src={FEATURED_SERVICES[2].imageSrc}
                   alt={FEATURED_SERVICES[2].imageAlt}
@@ -328,6 +377,7 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
             >
               <div
                 style={{
+                  position: 'relative',
                   borderRadius: '28px',
                   overflow: 'hidden',
                   boxShadow: '0 20px 45px rgba(0, 0, 0, 0.1), 0 0 25px rgba(234, 179, 8, 0.12)',
@@ -335,6 +385,27 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
                   border: '1px solid rgba(234, 179, 8, 0.3)',
                 }}
               >
+                {/* Background Text With Respect to Image */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '18px',
+                    left: '22px',
+                    fontFamily: "'Anton', sans-serif",
+                    fontSize: 'clamp(2.2rem, 4.5vw, 3.8rem)',
+                    color: 'rgba(255, 255, 255, 0.45)',
+                    letterSpacing: '-0.02em',
+                    textTransform: 'uppercase',
+                    whiteSpace: 'nowrap',
+                    pointerEvents: 'none',
+                    zIndex: 2,
+                    lineHeight: 0.9,
+                    textShadow: '0 3px 14px rgba(0,0,0,0.45)',
+                  }}
+                >
+                  {FEATURED_SERVICES[1].bgText}
+                </div>
+
                 <img
                   src={FEATURED_SERVICES[1].imageSrc}
                   alt={FEATURED_SERVICES[1].imageAlt}
@@ -375,6 +446,7 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
             >
               <div
                 style={{
+                  position: 'relative',
                   borderRadius: '28px',
                   overflow: 'hidden',
                   boxShadow: '0 20px 45px rgba(0, 0, 0, 0.1), 0 0 25px rgba(234, 179, 8, 0.12)',
@@ -382,6 +454,27 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
                   border: '1px solid rgba(234, 179, 8, 0.3)',
                 }}
               >
+                {/* Background Text With Respect to Image */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '18px',
+                    left: '22px',
+                    fontFamily: "'Anton', sans-serif",
+                    fontSize: 'clamp(2.2rem, 4.5vw, 3.8rem)',
+                    color: 'rgba(255, 255, 255, 0.45)',
+                    letterSpacing: '-0.02em',
+                    textTransform: 'uppercase',
+                    whiteSpace: 'nowrap',
+                    pointerEvents: 'none',
+                    zIndex: 2,
+                    lineHeight: 0.9,
+                    textShadow: '0 3px 14px rgba(0,0,0,0.45)',
+                  }}
+                >
+                  {FEATURED_SERVICES[3].bgText}
+                </div>
+
                 <img
                   src={FEATURED_SERVICES[3].imageSrc}
                   alt={FEATURED_SERVICES[3].imageAlt}

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Grow Big Marketers — in your terms</title>
+  <title>Grow Big Marketers — Performance Marketing Agency</title>
   
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="/Growbig blue.png">
@@ -215,32 +215,55 @@
 
     .btn-contact {
       height: calc(48 * var(--u));
-      padding: 0 calc(22 * var(--u));
-      border: 1.4px solid var(--ink);
-      border-radius: calc(8 * var(--u));
-      background: transparent;
-      color: var(--ink);
-      font-size: calc(16 * var(--u));
-      font-weight: 600;
+      padding: 0 calc(6 * var(--u)) 0 calc(20 * var(--u));
+      border: 1.5px solid #3d6ab3;
+      border-radius: calc(9999 * var(--u));
+      background: #3d6ab3;
+      color: #ffffff;
+      font-size: calc(15.5 * var(--u));
+      font-weight: 700;
       font-family: inherit;
       cursor: pointer;
-      transition: background-color 0.22s ease, color 0.22s ease, transform 0.15s ease;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: calc(6 * var(--u));
+      gap: calc(10 * var(--u));
       text-decoration: none;
+      box-shadow: 0 calc(4 * var(--u)) calc(16 * var(--u)) rgba(61, 106, 179, 0.35);
+    }
+
+    .btn-contact-badge {
+      width: calc(34 * var(--u));
+      height: calc(34 * var(--u));
+      border-radius: 50%;
+      background: #fdcf09;
+      color: #0f172a;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s ease, background-color 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .btn-contact .nav-arrow-icon {
+      width: calc(16 * var(--u));
+      height: calc(16 * var(--u));
+      stroke: #0f172a;
+      stroke-width: 2.5;
+      transition: transform 0.2s ease;
     }
 
     .btn-contact:hover {
-      background-color: var(--ink);
-      color: var(--cream);
-      transform: translateY(-1px);
+      background-color: #294f8d;
+      border-color: #294f8d;
+      transform: translateY(-2px);
+      box-shadow: 0 calc(6 * var(--u)) calc(22 * var(--u)) rgba(61, 106, 179, 0.45), 0 0 calc(12 * var(--u)) rgba(253, 207, 9, 0.3);
     }
 
-    .nav-arrow-icon {
-      width: calc(16 * var(--u));
-      height: calc(16 * var(--u));
+    .btn-contact:hover .btn-contact-badge {
+      transform: scale(1.08) translate(1px, -1px);
+      background-color: #ffe043;
     }
 
     /* ==========================================================================
@@ -254,9 +277,8 @@
     }
 
     .headline {
-      font-size: calc(172 * var(--u));
-      line-height: 0.86;
-      font-weight: 500;
+      font-size: calc(154 * var(--u));
+      line-height: 0.9;
       letter-spacing: -0.032em;
       color: var(--ink);
       margin: 0;
@@ -267,9 +289,12 @@
     .cycle-slot {
       display: flex;
       align-items: center;
-      gap: calc(28 * var(--u));
+      gap: calc(22 * var(--u));
       white-space: nowrap;
-      height: 1em;
+      font-size: 0.98em; /* refined balanced size for changing content */
+      font-weight: 600;
+      letter-spacing: -0.035em;
+      margin-bottom: calc(8 * var(--u));
     }
 
     /* Icon Tint Container */
@@ -555,7 +580,8 @@
       }
 
       .cycle-slot {
-        gap: 16px;
+        gap: 12px;
+        font-size: 0.96em;
       }
 
       .hero-row {
@@ -700,11 +726,13 @@
           </div>
 
           <a href="#faq" class="btn-contact">
-            Book a Call
-            <svg class="nav-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="7" y1="17" x2="17" y2="7"></line>
-              <polyline points="7 7 17 7 17 17"></polyline>
-            </svg>
+            <span>Book a Call</span>
+            <span class="btn-contact-badge">
+              <svg class="nav-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="7" y1="17" x2="17" y2="7"></line>
+                <polyline points="7 7 17 7 17 17"></polyline>
+              </svg>
+            </span>
           </a>
         </div>
       </nav>
@@ -720,10 +748,10 @@
             </div>
 
             <!-- Cycling Word -->
-            <span class="word-text" id="wordText">Scale</span>
+            <span class="word-text" id="wordText">Scale Faster</span>
           </div>
           
-          <span class="headline-fixed">in your terms</span>
+          <span class="headline-fixed">than your competition</span>
         </h1>
       </div>
 
@@ -816,22 +844,22 @@
       // 4 Marketing Cycles Configuration
       const SLOTS = [
         {
-          word: 'Scale',
+          word: 'Scale Faster',
           icon: 'https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/4d952211-0474-48cc-af48-58f68b3b7525.webp',
           tint: '#F2772F'
         },
         {
-          word: 'Convert',
+          word: 'Convert Better',
           icon: 'https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/e2e91fca-5b3f-4e0e-a437-8a581592e407.webp',
           tint: '#3FB874'
         },
         {
-          word: 'Engage',
+          word: 'Engage Deeper',
           icon: 'https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/83de7c35-dd91-4e56-bfb8-0ffafc83d0e0.webp',
           tint: '#E9C22E'
         },
         {
-          word: 'Rank',
+          word: 'Rank Higher',
           icon: 'https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/6b32bb47-4ad6-4938-a637-c997b373c68b.webp',
           tint: '#C564C4'
         }

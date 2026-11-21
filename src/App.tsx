@@ -4,7 +4,6 @@ import { Hero } from './components/Hero';
 import { AboutUs } from './components/AboutUs';
 import { Services } from './components/Services';
 import { Process } from './components/Process';
-import { Industries } from './components/Industries';
 import { Portfolio } from './components/Portfolio';
 import { Testimonials } from './components/Testimonials';
 import { Faq } from './components/Faq';
@@ -49,7 +48,6 @@ export const App: React.FC = () => {
           <AboutUs onOpenBooking={() => setIsBookingOpen(true)} />
           <Services onOpenBooking={() => setIsBookingOpen(true)} />
           <Process onOpenBooking={() => setIsBookingOpen(true)} />
-          <Industries />
           <Portfolio />
           <Testimonials />
           <Faq />

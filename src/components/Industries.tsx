@@ -1,597 +1,590 @@
-import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { ArrowLeft, ArrowRight, Sparkles, ArrowUpRight } from 'lucide-react';
+import healthcareImg from '../assets/7ad4fbdb-864c-4c5e-90f4-9b5fd2d5fe2f.webp';
 
-interface IndustryPillar {
-  id: string;
-  name: string;
-  category: string;
-  image: string;
+interface IndustriesProps {
+  onOpenBooking?: () => void;
 }
 
-const ALL_PILLARS: IndustryPillar[] = [
+interface IndustryItem {
+  id: string;
+  name: string;
+  bgText: string;
+  category: string;
+  metric: string;
+  src: string;
+  fallbackSrc: string;
+  accent: string;
+  panel: string;
+}
+
+const ALL_INDUSTRIES: IndustryItem[] = [
   {
     id: 'real-estate',
-    name: 'REAL ESTATE',
+    name: 'REAL ESTATE & PROPTECH',
+    bgText: 'REAL ESTATE',
     category: 'PropTech & Infrastructure',
-    image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80',
+    metric: '₹180Cr+ Asset Sales • 14.2X Pipeline',
+    src: '/industries/1.png',
+    fallbackSrc: 'https://fifth-gentle-45902158.figma.site/_components/v2/4de492f6d9cf8244ad5293233e5c6f52407d42fc/1.02464a56.png',
+    accent: '#F4845F',
+    panel: '#F79B7F',
   },
   {
     id: 'agriculture',
-    name: 'AGRICULTURE',
-    category: 'AgriTech & Automation',
-    image: 'https://images.unsplash.com/photo-1586771107445-d3ca888129ff?auto=format&fit=crop&w=800&q=80',
+    name: 'AGRICULTURE & AGRITECH',
+    bgText: 'AGRICULTURE',
+    category: 'AgriTech & Smart Farming',
+    metric: '350K+ Farmers • 3.4X Yield Output',
+    src: '/industries/2.png',
+    fallbackSrc: 'https://fifth-gentle-45902158.figma.site/_components/v2/4de492f6d9cf8244ad5293233e5c6f52407d42fc/2.b977faab.png',
+    accent: '#6BBF7A',
+    panel: '#85CC92',
   },
   {
-    id: 'e-commerce',
-    name: 'E-COMMERCE',
-    category: 'Retail & Logistics',
-    image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80',
+    id: 'ecommerce',
+    name: 'E-COMMERCE & D2C BRANDS',
+    bgText: 'E-COMMERCE',
+    category: 'Retail & Multi-Channel',
+    metric: '4.8X ROAS Surge • 2.4M+ Orders',
+    src: '/industries/3.png',
+    fallbackSrc: 'https://fifth-gentle-45902158.figma.site/_components/v2/4de492f6d9cf8244ad5293233e5c6f52407d42fc/3.4df853b4.png',
+    accent: '#E882B4',
+    panel: '#ED9DC4',
   },
   {
     id: 'hospitality',
-    name: 'HOSPITALITY',
-    category: 'Hotels & Tourism',
-    image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80',
+    name: 'HOSPITALITY & TOURISM',
+    bgText: 'HOSPITALITY',
+    category: 'Hotels, Resorts & Tourism',
+    metric: '92% Direct Bookings • 5.8X ROI',
+    src: '/industries/4.png',
+    fallbackSrc: 'https://fifth-gentle-45902158.figma.site/_components/v2/4de492f6d9cf8244ad5293233e5c6f52407d42fc/4.4457fbce.png',
+    accent: '#6EB5FF',
+    panel: '#8DC4FF',
   },
   {
     id: 'textiles',
-    name: 'TEXTILES',
-    category: 'Apparel & Fashion',
-    image: 'https://images.unsplash.com/photo-1604754742629-3e5728249d73?auto=format&fit=crop&w=800&q=80',
+    name: 'TEXTILES & APPAREL',
+    bgText: 'TEXTILES',
+    category: 'Fashion & Global Supply',
+    metric: '₹65Cr+ Export Demand • 18 Markets',
+    src: '/industries/1.png',
+    fallbackSrc: 'https://fifth-gentle-45902158.figma.site/_components/v2/4de492f6d9cf8244ad5293233e5c6f52407d42fc/1.02464a56.png',
+    accent: '#F97316',
+    panel: '#FDBA74',
   },
   {
     id: 'healthcare',
-    name: 'HEALTHCARE',
-    category: 'MedTech & Pharma',
-    image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=800&q=80',
+    name: 'HEALTHCARE & MEDTECH',
+    bgText: 'HEALTHCARE',
+    category: 'MedTech & Specialty Care',
+    metric: '82% Lower CAC • 35,000+ Consults',
+    src: healthcareImg,
+    fallbackSrc: '/industries/healthcare.png',
+    accent: '#10B981',
+    panel: '#6EE7B7',
   },
   {
     id: 'fintech',
-    name: 'FINTECH',
-    category: 'Banking & Financial',
-    image: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=800&q=80',
+    name: 'FINTECH & FINANCIAL',
+    bgText: 'FINTECH',
+    category: 'Banking & WealthTech',
+    metric: '₹450Cr+ Disbursals • 99.4% KYC',
+    src: '/industries/4.png',
+    fallbackSrc: 'https://fifth-gentle-45902158.figma.site/_components/v2/4de492f6d9cf8244ad5293233e5c6f52407d42fc/4.4457fbce.png',
+    accent: '#3d6ab3',
+    panel: '#93C5FD',
   },
   {
     id: 'automobile',
-    name: 'AUTOMOBILE',
-    category: 'EVs & Auto Tech',
-    image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80',
+    name: 'AUTOMOBILE & EV MOBILITY',
+    bgText: 'AUTOMOBILE',
+    category: 'EVs & Dealership Networks',
+    metric: '45K+ Test Drives • 6.2X Leads',
+    src: '/industries/3.png',
+    fallbackSrc: 'https://fifth-gentle-45902158.figma.site/_components/v2/4de492f6d9cf8244ad5293233e5c6f52407d42fc/3.4df853b4.png',
+    accent: '#EF4444',
+    panel: '#FCA5A5',
   },
   {
     id: 'education',
-    name: 'EDUCATION',
-    category: 'EdTech & Learning',
-    image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800&q=80',
+    name: 'EDUCATION & EDTECH',
+    bgText: 'EDUCATION',
+    category: 'EdTech & Learning Platforms',
+    metric: '1.2M+ Students • 88% Retention',
+    src: '/industries/2.png',
+    fallbackSrc: 'https://fifth-gentle-45902158.figma.site/_components/v2/4de492f6d9cf8244ad5293233e5c6f52407d42fc/2.b977faab.png',
+    accent: '#06B6D4',
+    panel: '#67E8F9',
   },
   {
     id: 'saas',
-    name: 'SAAS & TECH',
-    category: 'B2B Cloud Platforms',
-    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80',
+    name: 'SAAS & CLOUD PLATFORMS',
+    bgText: 'SAAS TECH',
+    category: 'Enterprise B2B Software',
+    metric: '120+ SQLs/Mo • 4.1X ARR Expansion',
+    src: '/industries/4.png',
+    fallbackSrc: 'https://fifth-gentle-45902158.figma.site/_components/v2/4de492f6d9cf8244ad5293233e5c6f52407d42fc/4.4457fbce.png',
+    accent: '#1e4587',
+    panel: '#60A5FA',
   },
 ];
 
-export const Industries: React.FC = () => {
-  const [startIndex, setStartIndex] = useState(0);
-  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
-  const [mobileActiveIdx, setMobileActiveIdx] = useState(0);
-  const mobileTrackRef = React.useRef<HTMLDivElement>(null);
+export const Industries: React.FC<IndustriesProps> = ({ onOpenBooking }) => {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const activeIndexRef = useRef(0);
+  const isAutoScrollingRef = useRef(false);
+  const touchStartXRef = useRef<number | null>(null);
 
-  // Infinite Circular Carousel Navigation on Desktop
-  const handlePrev = () => {
-    setStartIndex((prev) => (prev - 1 + ALL_PILLARS.length) % ALL_PILLARS.length);
-  };
+  // Resize listener for mobile responsive layout
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize, { passive: true });
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
-  const handleNext = () => {
-    setStartIndex((prev) => (prev + 1) % ALL_PILLARS.length);
-  };
+  // Preload images on mount
+  useEffect(() => {
+    ['/industries/1.png', '/industries/2.png', '/industries/3.png', '/industries/4.png', healthcareImg].forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
 
-  const handleMobilePrev = () => {
-    if (mobileActiveIdx > 0) {
-      const nextIdx = mobileActiveIdx - 1;
-      setMobileActiveIdx(nextIdx);
-      if (mobileTrackRef.current) {
-        const cardWidth = mobileTrackRef.current.clientWidth * 0.82;
-        mobileTrackRef.current.scrollTo({ left: nextIdx * cardWidth, behavior: 'smooth' });
-      }
+  // Set active industry index smoothly
+  const goToIndex = useCallback((idx: number, scrollPage = false) => {
+    const total = ALL_INDUSTRIES.length;
+    const nextIdx = (idx + total) % total;
+    activeIndexRef.current = nextIdx;
+    setActiveIndex(nextIdx);
+
+    if (scrollPage && trackRef.current) {
+      isAutoScrollingRef.current = true;
+      const track = trackRef.current;
+      const scrollableDist = track.offsetHeight - window.innerHeight;
+      const trackTop = track.getBoundingClientRect().top + window.scrollY;
+      const navbarHeight = isMobile ? 68 : 74;
+      const targetScrollY = Math.max(0, trackTop - navbarHeight + (nextIdx / (total - 1)) * scrollableDist);
+      window.scrollTo({ top: targetScrollY, behavior: 'smooth' });
+      setTimeout(() => {
+        isAutoScrollingRef.current = false;
+      }, 500);
     }
-  };
+  }, [isMobile]);
 
-  const handleMobileNext = () => {
-    if (mobileActiveIdx < ALL_PILLARS.length - 1) {
-      const nextIdx = mobileActiveIdx + 1;
-      setMobileActiveIdx(nextIdx);
-      if (mobileTrackRef.current) {
-        const cardWidth = mobileTrackRef.current.clientWidth * 0.82;
-        mobileTrackRef.current.scrollTo({ left: nextIdx * cardWidth, behavior: 'smooth' });
+  const navigate = useCallback(
+    (dir: 'next' | 'prev') => {
+      const total = ALL_INDUSTRIES.length;
+      const nextIdx = dir === 'next' ? (activeIndex + 1) % total : (activeIndex - 1 + total) % total;
+      goToIndex(nextIdx, true);
+    },
+    [activeIndex, goToIndex]
+  );
+
+  // Sticky Scroll Behavior: Sticks section until all 10 industries are visited
+  useEffect(() => {
+    const handleScroll = () => {
+      if (isAutoScrollingRef.current) return;
+      const track = trackRef.current;
+      if (!track) return;
+      const rect = track.getBoundingClientRect();
+      const scrollableDist = track.offsetHeight - window.innerHeight;
+      if (scrollableDist <= 0) return;
+
+      // When track is within sticky scroll bounds (accounting for navbar height)
+      const navbarHeight = isMobile ? 68 : 74;
+      if (rect.top <= navbarHeight + 10 && rect.bottom >= window.innerHeight - 10) {
+        const progress = Math.min(0.999, Math.max(0, (navbarHeight - rect.top) / scrollableDist));
+        const total = ALL_INDUSTRIES.length;
+        const targetIdx = Math.min(total - 1, Math.floor(progress * total));
+        if (targetIdx !== activeIndexRef.current) {
+          activeIndexRef.current = targetIdx;
+          setActiveIndex(targetIdx);
+        }
       }
-    }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') navigate('prev');
+      if (e.key === 'ArrowRight') navigate('next');
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [navigate]);
+
+  // Touch Swipe Handlers for Mobile
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartXRef.current = e.touches[0].clientX;
   };
 
-  // Always render 5 circular wrapped pillars on desktop
-  const visiblePillars = Array.from({ length: 5 }, (_, i) => {
-    return ALL_PILLARS[(startIndex + i) % ALL_PILLARS.length];
-  });
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartXRef.current === null) return;
+    const diff = touchStartXRef.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) navigate('next');
+      else navigate('prev');
+    }
+    touchStartXRef.current = null;
+  };
 
-  // The center card (index 2 in 5-pillar grid) is active by default on desktop
-  const activeIndex = hoveredIdx !== null ? hoveredIdx : 2;
+  const activeItem = ALL_INDUSTRIES[activeIndex];
+
+  // Continuous 3D Circular Positioning & Transitions across all N industries
+  const getStyleForIndex = (i: number) => {
+    const total = ALL_INDUSTRIES.length;
+    let diff = i - activeIndex;
+    const half = total / 2;
+    while (diff > half) diff -= total;
+    while (diff < -half) diff += total;
+
+    // Center active hero figurine
+    if (diff === 0) {
+      return {
+        transform: `translateX(-50%) scale(${isMobile ? 1.08 : 1.2})`,
+        transformOrigin: 'bottom center',
+        filter: 'blur(0px)',
+        opacity: 1,
+        zIndex: 30,
+        left: '50%',
+        height: isMobile ? '55%' : '73%',
+        bottom: isMobile ? '110px' : '44px',
+        pointerEvents: 'auto' as const,
+      };
+    }
+
+    // Immediate left flank
+    if (diff === -1) {
+      return {
+        transform: 'translateX(-50%) scale(1)',
+        transformOrigin: 'bottom center',
+        filter: 'blur(2px)',
+        opacity: 0.85,
+        zIndex: 20,
+        left: isMobile ? '18%' : '26%',
+        height: isMobile ? '18%' : '27%',
+        bottom: isMobile ? '125px' : '58px',
+        pointerEvents: 'auto' as const,
+      };
+    }
+
+    // Immediate right flank
+    if (diff === 1) {
+      return {
+        transform: 'translateX(-50%) scale(1)',
+        transformOrigin: 'bottom center',
+        filter: 'blur(2px)',
+        opacity: 0.85,
+        zIndex: 20,
+        left: isMobile ? '82%' : '74%',
+        height: isMobile ? '18%' : '27%',
+        bottom: isMobile ? '125px' : '58px',
+        pointerEvents: 'auto' as const,
+      };
+    }
+
+    // Far left depth position
+    if (diff === -2) {
+      return {
+        transform: 'translateX(-50%) scale(0.85)',
+        transformOrigin: 'bottom center',
+        filter: 'blur(4px)',
+        opacity: 0.45,
+        zIndex: 10,
+        left: isMobile ? '6%' : '14%',
+        height: isMobile ? '14%' : '20%',
+        bottom: isMobile ? '140px' : '78px',
+        pointerEvents: 'auto' as const,
+      };
+    }
+
+    // Far right depth position
+    if (diff === 2) {
+      return {
+        transform: 'translateX(-50%) scale(0.85)',
+        transformOrigin: 'bottom center',
+        filter: 'blur(4px)',
+        opacity: 0.45,
+        zIndex: 10,
+        left: isMobile ? '94%' : '86%',
+        height: isMobile ? '14%' : '20%',
+        bottom: isMobile ? '140px' : '78px',
+        pointerEvents: 'auto' as const,
+      };
+    }
+
+    // Distant background positions (seamlessly hidden)
+    return {
+      transform: 'translateX(-50%) scale(0.6)',
+      transformOrigin: 'bottom center',
+      filter: 'blur(6px)',
+      opacity: 0,
+      zIndex: 1,
+      left: diff < 0 ? '5%' : '95%',
+      height: '14%',
+      bottom: '14%',
+      pointerEvents: 'none' as const,
+    };
+  };
 
   return (
+    /* Outer Scroll Track: 220vh gives a compact, smooth sticky scroll without excessive height */
     <section
       id="industries"
-      style={{
-        background: '#ffffff', // Clean White Background as requested
-        padding: '6.5rem 0 8.5rem 0',
-        borderBottom: '1px solid rgba(15, 23, 42, 0.08)',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
+      ref={trackRef}
+      style={{ height: '220vh' }}
+      className="relative w-full bg-white text-[#0f172a]"
     >
-      {/* Light Dot Grid Overlay */}
+      {/* Pinned Sticky Stage: sticks right below the fixed navbar (top: 74px) and fills to the exact bottom of viewport (calc(100vh - 74px)), removing any gap at the bottom while keeping the header part fully visible */}
       <div
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
         style={{
-          position: 'absolute',
-          inset: 0,
-          backgroundImage: 'radial-gradient(rgba(132, 204, 22, 0.2) 1px, transparent 1px)',
-          backgroundSize: '28px 28px',
-          opacity: 0.5,
-          pointerEvents: 'none',
+          fontFamily: "'Inter', sans-serif",
+          position: 'sticky',
+          top: isMobile ? '68px' : '74px',
+          height: isMobile ? 'calc(100svh - 68px)' : 'calc(100vh - 74px)',
+          minHeight: '560px',
         }}
-      />
-
-      {/* Ambient Radial Glow */}
-      <div
-        style={{
-          position: 'absolute',
-          top: '30%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: '750px',
-          height: '750px',
-          background: 'radial-gradient(circle, rgba(132, 204, 22, 0.18) 0%, rgba(59, 130, 246, 0.08) 50%, transparent 70%)',
-          filter: 'blur(90px)',
-          pointerEvents: 'none',
-        }}
-      />
-
-      {/* Main Container Aligned Parallel to Navbar */}
-      <div
-        style={{
-          width: '100%',
-          maxWidth: '1400px',
-          margin: '0 auto',
-          padding: '0 2rem',
-          position: 'relative',
-          zIndex: 2,
-        }}
+        className="relative w-full overflow-hidden flex flex-col justify-between select-none"
       >
-        {/* TOP SECTION HEADING: "INDUSTRIES WE SERVE" */}
+        {/* Subtle Ambient Radial Glow matching the Active Item's Accent Color */}
         <div
+          className="absolute inset-0 pointer-events-none transition-colors duration-700 ease-out"
           style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-end',
-            marginBottom: '2.5rem',
-            flexWrap: 'wrap',
-            gap: '1.5rem',
+            background: `radial-gradient(circle 850px at 50% 65%, ${activeItem.accent}14 0%, transparent 70%)`,
           }}
-          className="reveal-fade-up"
+        />
+
+        {/* 1. Grain Overlay (SVG fractalNoise) */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            zIndex: 50,
+            opacity: 0.12,
+            backgroundSize: '200px 200px',
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E")`,
+          }}
+        />
+
+        {/* 2. Top Header Bar & Quick Industry Pill Navigation */}
+        <header
+          className="relative w-full max-w-[1360px] mx-auto px-4 sm:px-8 pt-3.5 sm:pt-5 flex items-center justify-between gap-4"
+          style={{ zIndex: 60 }}
         >
-          <div>
-            <div style={{ display: 'inline-block', marginBottom: '0.75rem' }} className="domain-verticals-badge">
-              <span
+          {/* Top Left: Clean Badge */}
+          <div className="flex items-center gap-3 shrink-0">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-[0.16em] bg-[#03063A]/5 text-[#03063A] border border-[#03063A]/10">
+              <Sparkles size={12} className="text-[#fdcf09]" />
+              INDUSTRIES WE SCALE
+            </span>
+          </div>
+
+          {/* Top Right: Scrollable Quick Industry Tab Switcher */}
+          <nav className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 max-w-[70%] sm:max-w-[75%]">
+            {ALL_INDUSTRIES.map((item, idx) => {
+              const isActive = idx === activeIndex;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => goToIndex(idx, true)}
+                  className={`px-2.5 sm:px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-all duration-300 cursor-pointer shrink-0 ${
+                    isActive
+                      ? 'bg-[#0f172a] text-white shadow-md shadow-[#0f172a]/15 scale-105'
+                      : 'bg-white/80 hover:bg-slate-100 text-slate-600 border border-slate-200'
+                  }`}
+                  aria-label={`Select ${item.name}`}
+                >
+                  <span className="font-mono text-[10px] opacity-70 mr-1">
+                    {idx + 1 < 10 ? `0${idx + 1}` : idx + 1}
+                  </span>
+                  <span className="font-semibold">{item.name.split(' ')[0]}</span>
+                </button>
+              );
+            })}
+          </nav>
+        </header>
+
+        {/* 3. Buttery-Smooth Continuous 3D Carousel Stage */}
+        <div className="absolute inset-0" style={{ zIndex: 3 }}>
+          {ALL_INDUSTRIES.map((item, i) => {
+            const itemStyle = getStyleForIndex(i);
+            const isHero = i === activeIndex;
+
+            return (
+              <div
+                key={item.id}
+                onClick={() => {
+                  if (!isHero) goToIndex(i, true);
+                }}
+                className={`absolute cursor-pointer ${
+                  isHero ? 'cursor-default' : 'hover:opacity-95'
+                }`}
                 style={{
-                  fontSize: '0.8rem',
-                  fontWeight: 900,
-                  background: 'rgba(253, 208, 11, 0.2)',
-                  color: '#0f172a',
-                  padding: '0.4rem 1.1rem',
-                  borderRadius: 'var(--radius-full)',
-                  border: '1px solid rgba(253, 208, 11, 0.5)',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.15em',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
+                  aspectRatio: '0.6 / 1',
+                  left: itemStyle.left,
+                  bottom: itemStyle.bottom,
+                  height: itemStyle.height,
+                  transform: itemStyle.transform,
+                  transformOrigin: itemStyle.transformOrigin || 'bottom center',
+                  filter: itemStyle.filter,
+                  opacity: itemStyle.opacity,
+                  zIndex: itemStyle.zIndex,
+                  pointerEvents: itemStyle.pointerEvents,
+                  transition:
+                    'transform 480ms cubic-bezier(0.16, 1, 0.3, 1), left 480ms cubic-bezier(0.16, 1, 0.3, 1), filter 400ms cubic-bezier(0.16, 1, 0.3, 1), opacity 380ms ease, height 480ms ease, bottom 480ms ease',
+                  willChange: 'transform, left, filter, opacity, height, bottom',
                 }}
               >
-                <Sparkles size={14} /> DOMAIN VERTICALS
-              </span>
-            </div>
-
-            <h2
-              style={{
-                fontSize: 'clamp(2.2rem, 5vw, 4.2rem)',
-                fontWeight: 900,
-                lineHeight: 1.05,
-                letterSpacing: '-0.03em',
-                textTransform: 'uppercase',
-                margin: 0,
-                color: '#0f172a',
-              }}
-            >
-              INDUSTRIES <span style={{ color: '#FDD00B', background: '#3E6AB3', padding: '0.1rem 0.5rem', borderRadius: '8px', fontStyle: 'italic', fontSize: '0.88em' }}>WE SERVE</span>
-            </h2>
-          </div>
-
-          <div style={{ display: 'flex', gap: '0.75rem' }} className="desktop-carousel-controls">
-            <button
-              onClick={handlePrev}
-              style={{
-                width: '46px',
-                height: '46px',
-                borderRadius: '50%',
-                background: '#ffffff',
-                color: '#0f172a',
-                border: '1px solid rgba(15, 23, 42, 0.12)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
-                transition: 'all 0.25s ease',
-              }}
-              className="desktop-nav-btn"
-            >
-              <ChevronLeft size={22} />
-            </button>
-
-            <button
-              onClick={handleNext}
-              style={{
-                width: '46px',
-                height: '46px',
-                borderRadius: '50%',
-                background: '#FDD00B',
-                color: '#0f172a',
-                border: '1px solid rgba(15, 23, 42, 0.12)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                boxShadow: '0 4px 12px rgba(253, 208, 11, 0.3)',
-                transition: 'all 0.25s ease',
-              }}
-              className="desktop-nav-btn"
-            >
-              <ChevronRight size={22} />
-            </button>
-          </div>
-        </div>
-
-        <div style={{ position: 'relative', paddingBottom: '2rem' }}>
-          
-          {/* DESKTOP 5 PILLARS GRID */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(5, 1fr)',
-              gap: '1.25rem',
-              height: '530px',
-              alignItems: 'center',
-            }}
-            className="pillars-5-grid"
-          >
-            {visiblePillars.map((pillar, idx) => {
-              const isActive = activeIndex === idx;
-              return (
-                <div
-                  key={`${pillar.id}-${idx}`}
-                  onMouseEnter={() => setHoveredIdx(idx)}
-                  onMouseLeave={() => setHoveredIdx(null)}
-                  style={{
-                    height: isActive ? '530px' : '460px',
-                    borderRadius: '24px',
-                    overflow: 'hidden',
-                    position: 'relative',
-                    boxShadow: isActive
-                      ? '0 30px 60px rgba(253, 208, 11, 0.4), 0 10px 25px rgba(0, 0, 0, 0.15)'
-                      : '0 12px 30px rgba(0, 0, 0, 0.08)',
-                    border: isActive ? '2.5px solid #FDD00B' : '1px solid rgba(15, 23, 42, 0.12)',
-                    cursor: 'pointer',
-                    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                    transform: isActive ? 'translateY(-16px) scale(1.04)' : 'translateY(0) scale(1)',
-                    zIndex: isActive ? 5 : 2,
-                    background: '#ffffff',
-                    opacity: 1,
-                  }}
-                  className="single-pillar-slice"
-                >
-                  <img
-                    src={pillar.image}
-                    alt={pillar.name}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                      display: 'block',
-                      transition: 'transform 0.6s ease',
-                      transform: isActive ? 'scale(1.1)' : 'scale(1)',
-                    }}
-                  />
-
+                {/* Background Text ONLY for the middle (active center) card */}
+                {isHero && (
                   <div
+                    className="absolute left-1/2 -translate-x-1/2 pointer-events-none select-none font-['Anton'] uppercase text-center transition-all duration-480 ease-out"
                     style={{
-                      position: 'absolute',
-                      inset: 0,
-                      background: 'linear-gradient(to bottom, rgba(15, 23, 42, 0.85) 0%, rgba(15, 23, 42, 0.15) 45%, rgba(15, 23, 42, 0.85) 100%)',
+                      top: isMobile ? '10%' : '12%',
+                      fontSize: isMobile ? '78px' : '160px',
+                      lineHeight: 0.88,
+                      letterSpacing: '-0.02em',
+                      whiteSpace: 'nowrap',
+                      color: 'rgba(30, 80, 185, 0.22)',
+                      textShadow:
+                        '0 0 45px rgba(37, 99, 235, 0.32), 0 0 90px rgba(59, 130, 246, 0.18)',
                       zIndex: 1,
                     }}
-                  />
-
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '1.25rem',
-                      left: '1.25rem',
-                      right: '1.25rem',
-                      zIndex: 2,
-                    }}
                   >
-                    <span
-                      style={{
-                        fontSize: '0.7rem',
-                        fontWeight: 900,
-                        background: isActive ? '#FDD00B' : 'rgba(255, 255, 255, 0.25)',
-                        color: '#0f172a',
-                        padding: '0.35rem 0.75rem',
-                        borderRadius: 'var(--radius-full)',
-                        backdropFilter: 'blur(8px)',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.08em',
-                        display: 'inline-block',
-                      }}
-                    >
-                      {pillar.category}
-                    </span>
+                    {item.bgText}
                   </div>
+                )}
 
-                  <div
-                    style={{
-                      position: 'absolute',
-                      bottom: '1.5rem',
-                      left: '1.25rem',
-                      right: '1.25rem',
-                      zIndex: 2,
-                      color: '#ffffff',
-                    }}
-                  >
-                    <h3
-                      style={{
-                        fontSize: isActive ? '1.4rem' : '1.2rem',
-                        fontWeight: 900,
-                        lineHeight: 1.2,
-                        marginBottom: '0.35rem',
-                        color: '#ffffff',
-                        transition: 'all 0.3s ease',
-                      }}
-                    >
-                      {pillar.name}
-                    </h3>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* MOBILE CAROUSEL TRACK (Mapping ALL_PILLARS with 80% Center Card + 10% Peek on Left & Right) */}
-          <div className="mobile-pillars-track" ref={mobileTrackRef}>
-            {ALL_PILLARS.map((pillar, idx) => {
-              const isActive = mobileActiveIdx === idx;
-              return (
-                <div
-                  key={pillar.id}
-                  onClick={() => setMobileActiveIdx(idx)}
-                  style={{
-                    borderRadius: '24px',
-                    overflow: 'hidden',
-                    position: 'relative',
-                    background: '#ffffff',
-                    boxShadow: isActive
-                      ? '0 20px 45px rgba(253, 208, 11, 0.35)'
-                      : '0 12px 30px rgba(0, 0, 0, 0.08)',
-                    border: isActive ? '2.5px solid #FDD00B' : '1px solid rgba(15, 23, 42, 0.12)',
-                    transition: 'all 0.3s ease',
-                  }}
-                  className={`mobile-pillar-card ${isActive ? 'is-active' : ''}`}
-                >
-                  <img
-                    src={pillar.image}
-                    alt={pillar.name}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                      display: 'block',
-                    }}
-                  />
-
-                  <div
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      background: 'linear-gradient(to bottom, rgba(15, 23, 42, 0.85) 0%, rgba(15, 23, 42, 0.15) 45%, rgba(15, 23, 42, 0.85) 100%)',
-                      zIndex: 1,
-                    }}
-                  />
-
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '1.25rem',
-                      left: '1.25rem',
-                      right: '1.25rem',
-                      zIndex: 2,
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontSize: '0.7rem',
-                        fontWeight: 900,
-                        background: isActive ? '#FDD00B' : 'rgba(255, 255, 255, 0.25)',
-                        color: '#0f172a',
-                        padding: '0.35rem 0.75rem',
-                        borderRadius: 'var(--radius-full)',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.08em',
-                        display: 'inline-block',
-                      }}
-                    >
-                      {pillar.category}
-                    </span>
-                  </div>
-
-                  <div
-                    style={{
-                      position: 'absolute',
-                      bottom: '1.5rem',
-                      left: '1.25rem',
-                      right: '1.25rem',
-                      zIndex: 2,
-                      color: '#ffffff',
-                    }}
-                  >
-                    <h3
-                      style={{
-                        fontSize: '1.35rem',
-                        fontWeight: 900,
-                        lineHeight: 1.2,
-                        color: '#ffffff',
-                      }}
-                    >
-                      {pillar.name}
-                    </h3>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* MOBILE BOTTOM NAVIGATION CONTROLS BELOW */}
-          <div
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '1rem',
-              marginTop: '2rem',
-              marginBottom: '1rem',
-            }}
-            className="mobile-industries-controls"
-          >
-            <button
-              onClick={handleMobilePrev}
-              disabled={mobileActiveIdx === 0}
-              style={{
-                width: '46px',
-                height: '46px',
-                borderRadius: '50%',
-                background: mobileActiveIdx === 0 ? '#f1f5f9' : '#0f172a',
-                color: mobileActiveIdx === 0 ? '#94a3b8' : '#ffffff',
-                border: '1px solid rgba(15, 23, 42, 0.15)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: mobileActiveIdx === 0 ? 'not-allowed' : 'pointer',
-                boxShadow: '0 6px 18px rgba(0,0,0,0.15)',
-              }}
-            >
-              <ChevronLeft size={22} />
-            </button>
-
-            {/* Pagination Indicators for All 7 Pillars */}
-            <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-              {ALL_PILLARS.map((_, i) => (
-                <div
-                  key={i}
-                  onClick={() => {
-                    setMobileActiveIdx(i);
-                    if (mobileTrackRef.current) {
-                      const cardWidth = mobileTrackRef.current.clientWidth * 0.82;
-                      mobileTrackRef.current.scrollTo({ left: i * cardWidth, behavior: 'smooth' });
+                {/* 3D Character Figurine Image */}
+                <img
+                  src={item.src}
+                  alt={item.name}
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    if (target.src !== item.fallbackSrc) {
+                      target.src = item.fallbackSrc;
                     }
                   }}
-                  style={{
-                    width: mobileActiveIdx === i ? '24px' : '7px',
-                    height: '7px',
-                    borderRadius: '4px',
-                    background: mobileActiveIdx === i ? '#FDD00B' : 'rgba(15, 23, 42, 0.25)',
-                    transition: 'all 0.3s ease',
-                    cursor: 'pointer',
-                  }}
+                  draggable={false}
+                  className="relative w-full h-full object-contain object-bottom pointer-events-none drop-shadow-[0_20px_35px_rgba(0,0,0,0.18)]"
+                  style={{ zIndex: 2 }}
                 />
-              ))}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* 5. Streamlined Bottom Row (Reduced Left Side Content) */}
+        <footer
+          className="relative w-full max-w-[1360px] mx-auto px-4 sm:px-8 pb-3.5 sm:pb-6 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-3"
+          style={{ zIndex: 60 }}
+        >
+          {/* Reduced & Streamlined Left Side */}
+          <div className="w-full sm:max-w-[400px]">
+            <div className="transition-all duration-300 ease-out" key={activeItem.id}>
+              {/* Category chip */}
+              <div className="flex items-center gap-1.5 mb-1">
+                <span
+                  className="w-2 h-2 rounded-full inline-block"
+                  style={{ backgroundColor: activeItem.accent }}
+                />
+                <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400">
+                  {activeIndex + 1 < 10 ? `0${activeIndex + 1}` : activeIndex + 1} // {activeItem.category}
+                </span>
+              </div>
+
+              {/* Title */}
+              <h3 className="font-['Anton'] text-[28px] sm:text-[36px] leading-[1.08] text-[#0f172a] tracking-wide mb-1.5">
+                {activeItem.name}
+              </h3>
+
+              {/* Compact Metric Tag */}
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-slate-100 border border-slate-200/70 text-[11px] font-semibold text-slate-700 mb-3.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#fdcf09]" />
+                {activeItem.metric}
+              </div>
             </div>
 
-            <button
-              onClick={handleMobileNext}
-              disabled={mobileActiveIdx >= ALL_PILLARS.length - 1}
-              style={{
-                width: '46px',
-                height: '46px',
-                borderRadius: '50%',
-                background: mobileActiveIdx >= ALL_PILLARS.length - 1 ? '#f1f5f9' : '#FDD00B',
-                color: mobileActiveIdx >= ALL_PILLARS.length - 1 ? '#94a3b8' : '#0f172a',
-                border: '1px solid rgba(15, 23, 42, 0.15)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: mobileActiveIdx >= ALL_PILLARS.length - 1 ? 'not-allowed' : 'pointer',
-                boxShadow: '0 6px 18px rgba(253, 208, 11, 0.35)',
-              }}
-            >
-              <ChevronRight size={22} />
-            </button>
+            {/* Circular Navigation Buttons + Step Tracker */}
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => navigate('prev')}
+                aria-label="Previous Industry"
+                className="w-11 h-11 sm:w-13 sm:h-13 rounded-full border border-slate-300 hover:border-[#0f172a] hover:bg-[#0f172a] text-[#0f172a] hover:text-white flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
+              >
+                <ArrowLeft size={20} strokeWidth={2.25} />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => navigate('next')}
+                aria-label="Next Industry"
+                className="w-11 h-11 sm:w-13 sm:h-13 rounded-full border border-[#0f172a] bg-[#0f172a] hover:bg-[#3d6ab3] hover:border-[#3d6ab3] text-white flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-md"
+              >
+                <ArrowRight size={20} strokeWidth={2.25} />
+              </button>
+
+              {/* Visited Progress Indicator */}
+              <div className="flex items-center gap-1 ml-2">
+                {ALL_INDUSTRIES.map((_, dotIdx) => (
+                  <span
+                    key={dotIdx}
+                    onClick={() => goToIndex(dotIdx, true)}
+                    className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                      dotIdx === activeIndex
+                        ? 'w-5 bg-[#0f172a]'
+                        : dotIdx < activeIndex
+                        ? 'w-1.5 bg-[#fdcf09]'
+                        : 'w-1.5 bg-slate-200 hover:bg-slate-300'
+                    }`}
+                    title={`Industry ${dotIdx + 1}`}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
 
-        </div>
+          {/* Bottom Right: Clean Explore Button */}
+          <div className="self-end sm:self-auto flex items-center">
+            <button
+              type="button"
+              onClick={onOpenBooking}
+              aria-label="Explore Industry"
+              className="group inline-flex items-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 rounded-full bg-[#fdcf09] hover:bg-[#ffe043] text-[#03063A] font-bold text-xs sm:text-sm tracking-wide uppercase shadow-md hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
+            >
+              <span>Explore</span>
+              <span className="w-6 h-6 rounded-full bg-[#03063A] text-white flex items-center justify-center transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200">
+                <ArrowUpRight size={14} strokeWidth={2.5} />
+              </span>
+            </button>
+          </div>
+        </footer>
       </div>
 
       <style>{`
-        @media (max-width: 768px) {
-          .domain-verticals-badge {
-            display: none !important;
-          }
-          .desktop-carousel-controls {
-            display: none !important;
-          }
-          .pillars-5-grid {
-            display: none !important;
-          }
-          .mobile-industries-controls {
-            display: flex !important;
-          }
-          .mobile-pillars-track {
-            display: flex !important;
-            overflow-x: auto !important;
-            scroll-snap-type: x mandatory !important;
-            padding: 1rem 10% !important;
-            gap: 1rem !important;
-            height: 440px !important;
-            margin-left: -2rem !important;
-            margin-right: -2rem !important;
-            width: calc(100% + 4rem) !important;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-          }
-          .mobile-pillars-track::-webkit-scrollbar {
-            display: none;
-          }
-          .mobile-pillar-card {
-            flex: 0 0 80% !important;
-            width: 80% !important;
-            scroll-snap-align: center !important;
-            height: 420px !important;
-          }
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
         }
-        @media (min-width: 769px) {
-          .mobile-industries-controls {
-            display: none !important;
-          }
-          .mobile-pillars-track {
-            display: none !important;
-          }
+        .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
         }
       `}</style>
     </section>
   );
 };
+
+export default Industries;
