@@ -1047,7 +1047,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
           }
 
           .vela-headline {
-            font-size: clamp(44px, 12.5vw, 66px);
+            font-size: clamp(38px, 10.5vw, 56px);
             line-height: 1.04;
             letter-spacing: -0.03em;
           }
@@ -1056,17 +1056,17 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            gap: 12px;
-            font-size: 1.25em; /* prominent increased changing text size */
+            gap: 10px;
+            font-size: 1.12em; /* refined slightly reduced changing text size */
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             white-space: normal;
           }
 
           .icon-wrapper {
-            width: clamp(82px, 21vw, 108px);
-            height: clamp(82px, 21vw, 108px);
-            margin-bottom: 8px;
+            width: clamp(72px, 18vw, 94px);
+            height: clamp(72px, 18vw, 94px);
+            margin-bottom: 6px;
           }
 
           .word-text {
@@ -1076,7 +1076,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
 
           .headline-fixed {
             display: block;
-            font-size: 0.94em;
+            font-size: 0.85em; /* refined slightly reduced below text */
             line-height: 1.08;
           }
 
