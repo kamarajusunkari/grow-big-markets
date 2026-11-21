@@ -333,7 +333,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
                 className="vela-mobile-toggle"
                 aria-label="Toggle navigation"
               >
-                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                {mobileMenuOpen ? <X size={26} color="#0D0D0C" /> : <Menu size={26} color="#0D0D0C" />}
               </button>
             </div>
           </header>
@@ -413,7 +413,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
             </div>
 
             <p className="vela-caption">
-              Grow Big Marketers accelerates revenue with data-driven SEO, high-ROI<br />
+              Grow Big Marketers accelerates revenue with data-driven SEO, high-ROI{' '}
               Google & Meta PPC ads, and full-funnel scaling strategies.
             </p>
           </div>
@@ -737,9 +737,9 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
         .cycle-slot {
           display: flex;
           align-items: center;
-          gap: calc(22 * var(--u));
+          gap: calc(24 * var(--u));
           white-space: nowrap;
-          font-size: 0.98em; /* refined balanced size for changing content */
+          font-size: 1.2em; /* increased changing text size */
           font-weight: 600;
           letter-spacing: -0.035em;
           margin-bottom: calc(8 * var(--u));
@@ -747,8 +747,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
 
         .icon-wrapper {
           position: relative;
-          width: 1.02em;
-          height: 1.02em;
+          width: 1.12em;
+          height: 1.12em;
           display: inline-flex;
           align-items: center;
           justify-content: center;
@@ -986,8 +986,9 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
 
           .vela-panel {
             height: auto;
-            min-height: 580px;
-            padding-bottom: 60px;
+            min-height: auto;
+            padding-bottom: 24px;
+            overflow: visible;
           }
 
           .vela-nav {
@@ -1001,56 +1002,92 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
           }
 
           .vela-mobile-toggle {
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
           }
 
           .vela-mobile-drawer {
             display: flex;
             flex-direction: column;
             gap: 14px;
-            padding: 20px;
-            background: rgba(251, 246, 239, 0.98);
-            border-bottom: 1px solid rgba(13, 13, 12, 0.08);
+            padding: 20px 24px 28px 24px;
+            background: #FBF6EF;
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(13, 13, 12, 0.1);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+            max-height: calc(100vh - 70px);
+            overflow-y: auto;
           }
 
           .vela-mobile-link {
-            font-size: 16px;
-            font-weight: 500;
+            font-size: 17px;
+            font-weight: 600;
             color: var(--ink);
             text-decoration: none;
-            padding: 6px 0;
-            border-bottom: 1px solid rgba(13, 13, 12, 0.04);
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(13, 13, 12, 0.06);
+            display: block;
+            transition: color 0.2s ease;
+          }
+
+          .vela-mobile-link:hover {
+            color: #3d6ab3;
           }
 
           .vela-content {
             position: relative;
             left: 0;
             top: 0;
-            padding: 40px 20px 0 20px;
+            padding: 106px 20px 0 20px;
           }
 
           .vela-headline {
-            font-size: clamp(38px, 11vw, 76px);
-            line-height: 0.95;
+            font-size: clamp(44px, 12.5vw, 66px);
+            line-height: 1.04;
+            letter-spacing: -0.03em;
           }
 
           .cycle-slot {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
             gap: 12px;
-            font-size: 0.96em;
+            font-size: 1.25em; /* prominent increased changing text size */
+            font-weight: 700;
+            margin-bottom: 8px;
+            white-space: normal;
+          }
+
+          .icon-wrapper {
+            width: clamp(82px, 21vw, 108px);
+            height: clamp(82px, 21vw, 108px);
+            margin-bottom: 8px;
+          }
+
+          .word-text {
+            display: inline-block;
+            line-height: 1.04;
           }
 
           .headline-fixed {
-            font-size: 0.9em;
+            display: block;
+            font-size: 0.94em;
+            line-height: 1.08;
           }
 
           .vela-row {
             position: relative;
             left: 0;
             top: 0;
-            padding: 32px 20px 0 20px;
+            padding: 24px 20px 0 20px;
             flex-direction: column;
             align-items: flex-start;
-            gap: 20px;
+            gap: 18px;
           }
 
           .store-buttons {
@@ -1060,20 +1097,26 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
           }
 
           .store-btn {
-            height: 52px;
-            font-size: 16px;
-            flex: 1 1 160px;
+            height: 50px;
+            font-size: 15.5px;
+            flex: 1 1 150px;
             justify-content: center;
           }
 
           .vela-caption {
-            font-size: 16px;
-            line-height: 1.45;
+            font-size: 15px;
+            line-height: 1.5;
+            color: var(--ink-secondary);
+          }
+
+          .vela-caption br {
+            display: none;
           }
 
           .vela-stats-strip {
             height: auto;
-            padding-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(13, 13, 12, 0.08);
           }
 
           .notch-wrapper {
@@ -1085,33 +1128,42 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
           }
 
           .stats-content {
-            padding: 30px 20px 40px 20px;
+            padding: 22px 20px 32px 20px;
             flex-direction: column;
             align-items: flex-start;
-            gap: 32px;
+            gap: 20px;
           }
 
           .stats-lead {
-            font-size: 24px;
+            font-size: 22px;
+            font-weight: 600;
+            line-height: 1.25;
           }
 
           .stats-metrics {
             width: 100%;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 28px 20px;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px 10px;
+          }
+
+          .stat-item {
+            gap: 4px;
           }
 
           .stat-num {
-            font-size: 42px;
+            font-size: clamp(24px, 7vw, 36px);
+            font-weight: 700;
+            line-height: 1;
           }
 
           .stat-label {
-            font-size: 14px;
+            font-size: 12px;
+            line-height: 1.3;
           }
 
           .sprout-container {
-            align-self: flex-end;
+            display: none;
           }
         }
       `}</style>

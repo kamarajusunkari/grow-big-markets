@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Sun, Moon, Menu, X, ArrowUpRight, Grid } from 'lucide-react';
+import { Menu, X, ArrowUpRight, Grid } from 'lucide-react';
 import growBigPrimary from '../assets/Growbig Primary.png';
 
 interface NavbarProps {
   onOpenBooking: () => void;
-  theme: 'dark' | 'light';
-  onToggleTheme: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, theme, onToggleTheme }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -32,10 +30,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, theme, onToggleTh
         zIndex: 950,
         transition: 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease, border-color 0.3s ease',
         transform: scrolled ? 'translateY(0)' : 'translateY(-105%)',
-        background: theme === 'dark' ? 'rgba(10, 22, 44, 0.88)' : 'rgba(255, 255, 255, 0.92)',
+        background: 'rgba(255, 255, 255, 0.94)',
         backdropFilter: 'blur(16px)',
         WebkitBackdropFilter: 'blur(16px)',
-        borderBottom: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid rgba(15, 23, 42, 0.08)',
+        borderBottom: '1px solid rgba(15, 23, 42, 0.08)',
         padding: '0.85rem 0',
       }}
       className="navbar-header"
@@ -84,36 +82,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, theme, onToggleTh
           }}
           className="desktop-nav"
         >
-          <a href="#hero" className={`nav-link ${theme === 'dark' ? 'text-white/80 hover:text-[#fdcf09]' : 'text-slate-700 hover:text-[#3d6ab3]'}`}>Home</a>
-          <a href="#services" className={`nav-link ${theme === 'dark' ? 'text-white/80 hover:text-[#fdcf09]' : 'text-slate-700 hover:text-[#3d6ab3]'}`}>Services</a>
-          <a href="#process" className={`nav-link ${theme === 'dark' ? 'text-white/80 hover:text-[#fdcf09]' : 'text-slate-700 hover:text-[#3d6ab3]'}`}>Our Process</a>
-          <a href="#portfolio" className={`nav-link ${theme === 'dark' ? 'text-white/80 hover:text-[#fdcf09]' : 'text-slate-700 hover:text-[#3d6ab3]'}`}>Portfolio</a>
-          <a href="#faq" className={`nav-link ${theme === 'dark' ? 'text-white/80 hover:text-[#fdcf09]' : 'text-slate-700 hover:text-[#3d6ab3]'}`}>Contact</a>
+          <a href="#hero" className="nav-link text-slate-700 hover:text-[#3d6ab3]">Home</a>
+          <a href="#services" className="nav-link text-slate-700 hover:text-[#3d6ab3]">Services</a>
+          <a href="#process" className="nav-link text-slate-700 hover:text-[#3d6ab3]">Our Process</a>
+          <a href="#portfolio" className="nav-link text-slate-700 hover:text-[#3d6ab3]">Portfolio</a>
+          <a href="#faq" className="nav-link text-slate-700 hover:text-[#3d6ab3]">Contact</a>
         </nav>
 
         {/* Action Controls */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          {/* Theme Toggle Button */}
-          <button
-            onClick={onToggleTheme}
-            aria-label="Toggle Theme"
-            style={{
-              width: '40px',
-              height: '40px',
-              borderRadius: '50%',
-              background: theme === 'dark' ? 'rgba(255, 255, 255, 0.08)' : '#f1f5f9',
-              border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid rgba(15, 23, 42, 0.08)',
-              color: theme === 'dark' ? '#ffffff' : '#0f172a',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transition: 'all 0.2s ease',
-            }}
-          >
-            {theme === 'dark' ? <Sun size={19} color="#fdcf09" /> : <Moon size={19} color="#3d6ab3" />}
-          </button>
-
           {/* Contact Container */}
           <div
             style={{
@@ -176,9 +153,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, theme, onToggleTh
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="mobile-toggle"
             style={{
-              background: 'rgba(255, 255, 255, 0.08)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
-              color: theme === 'dark' ? '#ffffff' : '#0f172a',
+              background: '#f1f5f9',
+              border: '1px solid rgba(15, 23, 42, 0.12)',
+              color: '#0f172a',
               cursor: 'pointer',
               padding: '0.5rem',
               borderRadius: '10px',
@@ -198,15 +175,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, theme, onToggleTh
             top: '100%',
             left: 0,
             right: 0,
-            background: theme === 'dark' ? 'rgba(10, 22, 44, 0.96)' : 'rgba(255, 255, 255, 0.98)',
+            background: 'rgba(255, 255, 255, 0.98)',
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+            borderBottom: '1px solid rgba(15, 23, 42, 0.1)',
             padding: '1.5rem',
             display: 'flex',
             flexDirection: 'column',
             gap: '1rem',
-            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)',
+            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.12)',
+            zIndex: 1000,
           }}
         >
           <a href="#hero" onClick={() => setMobileMenuOpen(false)} className="nav-link-mobile">Home</a>

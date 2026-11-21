@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { AboutUs } from './components/AboutUs';
@@ -11,37 +11,18 @@ import { BookingModal } from './components/BookingModal';
 import { Footer } from './components/Footer';
 
 export const App: React.FC = () => {
-  const [theme, setTheme] = useState<'dark' | 'light'>('light');
   const [isBookingOpen, setIsBookingOpen] = useState(false);
-
-  // Sync theme class to <html> element
-  useEffect(() => {
-    const root = document.documentElement;
-    if (theme === 'dark') {
-      root.classList.add('dark');
-      root.classList.remove('light');
-    } else {
-      root.classList.add('light');
-      root.classList.remove('dark');
-    }
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
-  };
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FBF6EF] text-[#0D0D0C]">
       {/* Slide-in Sticky Header (appears when scrolling past the hero) */}
       <Navbar
         onOpenBooking={() => setIsBookingOpen(true)}
-        theme={theme}
-        onToggleTheme={toggleTheme}
       />
 
       {/* Main Single-Page Content */}
       <main className="flex-1">
-        {/* Vela "in your terms" Hero Section */}
+        {/* Vela Hero Section */}
         <Hero onOpenBooking={() => setIsBookingOpen(true)} />
 
         <div className="bg-[#f8fafc] text-slate-800">
