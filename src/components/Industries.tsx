@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { ArrowLeft, ArrowRight, Sparkles, ArrowUpRight } from 'lucide-react';
-import healthcareImg from '../assets/7ad4fbdb-864c-4c5e-90f4-9b5fd2d5fe2f.webp';
+import React, { useState } from 'react';
+import { ArrowUpRight, CheckCircle2, PhoneCall, X, Sparkles } from 'lucide-react';
+import growBigPrimary from '../assets/Growbig Primary.png';
 
 interface IndustriesProps {
   onOpenBooking?: () => void;
@@ -8,581 +8,507 @@ interface IndustriesProps {
 
 interface IndustryItem {
   id: string;
-  name: string;
-  bgText: string;
+  title: string;
+  shortTitle: string;
   category: string;
   metric: string;
-  src: string;
-  fallbackSrc: string;
-  accent: string;
-  panel: string;
+  desc: string;
+  deliverables: string[];
+  icon: (props: { className?: string }) => React.JSX.Element;
 }
 
-const ALL_INDUSTRIES: IndustryItem[] = [
+/* ==========================================================================
+   CUSTOM STROKE ICONS (Exact match to reference design outline style)
+   ========================================================================== */
+
+// 1. Travel & Hospitality: Suitcase with handle, straps, lock, and safety shield badge
+const TravelHospitalityIcon = ({ className = 'w-14 h-14' }: { className?: string }) => (
+  <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    {/* Suitcase Handle */}
+    <path
+      d="M26 18V13C26 11.3431 27.3431 10 29 10H35C36.6569 10 38 11.3431 38 13V18"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+    />
+    {/* Main Suitcase Body */}
+    <rect x="12" y="18" width="40" height="32" rx="4" stroke="currentColor" strokeWidth="2.2" />
+    {/* Horizontal Belt Divider */}
+    <line x1="12" y1="34" x2="52" y2="34" stroke="currentColor" strokeWidth="1.8" strokeDasharray="3 2" />
+    {/* Center Lock / Buckle */}
+    <rect x="29" y="31" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="2" fill="#18181b" />
+    {/* Side Straps */}
+    <line x1="22" y1="18" x2="22" y2="50" stroke="currentColor" strokeWidth="1.8" />
+    <line x1="42" y1="18" x2="42" y2="50" stroke="currentColor" strokeWidth="1.8" />
+    {/* Shield with Medical/Safety Cross (Top Right) */}
+    <path
+      d="M44 8L54 12V20C54 26 49 30 44 32C39 30 34 26 34 20V12L44 8Z"
+      stroke="currentColor"
+      strokeWidth="2"
+      fill="#18181b"
+    />
+    <path d="M44 14V22M40 18H48" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    {/* Feet */}
+    <rect x="17" y="50" width="5" height="3" rx="1.5" fill="currentColor" />
+    <rect x="42" y="50" width="5" height="3" rx="1.5" fill="currentColor" />
+  </svg>
+);
+
+// 2. IT / ITES: Desktop computer monitor on stand with "i" information screen
+const ItItesIcon = ({ className = 'w-14 h-14' }: { className?: string }) => (
+  <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    {/* Monitor Screen Frame */}
+    <rect x="11" y="10" width="42" height="30" rx="3.5" stroke="currentColor" strokeWidth="2.2" />
+    {/* Inner Display Bezel */}
+    <rect x="15" y="14" width="34" height="22" rx="2" stroke="currentColor" strokeWidth="1.5" strokeOpacity="0.5" />
+    {/* Stand Column */}
+    <path d="M32 40V48" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+    {/* Stand Base */}
+    <path d="M22 48H42" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+    {/* Lower Keyboard/Surface Accent */}
+    <path d="M16 53H48" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeOpacity="0.6" />
+    {/* "i" Icon Inside Screen */}
+    <circle cx="32" cy="20.5" r="2.2" fill="currentColor" />
+    <path d="M30 25H32.5V31H34" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+// 3. Healthcare: Two hands cupping and protecting a heart with pulse
+const HealthcareIcon = ({ className = 'w-14 h-14' }: { className?: string }) => (
+  <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    {/* Central Heart */}
+    <path
+      d="M32 28C32 28 26 21 21 24C16.5 26.7 17 33 21.5 37.5L32 46L42.5 37.5C47 33 47.5 26.7 43 24C38 21 32 28 32 28Z"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinejoin="round"
+    />
+    {/* Left Cupping Hand */}
+    <path d="M12 40C12 40 17 34 23 37L28 39.5M10 44C13 44 20 42 26 44L30 46" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    <path d="M10 44C9 42 9 37 14 36C18 35 22 36 26 39" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    {/* Right Cupping Hand */}
+    <path d="M52 40C52 40 47 34 41 37L36 39.5M54 44C51 44 44 42 38 44L34 46" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    <path d="M54 44C55 42 55 37 50 36C46 35 42 36 38 39" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    {/* Caring Radiant Arc */}
+    <path d="M28 23C29.2 21.7 30.5 21 32 21C33.5 21 34.8 21.7 36 23" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeOpacity="0.7" />
+  </svg>
+);
+
+// 4. Education: Teacher at whiteboard with students/audience
+const EducationIcon = ({ className = 'w-14 h-14' }: { className?: string }) => (
+  <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    {/* Whiteboard / Screen */}
+    <rect x="18" y="10" width="36" height="24" rx="2" stroke="currentColor" strokeWidth="2.2" />
+    {/* Board Chart / Content */}
+    <line x1="28" y1="16" x2="48" y2="16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    <line x1="28" y1="21" x2="42" y2="21" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    <line x1="28" y1="26" x2="38" y2="26" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    {/* Instructor Teacher */}
+    <circle cx="16" cy="18" r="3.5" stroke="currentColor" strokeWidth="2" />
+    <path d="M16 23V35M16 26L26 21M16 35L12 43M16 35L20 43" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    {/* Board Stand Legs */}
+    <line x1="22" y1="34" x2="19" y2="44" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    <line x1="50" y1="34" x2="53" y2="44" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    {/* Students Audience (3 figures) */}
+    <circle cx="28" cy="45" r="2.5" stroke="currentColor" strokeWidth="1.8" />
+    <path d="M23 54C23 50.5 25 49 28 49C31 49 33 50.5 33 54" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    <circle cx="38" cy="45" r="2.5" stroke="currentColor" strokeWidth="1.8" />
+    <path d="M33 54C33 50.5 35 49 38 49C41 49 43 50.5 43 54" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    <circle cx="48" cy="45" r="2.5" stroke="currentColor" strokeWidth="1.8" />
+    <path d="M43 54C43 50.5 45 49 48 49C51 49 53 50.5 53 54" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+  </svg>
+);
+
+// 5. Manufacturing: Conveyor belt with rising bar-chart / factory output
+const ManufacturingIcon = ({ className = 'w-14 h-14' }: { className?: string }) => (
+  <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    {/* Ascending Output Blocks on Conveyor */}
+    <rect x="18" y="27" width="6" height="11" rx="1" stroke="currentColor" strokeWidth="2" />
+    <rect x="28" y="21" width="6" height="17" rx="1" stroke="currentColor" strokeWidth="2" />
+    <rect x="38" y="15" width="6" height="23" rx="1" stroke="currentColor" strokeWidth="2" />
+    {/* Conveyor Belt Loop */}
+    <rect x="11" y="38" width="42" height="10" rx="5" stroke="currentColor" strokeWidth="2.2" />
+    {/* Conveyor Rollers / Wheels */}
+    <circle cx="16" cy="43" r="2.2" fill="currentColor" />
+    <circle cx="26.5" cy="43" r="2.2" fill="currentColor" />
+    <circle cx="37.5" cy="43" r="2.2" fill="currentColor" />
+    <circle cx="48" cy="43" r="2.2" fill="currentColor" />
+    {/* Base Stand Supports */}
+    <line x1="16" y1="48" x2="16" y2="53" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    <line x1="48" y1="48" x2="48" y2="53" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    <line x1="12" y1="53" x2="52" y2="53" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+  </svg>
+);
+
+// 6. BFSI: Open hand holding money bag with currency symbol
+const BfsiIcon = ({ className = 'w-14 h-14' }: { className?: string }) => (
+  <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    {/* Top cinch knot */}
+    <path d="M29 20C29 20 27 14 32 14C37 14 35 20 35 20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    <line x1="27" y1="20" x2="37" y2="20" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+    {/* Money Bag Shape */}
+    <path
+      d="M27 20C24 22 21 26 21 33C21 40 25 43 32 43C39 43 43 40 43 33C43 26 40 22 37 20"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      fill="#18181b"
+    />
+    {/* Currency Symbol */}
+    <path d="M33 26C31 25.5 30 26.5 30 28C30 30 34 29.5 34 32C34 33.5 32.5 34.5 31 34" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    <line x1="32" y1="24.5" x2="32" y2="35.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    {/* Supporting Open Hand Underneath */}
+    <path d="M12 47H26L34 46C38 45.5 44 47 48 49L52 50" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M23 47C20 47 16 48 14 51L24 51C30 51 36 49.5 41 51L47 52" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+  </svg>
+);
+
+/* ==========================================================================
+   INDUSTRIES DATA
+   ========================================================================== */
+
+const INDUSTRIES_DATA: IndustryItem[] = [
   {
-    id: 'real-estate',
-    name: 'REAL ESTATE & PROPTECH',
-    bgText: 'REAL ESTATE',
-    category: 'PropTech & Infrastructure',
-    metric: '₹180Cr+ Asset Sales • 14.2X Pipeline',
-    src: '/industries/1.png',
-    fallbackSrc: 'https://fifth-gentle-45902158.figma.site/_components/v2/4de492f6d9cf8244ad5293233e5c6f52407d42fc/1.02464a56.png',
-    accent: '#F4845F',
-    panel: '#F79B7F',
-  },
-  {
-    id: 'agriculture',
-    name: 'AGRICULTURE & AGRITECH',
-    bgText: 'AGRICULTURE',
-    category: 'AgriTech & Smart Farming',
-    metric: '350K+ Farmers • 3.4X Yield Output',
-    src: '/industries/2.png',
-    fallbackSrc: 'https://fifth-gentle-45902158.figma.site/_components/v2/4de492f6d9cf8244ad5293233e5c6f52407d42fc/2.b977faab.png',
-    accent: '#6BBF7A',
-    panel: '#85CC92',
-  },
-  {
-    id: 'ecommerce',
-    name: 'E-COMMERCE & D2C BRANDS',
-    bgText: 'E-COMMERCE',
-    category: 'Retail & Multi-Channel',
-    metric: '4.8X ROAS Surge • 2.4M+ Orders',
-    src: '/industries/3.png',
-    fallbackSrc: 'https://fifth-gentle-45902158.figma.site/_components/v2/4de492f6d9cf8244ad5293233e5c6f52407d42fc/3.4df853b4.png',
-    accent: '#E882B4',
-    panel: '#ED9DC4',
-  },
-  {
-    id: 'hospitality',
-    name: 'HOSPITALITY & TOURISM',
-    bgText: 'HOSPITALITY',
-    category: 'Hotels, Resorts & Tourism',
+    id: 'travel-hospitality',
+    title: 'Travel & Hospitality',
+    shortTitle: 'Travel & Hospitality',
+    category: 'HOTELS, RESORTS & TOURISM',
     metric: '92% Direct Bookings • 5.8X ROI',
-    src: '/industries/4.png',
-    fallbackSrc: 'https://fifth-gentle-45902158.figma.site/_components/v2/4de492f6d9cf8244ad5293233e5c6f52407d42fc/4.4457fbce.png',
-    accent: '#6EB5FF',
-    panel: '#8DC4FF',
+    desc: 'High-converting direct booking funnels, seasonal paid demand capture, OTA commission reduction, and luxury guest remarketing engines.',
+    deliverables: [
+      'Direct Website Booking Engines & Funnels',
+      'Meta Search (Google Hotel Ads & TripAdvisor)',
+      'High-Intent Regional & International PPC',
+      'Influencer Stays & Viral Travel Reels',
+    ],
+    icon: TravelHospitalityIcon,
   },
   {
-    id: 'textiles',
-    name: 'TEXTILES & APPAREL',
-    bgText: 'TEXTILES',
-    category: 'Fashion & Global Supply',
-    metric: '₹65Cr+ Export Demand • 18 Markets',
-    src: '/industries/1.png',
-    fallbackSrc: 'https://fifth-gentle-45902158.figma.site/_components/v2/4de492f6d9cf8244ad5293233e5c6f52407d42fc/1.02464a56.png',
-    accent: '#F97316',
-    panel: '#FDBA74',
+    id: 'it-ites',
+    title: 'IT / ITES',
+    shortTitle: 'IT / ITES & SaaS',
+    category: 'ENTERPRISE TECH & IT SERVICES',
+    metric: '120+ SQLs/Mo • 4.1X Pipeline Surge',
+    desc: 'Account-Based Marketing (ABM), LinkedIn enterprise demand generation, and technical content architectures that accelerate deals for B2B tech firms.',
+    deliverables: [
+      'Account-Based Marketing (ABM) on LinkedIn',
+      'High-Intent B2B Search & Solution Keywords',
+      'Whitepaper & Case Study Lead Capture Funnels',
+      'HubSpot / Salesforce Automated CRM Nurture',
+    ],
+    icon: ItItesIcon,
   },
   {
     id: 'healthcare',
-    name: 'HEALTHCARE & MEDTECH',
-    bgText: 'HEALTHCARE',
-    category: 'MedTech & Specialty Care',
+    title: 'Healthcare',
+    shortTitle: 'Healthcare & MedTech',
+    category: 'SPECIALTY CLINICS & MEDTECH',
     metric: '82% Lower CAC • 35,000+ Consults',
-    src: healthcareImg,
-    fallbackSrc: '/industries/healthcare.png',
-    accent: '#10B981',
-    panel: '#6EE7B7',
-  },
-  {
-    id: 'fintech',
-    name: 'FINTECH & FINANCIAL',
-    bgText: 'FINTECH',
-    category: 'Banking & WealthTech',
-    metric: '₹450Cr+ Disbursals • 99.4% KYC',
-    src: '/industries/4.png',
-    fallbackSrc: 'https://fifth-gentle-45902158.figma.site/_components/v2/4de492f6d9cf8244ad5293233e5c6f52407d42fc/4.4457fbce.png',
-    accent: '#3d6ab3',
-    panel: '#93C5FD',
-  },
-  {
-    id: 'automobile',
-    name: 'AUTOMOBILE & EV MOBILITY',
-    bgText: 'AUTOMOBILE',
-    category: 'EVs & Dealership Networks',
-    metric: '45K+ Test Drives • 6.2X Leads',
-    src: '/industries/3.png',
-    fallbackSrc: 'https://fifth-gentle-45902158.figma.site/_components/v2/4de492f6d9cf8244ad5293233e5c6f52407d42fc/3.4df853b4.png',
-    accent: '#EF4444',
-    panel: '#FCA5A5',
+    desc: 'HIPAA-compliant patient acquisition funnels, local Google Maps 3-pack dominance, and doctor authority branding that drives qualified inquiries.',
+    deliverables: [
+      'Local Medical SEO & Google Maps 3-Pack',
+      'High-Trust Video Patient Testimonials',
+      'HIPAA-Compliant Click-to-Call Ads',
+      'Automated Appointment Booking Routing',
+    ],
+    icon: HealthcareIcon,
   },
   {
     id: 'education',
-    name: 'EDUCATION & EDTECH',
-    bgText: 'EDUCATION',
-    category: 'EdTech & Learning Platforms',
+    title: 'Education',
+    shortTitle: 'Education & EdTech',
+    category: 'EDTECH, UNIVERSITIES & INSTITUTES',
     metric: '1.2M+ Students • 88% Retention',
-    src: '/industries/2.png',
-    fallbackSrc: 'https://fifth-gentle-45902158.figma.site/_components/v2/4de492f6d9cf8244ad5293233e5c6f52407d42fc/2.b977faab.png',
-    accent: '#06B6D4',
-    panel: '#67E8F9',
+    desc: 'Multi-touch admissions funnels, free masterclass / demo day acquisition pipelines, and programmatic retargeting that scale enrollments profitably.',
+    deliverables: [
+      'Demo Class & Free Masterclass Funnels',
+      'Admissions Deadline High-Urgency PPC',
+      'WhatsApp & Email Automated Counseling',
+      'Omnichannel Attribution & LTV Optimization',
+    ],
+    icon: EducationIcon,
   },
   {
-    id: 'saas',
-    name: 'SAAS & CLOUD PLATFORMS',
-    bgText: 'SAAS TECH',
-    category: 'Enterprise B2B Software',
-    metric: '120+ SQLs/Mo • 4.1X ARR Expansion',
-    src: '/industries/4.png',
-    fallbackSrc: 'https://fifth-gentle-45902158.figma.site/_components/v2/4de492f6d9cf8244ad5293233e5c6f52407d42fc/4.4457fbce.png',
-    accent: '#1e4587',
-    panel: '#60A5FA',
+    id: 'manufacturing',
+    title: 'Manufacturing',
+    shortTitle: 'Manufacturing & Industrial',
+    category: 'OEM, B2B & GLOBAL EXPORTS',
+    metric: '₹180Cr+ B2B Deals • 14.2X Pipeline',
+    desc: 'B2B buyer discovery systems, precision procurement targeting, digital product catalog ads, and international buyer inquiry pipelines.',
+    deliverables: [
+      'Global Export Inquiries & Procurement PPC',
+      'Trade Show & Industrial Expo Retargeting',
+      'B2B Product Video & Facility Showcases',
+      'RFQ (Request for Quote) High-Value Capture',
+    ],
+    icon: ManufacturingIcon,
+  },
+  {
+    id: 'bfsi',
+    title: 'Banking, Financial Services and Insurance',
+    shortTitle: 'Banking, Financial Services & Insurance',
+    category: 'FINTECH, WEALTH & INSURANCE',
+    metric: '₹450Cr+ Disbursals • 99.4% KYC',
+    desc: 'High-trust acquisition funnels for wealth management, loans, insurtech, and advisory services backed by institutional-grade compliance.',
+    deliverables: [
+      'High-Trust Wealth Advisory Lead Funnels',
+      'Pre-Qualified Loan & Policy Lead Engines',
+      'Strict Regulatory & Data-Compliant Ad Systems',
+      'Multi-Step Verified OTP/KYC Capture Pages',
+    ],
+    icon: BfsiIcon,
   },
 ];
 
 export const Industries: React.FC<IndustriesProps> = ({ onOpenBooking }) => {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const activeIndexRef = useRef(0);
-  const isAutoScrollingRef = useRef(false);
-  const touchStartXRef = useRef<number | null>(null);
-
-  // Resize listener for mobile responsive layout
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 640);
-    };
-    handleResize();
-    window.addEventListener('resize', handleResize, { passive: true });
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  // Preload images on mount
-  useEffect(() => {
-    ['/industries/1.png', '/industries/2.png', '/industries/3.png', '/industries/4.png', healthcareImg].forEach((src) => {
-      const img = new Image();
-      img.src = src;
-    });
-  }, []);
-
-  // Set active industry index smoothly
-  const goToIndex = useCallback((idx: number, scrollPage = false) => {
-    const total = ALL_INDUSTRIES.length;
-    const nextIdx = (idx + total) % total;
-    activeIndexRef.current = nextIdx;
-    setActiveIndex(nextIdx);
-
-    if (scrollPage && trackRef.current) {
-      isAutoScrollingRef.current = true;
-      const track = trackRef.current;
-      const scrollableDist = track.offsetHeight - window.innerHeight;
-      const trackTop = track.getBoundingClientRect().top + window.scrollY;
-      const navbarHeight = isMobile ? 68 : 74;
-      const targetScrollY = Math.max(0, trackTop - navbarHeight + (nextIdx / (total - 1)) * scrollableDist);
-      window.scrollTo({ top: targetScrollY, behavior: 'smooth' });
-      setTimeout(() => {
-        isAutoScrollingRef.current = false;
-      }, 500);
-    }
-  }, [isMobile]);
-
-  const navigate = useCallback(
-    (dir: 'next' | 'prev') => {
-      const total = ALL_INDUSTRIES.length;
-      const nextIdx = dir === 'next' ? (activeIndex + 1) % total : (activeIndex - 1 + total) % total;
-      goToIndex(nextIdx, true);
-    },
-    [activeIndex, goToIndex]
-  );
-
-  // Sticky Scroll Behavior: Sticks section until all 10 industries are visited
-  useEffect(() => {
-    const handleScroll = () => {
-      if (isAutoScrollingRef.current) return;
-      const track = trackRef.current;
-      if (!track) return;
-      const rect = track.getBoundingClientRect();
-      const scrollableDist = track.offsetHeight - window.innerHeight;
-      if (scrollableDist <= 0) return;
-
-      // When track is within sticky scroll bounds (accounting for navbar height)
-      const navbarHeight = isMobile ? 68 : 74;
-      if (rect.top <= navbarHeight + 10 && rect.bottom >= window.innerHeight - 10) {
-        const progress = Math.min(0.999, Math.max(0, (navbarHeight - rect.top) / scrollableDist));
-        const total = ALL_INDUSTRIES.length;
-        const targetIdx = Math.min(total - 1, Math.floor(progress * total));
-        if (targetIdx !== activeIndexRef.current) {
-          activeIndexRef.current = targetIdx;
-          setActiveIndex(targetIdx);
-        }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // Keyboard navigation
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft') navigate('prev');
-      if (e.key === 'ArrowRight') navigate('next');
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [navigate]);
-
-  // Touch Swipe Handlers for Mobile
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartXRef.current = e.touches[0].clientX;
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartXRef.current === null) return;
-    const diff = touchStartXRef.current - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 40) {
-      if (diff > 0) navigate('next');
-      else navigate('prev');
-    }
-    touchStartXRef.current = null;
-  };
-
-  const activeItem = ALL_INDUSTRIES[activeIndex];
-
-  // Continuous 3D Circular Positioning & Transitions across all N industries
-  const getStyleForIndex = (i: number) => {
-    const total = ALL_INDUSTRIES.length;
-    let diff = i - activeIndex;
-    const half = total / 2;
-    while (diff > half) diff -= total;
-    while (diff < -half) diff += total;
-
-    // Center active hero figurine
-    if (diff === 0) {
-      return {
-        transform: `translateX(-50%) scale(${isMobile ? 1.08 : 1.2})`,
-        transformOrigin: 'bottom center',
-        filter: 'blur(0px)',
-        opacity: 1,
-        zIndex: 30,
-        left: '50%',
-        height: isMobile ? '55%' : '73%',
-        bottom: isMobile ? '110px' : '44px',
-        pointerEvents: 'auto' as const,
-      };
-    }
-
-    // Immediate left flank
-    if (diff === -1) {
-      return {
-        transform: 'translateX(-50%) scale(1)',
-        transformOrigin: 'bottom center',
-        filter: 'blur(2px)',
-        opacity: 0.85,
-        zIndex: 20,
-        left: isMobile ? '18%' : '26%',
-        height: isMobile ? '18%' : '27%',
-        bottom: isMobile ? '125px' : '58px',
-        pointerEvents: 'auto' as const,
-      };
-    }
-
-    // Immediate right flank
-    if (diff === 1) {
-      return {
-        transform: 'translateX(-50%) scale(1)',
-        transformOrigin: 'bottom center',
-        filter: 'blur(2px)',
-        opacity: 0.85,
-        zIndex: 20,
-        left: isMobile ? '82%' : '74%',
-        height: isMobile ? '18%' : '27%',
-        bottom: isMobile ? '125px' : '58px',
-        pointerEvents: 'auto' as const,
-      };
-    }
-
-    // Far left depth position
-    if (diff === -2) {
-      return {
-        transform: 'translateX(-50%) scale(0.85)',
-        transformOrigin: 'bottom center',
-        filter: 'blur(4px)',
-        opacity: 0.45,
-        zIndex: 10,
-        left: isMobile ? '6%' : '14%',
-        height: isMobile ? '14%' : '20%',
-        bottom: isMobile ? '140px' : '78px',
-        pointerEvents: 'auto' as const,
-      };
-    }
-
-    // Far right depth position
-    if (diff === 2) {
-      return {
-        transform: 'translateX(-50%) scale(0.85)',
-        transformOrigin: 'bottom center',
-        filter: 'blur(4px)',
-        opacity: 0.45,
-        zIndex: 10,
-        left: isMobile ? '94%' : '86%',
-        height: isMobile ? '14%' : '20%',
-        bottom: isMobile ? '140px' : '78px',
-        pointerEvents: 'auto' as const,
-      };
-    }
-
-    // Distant background positions (seamlessly hidden)
-    return {
-      transform: 'translateX(-50%) scale(0.6)',
-      transformOrigin: 'bottom center',
-      filter: 'blur(6px)',
-      opacity: 0,
-      zIndex: 1,
-      left: diff < 0 ? '5%' : '95%',
-      height: '14%',
-      bottom: '14%',
-      pointerEvents: 'none' as const,
-    };
-  };
+  const [activeItem, setActiveItem] = useState<IndustryItem | null>(null);
 
   return (
-    /* Outer Scroll Track: 220vh gives a compact, smooth sticky scroll without excessive height */
     <section
       id="industries"
-      ref={trackRef}
-      style={{ height: '220vh' }}
-      className="relative w-full bg-white text-[#0f172a]"
+      className="relative w-full overflow-hidden text-slate-900 select-none"
+      style={{
+        minHeight: '820px',
+        backgroundColor: '#f8fafc',
+      }}
     >
-      {/* Pinned Sticky Stage: sticks right below the fixed navbar (top: 74px) and fills to the exact bottom of viewport (calc(100vh - 74px)), removing any gap at the bottom while keeping the header part fully visible */}
-      <div
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-        style={{
-          fontFamily: "'Inter', sans-serif",
-          position: 'sticky',
-          top: isMobile ? '68px' : '74px',
-          height: isMobile ? 'calc(100svh - 68px)' : 'calc(100vh - 74px)',
-          minHeight: '560px',
-        }}
-        className="relative w-full overflow-hidden flex flex-col justify-between select-none"
-      >
-        {/* Subtle Ambient Radial Glow matching the Active Item's Accent Color */}
+      {/* ====================================================================
+          PHOTOGRAPHIC MARKETING CITYSCAPE BACKGROUND WITH DRAMATIC MASKS
+          ==================================================================== */}
+      <div className="absolute inset-0 w-full h-full pointer-events-none">
+        {/* Background Image: Waterfront Skyline & Clouds (Grayscale High-Contrast) */}
         <div
-          className="absolute inset-0 pointer-events-none transition-colors duration-700 ease-out"
+          className="absolute inset-0 w-full h-full bg-cover bg-center"
           style={{
-            background: `radial-gradient(circle 850px at 50% 65%, ${activeItem.accent}14 0%, transparent 70%)`,
+            backgroundImage: "url('/industries-bg.jpg')",
+            filter: 'grayscale(100%) contrast(120%) brightness(95%)',
           }}
         />
 
-        {/* 1. Grain Overlay (SVG fractalNoise) */}
+        {/* Marketing Data Waves & Gradient Network Mask */}
         <div
-          className="absolute inset-0 pointer-events-none"
+          className="absolute inset-0 w-full h-full"
           style={{
-            zIndex: 50,
-            opacity: 0.12,
-            backgroundSize: '200px 200px',
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E")`,
+            background:
+              'radial-gradient(ellipse at 50% 55%, rgba(15, 23, 42, 0.45) 0%, rgba(15, 23, 42, 0.75) 60%, rgba(15, 23, 42, 0.95) 100%)',
           }}
         />
 
-        {/* 2. Top Header Bar & Quick Industry Pill Navigation */}
-        <header
-          className="relative w-full max-w-[1360px] mx-auto px-4 sm:px-8 pt-3.5 sm:pt-5 flex items-center justify-between gap-4"
-          style={{ zIndex: 60 }}
-        >
-          {/* Top Left: Clean Badge */}
-          <div className="flex items-center gap-3 shrink-0">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-[0.16em] bg-[#03063A]/5 text-[#03063A] border border-[#03063A]/10">
-              <Sparkles size={12} className="text-[#fdcf09]" />
-              INDUSTRIES WE SCALE
+        {/* Top Seamless Blending Mask: Fades gracefully from the upper section */}
+        <div
+          className="absolute top-0 left-0 right-0 h-40"
+          style={{
+            background: 'linear-gradient(180deg, #f8fafc 0%, rgba(248, 250, 252, 0.8) 40%, rgba(248, 250, 252, 0) 100%)',
+          }}
+        />
+
+        {/* Bottom Seamless Blending Mask: Fades gracefully into the next section */}
+        <div
+          className="absolute bottom-0 left-0 right-0 h-40"
+          style={{
+            background: 'linear-gradient(0deg, #f8fafc 0%, rgba(248, 250, 252, 0.8) 40%, rgba(248, 250, 252, 0) 100%)',
+          }}
+        />
+
+        {/* Subtle Tech / Marketing Coordinate Grid overlay */}
+        <div
+          className="absolute inset-0 opacity-[0.06]"
+          style={{
+            backgroundImage:
+              'linear-gradient(rgba(255, 255, 255, 0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.4) 1px, transparent 1px)',
+            backgroundSize: '48px 48px',
+          }}
+        />
+      </div>
+
+      {/* ====================================================================
+          MAIN CONTENT CONTAINER
+          ==================================================================== */}
+      <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-24 flex flex-col items-center">
+        {/* Top Header Row (Mirroring the reference image typography & layout) */}
+        <div className="w-full flex flex-col md:flex-row md:items-start justify-between gap-6 mb-12 sm:mb-16">
+          {/* Left Title: Bold "INDUSTRIES" + Tracked Light "WE COVER" */}
+          <div className="flex flex-col">
+            <span className="text-xs sm:text-sm font-bold tracking-[0.2em] text-[#d97706] uppercase mb-1">
+              Cross-Sector Scaling
             </span>
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-slate-900 tracking-tight leading-none drop-shadow-sm">
+              INDUSTRIES
+            </h2>
+            <div className="text-2xl sm:text-3xl md:text-4xl font-light text-slate-800 tracking-[0.22em] uppercase mt-1">
+              WE COVER
+            </div>
           </div>
 
-          {/* Top Right: Scrollable Quick Industry Tab Switcher */}
-          <nav className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 max-w-[70%] sm:max-w-[75%]">
-            {ALL_INDUSTRIES.map((item, idx) => {
-              const isActive = idx === activeIndex;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => goToIndex(idx, true)}
-                  className={`px-2.5 sm:px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-all duration-300 cursor-pointer shrink-0 ${
-                    isActive
-                      ? 'bg-[#0f172a] text-white shadow-md shadow-[#0f172a]/15 scale-105'
-                      : 'bg-white/80 hover:bg-slate-100 text-slate-600 border border-slate-200'
-                  }`}
-                  aria-label={`Select ${item.name}`}
-                >
-                  <span className="font-mono text-[10px] opacity-70 mr-1">
-                    {idx + 1 < 10 ? `0${idx + 1}` : idx + 1}
-                  </span>
-                  <span className="font-semibold">{item.name.split(' ')[0]}</span>
-                </button>
-              );
-            })}
-          </nav>
-        </header>
-
-        {/* 3. Buttery-Smooth Continuous 3D Carousel Stage */}
-        <div className="absolute inset-0" style={{ zIndex: 3 }}>
-          {ALL_INDUSTRIES.map((item, i) => {
-            const itemStyle = getStyleForIndex(i);
-            const isHero = i === activeIndex;
-
-            return (
-              <div
-                key={item.id}
-                onClick={() => {
-                  if (!isHero) goToIndex(i, true);
-                }}
-                className={`absolute cursor-pointer ${
-                  isHero ? 'cursor-default' : 'hover:opacity-95'
-                }`}
-                style={{
-                  aspectRatio: '0.6 / 1',
-                  left: itemStyle.left,
-                  bottom: itemStyle.bottom,
-                  height: itemStyle.height,
-                  transform: itemStyle.transform,
-                  transformOrigin: itemStyle.transformOrigin || 'bottom center',
-                  filter: itemStyle.filter,
-                  opacity: itemStyle.opacity,
-                  zIndex: itemStyle.zIndex,
-                  pointerEvents: itemStyle.pointerEvents,
-                  transition:
-                    'transform 480ms cubic-bezier(0.16, 1, 0.3, 1), left 480ms cubic-bezier(0.16, 1, 0.3, 1), filter 400ms cubic-bezier(0.16, 1, 0.3, 1), opacity 380ms ease, height 480ms ease, bottom 480ms ease',
-                  willChange: 'transform, left, filter, opacity, height, bottom',
-                }}
-              >
-                {/* Background Text ONLY for the middle (active center) card */}
-                {isHero && (
-                  <div
-                    className="absolute left-1/2 -translate-x-1/2 pointer-events-none select-none font-['Anton'] uppercase text-center transition-all duration-480 ease-out"
-                    style={{
-                      top: isMobile ? '10%' : '12%',
-                      fontSize: isMobile ? '78px' : '160px',
-                      lineHeight: 0.88,
-                      letterSpacing: '-0.02em',
-                      whiteSpace: 'nowrap',
-                      color: 'rgba(30, 80, 185, 0.22)',
-                      textShadow:
-                        '0 0 45px rgba(37, 99, 235, 0.32), 0 0 90px rgba(59, 130, 246, 0.18)',
-                      zIndex: 1,
-                    }}
-                  >
-                    {item.bgText}
-                  </div>
-                )}
-
-                {/* 3D Character Figurine Image */}
-                <img
-                  src={item.src}
-                  alt={item.name}
-                  onError={(e) => {
-                    const target = e.currentTarget;
-                    if (target.src !== item.fallbackSrc) {
-                      target.src = item.fallbackSrc;
-                    }
-                  }}
-                  draggable={false}
-                  className="relative w-full h-full object-contain object-bottom pointer-events-none drop-shadow-[0_20px_35px_rgba(0,0,0,0.18)]"
-                  style={{ zIndex: 2 }}
-                />
-              </div>
-            );
-          })}
+          {/* Right Branding Mark (Mirroring reference image's AGC logo top-right) */}
+          <div className="flex items-center gap-3 self-start md:self-auto bg-white/70 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-slate-200/60 shadow-sm">
+            <img
+              src={growBigPrimary}
+              alt="Grow Big Marketers"
+              className="h-9 w-auto object-contain"
+            />
+            <div className="flex flex-col border-l border-slate-300 pl-3">
+              <span className="text-[11px] font-extrabold tracking-wider text-slate-900 uppercase">
+                Accelerating Business
+              </span>
+              <span className="text-[9.5px] font-medium text-slate-500 uppercase tracking-widest">
+                Engineered to Scale
+              </span>
+            </div>
+          </div>
         </div>
 
-        {/* 5. Streamlined Bottom Row (Reduced Left Side Content) */}
-        <footer
-          className="relative w-full max-w-[1360px] mx-auto px-4 sm:px-8 pb-3.5 sm:pb-6 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-3"
-          style={{ zIndex: 60 }}
+        {/* ====================================================================
+            THE CENTRAL MASKED DARK CARD (Exactly matching reference design)
+            ==================================================================== */}
+        <div
+          className="w-full relative rounded-2xl sm:rounded-3xl border border-white/10 shadow-[0_25px_70px_rgba(0,0,0,0.65)] overflow-hidden transition-all duration-300"
+          style={{
+            background: 'rgba(24, 24, 27, 0.94)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+          }}
         >
-          {/* Reduced & Streamlined Left Side */}
-          <div className="w-full sm:max-w-[400px]">
-            <div className="transition-all duration-300 ease-out" key={activeItem.id}>
-              {/* Category chip */}
-              <div className="flex items-center gap-1.5 mb-1">
-                <span
-                  className="w-2 h-2 rounded-full inline-block"
-                  style={{ backgroundColor: activeItem.accent }}
-                />
-                <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400">
-                  {activeIndex + 1 < 10 ? `0${activeIndex + 1}` : activeIndex + 1} // {activeItem.category}
-                </span>
-              </div>
+          {/* Subtle top amber highlight glow */}
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#FDD00B] to-transparent opacity-80" />
 
-              {/* Title */}
-              <h3 className="font-['Anton'] text-[28px] sm:text-[36px] leading-[1.08] text-[#0f172a] tracking-wide mb-1.5">
-                {activeItem.name}
-              </h3>
+          {/* 3 Columns x 2 Rows Grid (Desktop), Responsive on Mobile */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-white/[0.08] p-6 sm:p-10 md:p-12 gap-y-10 sm:gap-y-12">
+            {INDUSTRIES_DATA.map((item, idx) => {
+              const IconComponent = item.icon;
+              return (
+                <div
+                  key={item.id}
+                  onClick={() => setActiveItem(item)}
+                  className={`group relative flex flex-col items-center text-center p-6 sm:p-8 cursor-pointer transition-all duration-300 rounded-2xl hover:bg-white/[0.04] active:scale-[0.98] ${
+                    idx >= 3 ? 'md:border-t md:border-white/[0.08]' : ''
+                  }`}
+                >
+                  {/* Glowing Outline Icon Container (Bright Orange/Gold #FDD00B) */}
+                  <div className="relative mb-5 flex items-center justify-center">
+                    {/* Ambient Glow on hover */}
+                    <div className="absolute inset-0 rounded-full bg-[#FDD00B]/0 group-hover:bg-[#FDD00B]/20 blur-xl transition-all duration-300 scale-75 group-hover:scale-125" />
 
-              {/* Compact Metric Tag */}
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-slate-100 border border-slate-200/70 text-[11px] font-semibold text-slate-700 mb-3.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#fdcf09]" />
-                {activeItem.metric}
-              </div>
-            </div>
+                    <div className="text-[#FDD00B] group-hover:text-[#facc15] transition-all duration-300 transform group-hover:-translate-y-1 group-hover:scale-105">
+                      <IconComponent className="w-14 h-14 sm:w-16 sm:h-16 drop-shadow-[0_4px_12px_rgba(253,208,11,0.35)]" />
+                    </div>
+                  </div>
 
-            {/* Circular Navigation Buttons + Step Tracker */}
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={() => navigate('prev')}
-                aria-label="Previous Industry"
-                className="w-11 h-11 sm:w-13 sm:h-13 rounded-full border border-slate-300 hover:border-[#0f172a] hover:bg-[#0f172a] text-[#0f172a] hover:text-white flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
-              >
-                <ArrowLeft size={20} strokeWidth={2.25} />
-              </button>
+                  {/* Industry Title */}
+                  <h3 className="text-white group-hover:text-[#FDD00B] text-base sm:text-lg font-medium tracking-wide transition-colors duration-200 max-w-[240px] leading-snug">
+                    {item.title}
+                  </h3>
 
-              <button
-                type="button"
-                onClick={() => navigate('next')}
-                aria-label="Next Industry"
-                className="w-11 h-11 sm:w-13 sm:h-13 rounded-full border border-[#0f172a] bg-[#0f172a] hover:bg-[#3d6ab3] hover:border-[#3d6ab3] text-white flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-md"
-              >
-                <ArrowRight size={20} strokeWidth={2.25} />
-              </button>
+                  {/* Micro KPI Badge */}
+                  <div className="mt-2.5 inline-flex items-center gap-1.5 text-[11px] font-mono font-semibold text-[#FDD00B]/90 bg-white/[0.06] border border-[#FDD00B]/20 px-2.5 py-1 rounded-full opacity-90 group-hover:opacity-100 transition-opacity">
+                    <span>{item.metric.split('•')[0].trim()}</span>
+                  </div>
 
-              {/* Visited Progress Indicator */}
-              <div className="flex items-center gap-1 ml-2">
-                {ALL_INDUSTRIES.map((_, dotIdx) => (
-                  <span
-                    key={dotIdx}
-                    onClick={() => goToIndex(dotIdx, true)}
-                    className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
-                      dotIdx === activeIndex
-                        ? 'w-5 bg-[#0f172a]'
-                        : dotIdx < activeIndex
-                        ? 'w-1.5 bg-[#fdcf09]'
-                        : 'w-1.5 bg-slate-200 hover:bg-slate-300'
-                    }`}
-                    title={`Industry ${dotIdx + 1}`}
-                  />
-                ))}
-              </div>
-            </div>
+                  {/* Hover Quick Action Indicator */}
+                  <div className="mt-3 flex items-center gap-1 text-[11.5px] font-semibold text-slate-400 group-hover:text-white transition-colors">
+                    <span>View Blueprint</span>
+                    <ArrowUpRight size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  </div>
+                </div>
+              );
+            })}
           </div>
 
-          {/* Bottom Right: Clean Explore Button */}
-          <div className="self-end sm:self-auto flex items-center">
+          {/* Bottom Bar Inside The Card */}
+          <div className="border-t border-white/[0.08] bg-black/40 px-6 sm:px-10 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2.5 text-slate-300 text-xs sm:text-sm text-center sm:text-left">
+              <Sparkles size={16} className="text-[#FDD00B] shrink-0 hidden sm:block" />
+              <span>
+                Don't see your vertical? We build custom acquisition architectures for any high-growth market.
+              </span>
+            </div>
+
             <button
               type="button"
               onClick={onOpenBooking}
-              aria-label="Explore Industry"
-              className="group inline-flex items-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 rounded-full bg-[#fdcf09] hover:bg-[#ffe043] text-[#03063A] font-bold text-xs sm:text-sm tracking-wide uppercase shadow-md hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
+              className="inline-flex items-center gap-2 bg-[#FDD00B] hover:bg-[#facc15] text-[#0f172a] font-bold text-xs sm:text-sm px-5 py-2.5 rounded-full transition-all duration-200 hover:scale-105 shadow-md shadow-[#FDD00B]/20 shrink-0"
             >
-              <span>Explore</span>
-              <span className="w-6 h-6 rounded-full bg-[#03063A] text-white flex items-center justify-center transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200">
-                <ArrowUpRight size={14} strokeWidth={2.5} />
-              </span>
+              <PhoneCall size={14} />
+              <span>Discuss Your Industry</span>
             </button>
           </div>
-        </footer>
+        </div>
       </div>
 
-      <style>{`
-        .no-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-        .no-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
+      {/* ====================================================================
+          INTERACTIVE INDUSTRY DETAILS MODAL
+          ==================================================================== */}
+      {activeItem && (
+        <div
+          className="fixed inset-0 z-[1000] flex items-center justify-center p-4 sm:p-6 bg-slate-950/70 backdrop-blur-md animate-fadeIn"
+          onClick={() => setActiveItem(null)}
+        >
+          <div
+            className="relative w-full max-w-lg bg-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200 text-slate-900"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              type="button"
+              onClick={() => setActiveItem(null)}
+              className="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition-colors"
+              aria-label="Close modal"
+            >
+              <X size={16} />
+            </button>
+
+            {/* Category Tag */}
+            <div className="text-[11px] font-mono font-bold tracking-widest text-[#d97706] uppercase mb-2">
+              {activeItem.category}
+            </div>
+
+            {/* Title & Icon */}
+            <div className="flex items-center gap-3.5 mb-3">
+              <div className="w-12 h-12 rounded-2xl bg-[#0f172a] text-[#FDD00B] flex items-center justify-center shrink-0 shadow-md">
+                <activeItem.icon className="w-8 h-8" />
+              </div>
+              <div>
+                <h3 className="text-2xl font-black text-slate-900 leading-tight">
+                  {activeItem.title}
+                </h3>
+                <div className="text-xs font-mono font-semibold text-[#0f172a] mt-0.5">
+                  {activeItem.metric}
+                </div>
+              </div>
+            </div>
+
+            {/* Description */}
+            <p className="text-sm text-slate-600 leading-relaxed mb-5">
+              {activeItem.desc}
+            </p>
+
+            {/* Key Deliverables */}
+            <div className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-2.5">
+              Engineered Capabilities:
+            </div>
+            <div className="space-y-2 mb-6">
+              {activeItem.deliverables.map((d, i) => (
+                <div key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700">
+                  <CheckCircle2 size={16} className="text-[#d97706] shrink-0 mt-0.5" />
+                  <span>{d}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Action Button */}
+            <button
+              type="button"
+              onClick={() => {
+                setActiveItem(null);
+                if (onOpenBooking) onOpenBooking();
+              }}
+              className="w-full py-3.5 px-6 rounded-full bg-[#FDD00B] hover:bg-[#facc15] text-[#0f172a] font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#FDD00B]/30 transition-all duration-200 active:scale-[0.98]"
+            >
+              <PhoneCall size={16} />
+              <span>Book Custom Strategy Call for {activeItem.shortTitle}</span>
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

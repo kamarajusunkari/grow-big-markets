@@ -84,6 +84,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
         >
           <a href="#hero" className="nav-link text-slate-700 hover:text-[#3d6ab3]">Home</a>
           <a href="#services" className="nav-link text-slate-700 hover:text-[#3d6ab3]">Services</a>
+          <a href="#industries" className="nav-link text-slate-700 hover:text-[#3d6ab3]">Industries</a>
           <a href="#process" className="nav-link text-slate-700 hover:text-[#3d6ab3]">Our Process</a>
           <a href="#portfolio" className="nav-link text-slate-700 hover:text-[#3d6ab3]">Portfolio</a>
           <a href="#faq" className="nav-link text-slate-700 hover:text-[#3d6ab3]">Contact</a>
@@ -189,6 +190,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
         >
           <a href="#hero" onClick={() => setMobileMenuOpen(false)} className="nav-link-mobile">Home</a>
           <a href="#services" onClick={() => setMobileMenuOpen(false)} className="nav-link-mobile">Services</a>
+          <a href="#industries" onClick={() => setMobileMenuOpen(false)} className="nav-link-mobile">Industries</a>
           <a href="#process" onClick={() => setMobileMenuOpen(false)} className="nav-link-mobile">Our Process</a>
           <a href="#portfolio" onClick={() => setMobileMenuOpen(false)} className="nav-link-mobile">Portfolio</a>
           <a href="#faq" onClick={() => setMobileMenuOpen(false)} className="nav-link-mobile">Contact</a>

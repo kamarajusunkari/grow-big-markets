@@ -3,6 +3,7 @@ import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { AboutUs } from './components/AboutUs';
 import { Services } from './components/Services';
+import { Industries } from './components/Industries';
 import { Process } from './components/Process';
 import { Portfolio } from './components/Portfolio';
 import { Testimonials } from './components/Testimonials';
@@ -28,6 +29,7 @@ export const App: React.FC = () => {
         <div className="bg-[#f8fafc] text-slate-800 w-full max-w-full">
           <AboutUs onOpenBooking={() => setIsBookingOpen(true)} />
           <Services onOpenBooking={() => setIsBookingOpen(true)} />
+          <Industries onOpenBooking={() => setIsBookingOpen(true)} />
           <Process onOpenBooking={() => setIsBookingOpen(true)} />
           <Portfolio />
           <Testimonials />
