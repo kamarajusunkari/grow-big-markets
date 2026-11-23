@@ -638,9 +638,12 @@ function render() {
   const pp = p;
   const rise = 1 - out(span(pp, 0, .12));
   const run = mix(-50, 76, span(pp, 0, .58));
+  const hlFade = 1 - span(pp, 0.52, 0.62);
   const riseOffset = isMobile ? rise * 5 : rise * 8;
   $('l1').style.transform = `translate3d(${run}vw,${riseOffset}vh,0)`;
+  $('l1').style.opacity = hlFade;
   $('l2').style.transform = `translate3d(${-run}vw,${riseOffset}vh,0)`;
+  $('l2').style.opacity = hlFade;
   const capA = 1 - span(pp, .52, .57);
   $('cap').style.opacity = capA; $('cap').style.transform = `translate(-50%,calc(-50% + ${riseOffset}vh))`;
   $('rule').style.transform = `scaleX(${ease(span(pp, .72, .86))})`;
