@@ -66,15 +66,15 @@
       user-select: none;
       color: var(--ink);
     }
-    #l1 { top: calc(34% - .95em); }
-    #l2 { top: calc(34% + .05em); }
+    #l1 { top: calc(28% - .95em); }
+    #l2 { top: calc(28% + .05em); }
     #l1 span, #l2 span { display: inline-block; }
     #l1 span { margin-right: 15vw; }
     #l2 span { margin-left: 15vw; }
     #cap {
       position: absolute;
       left: 50%;
-      top: 34%;
+      top: 28%;
       transform: translate(-50%, -50%);
       width: 22em;
       text-align: center;
@@ -97,12 +97,32 @@
       position: absolute;
       left: 3.5vw;
       right: 3.5vw;
-      top: 46%;
+      top: 48%;
       height: 1px;
       background: var(--line);
       transform-origin: left;
       transform: scaleX(0);
       pointer-events: none;
+    }
+
+    @media (max-width: 768px) {
+      #track { height: 220vh; }
+      .hl {
+        font-size: clamp(48px, 13vw, 76px);
+        line-height: 0.94;
+        letter-spacing: -0.04em;
+      }
+      #l1 { top: calc(20% - 0.92em); }
+      #l2 { top: calc(20% + 0.08em); }
+      #l1 span { margin-right: 8vw; }
+      #l2 span { margin-left: 8vw; }
+      #cap {
+        top: 20%;
+        width: 84%;
+        max-width: 310px;
+        font-size: 11px;
+        line-height: 1.35;
+      }
     }
     #name {
       position: absolute;
@@ -365,11 +385,15 @@ const SAMPLES = 1200, pathP = [], pathT = [];
 const PH0 = -1.5, PH1 = Math.PI * 2 + 1.35;
 function buildPath() {
   const pts = [];
+  const isMob = innerWidth < 768;
+  const depthScale = isMob ? 0.88 : 1.0;
+  const xFactor = isMob ? 0.36 : 0.561;
+  const yFactor = isMob ? 0.44 : 0.63;
   for (let i = 0; i <= 160; i++) {
     const t = i / 160, ph = mix(PH0, PH1, t), cs = Math.cos(ph), u = 2 * t - 1;
-    const depth = cs > 0 ? 7.6 + 16.4 * cs ** .9 : 7.6 + 2.2 * cs;
-    const edge = .84 + .5 * span(.14 - t, 0, .14) + .8 * span(t, .84, 1);
-    pts.push(new THREE.Vector3(edge * Math.sin(ph) * depth * .561, .5 * Math.sign(u) * Math.abs(u) ** 1.4 * depth * .63, -depth));
+    const depth = (cs > 0 ? 7.6 + 16.4 * cs ** .9 : 7.6 + 2.2 * cs) * depthScale;
+    const edge = (isMob ? 0.65 : 0.84) + 0.5 * span(0.14 - t, 0, 0.14) + 0.8 * span(t, 0.84, 1);
+    pts.push(new THREE.Vector3(edge * Math.sin(ph) * depth * xFactor, 0.5 * Math.sign(u) * Math.abs(u) ** 1.4 * depth * yFactor, -depth));
   }
   path = new THREE.CatmullRomCurve3(pts, false, 'centripetal');
   path.arcLengthDivisions = 1500;
@@ -535,27 +559,47 @@ const cards = SERVICES.map((item, i) => {
 
 /* ---------- layout ---------- */
 const GZ = 8;
-let W = 1, H = 1, asp = 1, cols = 3, rows = 2, tanH = .3153;
+let W = 1, H = 1, asp = 1, cols = 3, rows = 2, tanH = .3153, isMobile = false;
 function resize() {
   W = innerWidth; H = innerHeight; asp = W / H;
+  isMobile = asp < 0.85 || W < 768;
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2)); renderer.setSize(W, H, false);
-  camera.aspect = asp; camera.fov = asp < 16 / 9 ? Math.atan(.561 / asp) * 360 / Math.PI : FOV; camera.updateProjectionMatrix();
+  camera.aspect = asp;
+  if (isMobile) {
+    camera.fov = 42;
+    cols = 1;
+    rows = 2;
+  } else {
+    camera.fov = asp < 16 / 9 ? Math.min(48, Math.atan(.561 / Math.max(asp, 0.72)) * 360 / Math.PI) : FOV;
+    cols = 3;
+    rows = 2;
+  }
+  camera.updateProjectionMatrix();
   tanH = Math.tan(camera.fov * Math.PI / 360);
-  cols = asp < .9 ? 2 : 3; rows = asp < .9 ? 3 : 2;
+  buildPath();
 }
 addEventListener('resize', resize); resize(); buildPath();
 
 function grid(i) {
   const vh = 2 * GZ * tanH, vw = vh * asp;
-  const targetPx = Math.min(W - 48, 1400);
-  const gw = (targetPx / W) * vw;
-  const gap = gw * (cols === 3 ? 0.022 : 0.028);
-  const cw = (gw - gap * (cols - 1)) / cols;
-  const ch = cw / (CARD_W / CARD_H);
-  const gh = ch * rows + gap * 1.5 * (rows - 1);
-  const c = i % cols, r = Math.floor(i / cols);
-  const topShift = Math.max(0, (vh - gh) * 0.22);
-  return {x:-gw / 2 + cw / 2 + c * (cw + gap), y:gh / 2 - ch / 2 - r * (ch + gap * 1.5) + topShift, w:cw, h:ch, vw, vh, c, r};
+  const aspectRatio = CARD_W / CARD_H;
+  if (cols === 1) {
+    const navbarPx = 68, buttonPx = 80, safeHPx = Math.max(300, H - navbarPx - buttonPx), gapPx = 16;
+    let cwPx = Math.min(W - 32, 420), chPx = cwPx / aspectRatio, ghPx = chPx * 2 + gapPx;
+    if (ghPx > safeHPx) { chPx = (safeHPx - gapPx) / 2; cwPx = chPx * aspectRatio; ghPx = safeHPx; }
+    const gw = (cwPx / W) * vw, cw = gw, ch = (chPx / H) * vh, gap = (gapPx / H) * vh, gh = (ghPx / H) * vh;
+    const centerOffsetPx = (buttonPx - navbarPx) / 2, safeCenterY = (centerOffsetPx / H) * vh;
+    const r = i % 2;
+    return { x: 0, y: safeCenterY + gh / 2 - ch / 2 - r * (ch + gap), w: cw, h: ch, vw, vh, c: 0, r };
+  } else {
+    const navbarPx = Math.max(90, H * 0.115), buttonPx = Math.max(96, H * 0.125), safeHPx = Math.max(380, H - navbarPx - buttonPx);
+    const maxGwFromHeight = safeHPx / 0.44;
+    const targetPx = Math.min(W - 64, 1380, maxGwFromHeight);
+    const gw = (targetPx / W) * vw, gap = gw * 0.022, cw = (gw - gap * (cols - 1)) / cols, ch = cw / aspectRatio, gh = ch * rows + gap * 1.5 * (rows - 1);
+    const c = i % cols, r = Math.floor(i / cols);
+    const centerOffsetPx = (buttonPx - navbarPx) / 2, safeCenterY = (centerOffsetPx / H) * vh;
+    return { x: -gw / 2 + cw / 2 + c * (cw + gap), y: safeCenterY + gh / 2 - ch / 2 - r * (ch + gap * 1.5), w: cw, h: ch, vw, vh, c, r };
+  }
 }
 
 /* ---------- scroll ---------- */
@@ -594,12 +638,13 @@ function render() {
   const pp = p;
   const rise = 1 - out(span(pp, 0, .12));
   const run = mix(-50, 76, span(pp, 0, .58));
-  $('l1').style.transform = `translate3d(${run}vw,${rise * 12}vh,0)`;
-  $('l2').style.transform = `translate3d(${-run}vw,${rise * 12}vh,0)`;
+  const riseOffset = isMobile ? rise * 5 : rise * 8;
+  $('l1').style.transform = `translate3d(${run}vw,${riseOffset}vh,0)`;
+  $('l2').style.transform = `translate3d(${-run}vw,${riseOffset}vh,0)`;
   const capA = 1 - span(pp, .52, .57);
-  $('cap').style.opacity = capA; $('cap').style.transform = `translate(-50%,calc(-50% + ${rise * 12}vh))`;
+  $('cap').style.opacity = capA; $('cap').style.transform = `translate(-50%,calc(-50% + ${riseOffset}vh))`;
   $('rule').style.transform = `scaleX(${ease(span(pp, .72, .86))})`;
-  $('rule').style.top = '46%';
+  $('rule').style.top = isMobile ? '45%' : '48%';
 
   const pr = span(pp, RIB_A, RIB_B), head = mix(0, PATH_L + cards.length * STEP, pr);
   for (const c of cards) {

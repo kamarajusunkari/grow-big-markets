@@ -213,6 +213,7 @@ function drawCardCanvas(ctx: CanvasRenderingContext2D, img: HTMLImageElement | n
 
 export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
   const [activeModal, setActiveModal] = useState<ServiceCardData | null>(null);
+  const [mobilePage, setMobilePage] = useState(0);
 
   const trackRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -223,6 +224,10 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
   const ruleRef = useRef<HTMLDivElement>(null);
   const nameRef = useRef<HTMLDivElement>(null);
   const landedCtaRef = useRef<HTMLDivElement>(null);
+  const mobilePagerRef = useRef<HTMLDivElement>(null);
+
+  const mobilePageRef = useRef(0);
+  mobilePageRef.current = mobilePage;
 
   const hoveredCardRef = useRef<{ item: ServiceCardData } | null>(null);
 
@@ -251,17 +256,21 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
 
     function buildPath() {
       const pts: THREE.Vector3[] = [];
+      const isMob = window.innerWidth < 768;
+      const depthScale = isMob ? 0.88 : 1.0;
+      const xFactor = isMob ? 0.36 : 0.561;
+      const yFactor = isMob ? 0.44 : 0.63;
       for (let i = 0; i <= 160; i++) {
         const t = i / 160;
         const ph = mix(PH0, PH1, t);
         const cs = Math.cos(ph);
         const u = 2 * t - 1;
-        const depth = cs > 0 ? 7.6 + 16.4 * Math.pow(cs, 0.9) : 7.6 + 2.2 * cs;
-        const edge = 0.84 + 0.5 * span(0.14 - t, 0, 0.14) + 0.8 * span(t, 0.84, 1);
+        const depth = (cs > 0 ? 7.6 + 16.4 * Math.pow(cs, 0.9) : 7.6 + 2.2 * cs) * depthScale;
+        const edge = (isMob ? 0.65 : 0.84) + 0.5 * span(0.14 - t, 0, 0.14) + 0.8 * span(t, 0.84, 1);
         pts.push(
           new THREE.Vector3(
-            edge * Math.sin(ph) * depth * 0.561,
-            0.5 * Math.sign(u) * Math.pow(Math.abs(u), 1.4) * depth * 0.63,
+            edge * Math.sin(ph) * depth * xFactor,
+            0.5 * Math.sign(u) * Math.pow(Math.abs(u), 1.4) * depth * yFactor,
             -depth
           )
         );
@@ -375,20 +384,29 @@ void main(){
     /* ---------- Responsive Layout ---------- */
     const GZ = 8;
     let W = 1, H = 1, asp = 1, cols = 3, rows = 2, tanH = 0.3153;
+    let isMobile = false;
 
     function resize() {
       if (!stage) return;
       W = stage.clientWidth || window.innerWidth;
       H = stage.clientHeight || window.innerHeight;
       asp = W / H;
+      isMobile = asp < 0.85 || W < 768;
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.setSize(W, H, false);
       camera.aspect = asp;
-      camera.fov = asp < 16 / 9 ? (Math.atan(0.561 / asp) * 360) / Math.PI : FOV;
+      if (isMobile) {
+        camera.fov = 42;
+        cols = 1;
+        rows = 2;
+      } else {
+        camera.fov = asp < 16 / 9 ? Math.min(48, (Math.atan(0.561 / Math.max(asp, 0.72)) * 360) / Math.PI) : FOV;
+        cols = 3;
+        rows = 2;
+      }
       camera.updateProjectionMatrix();
       tanH = Math.tan((camera.fov * Math.PI) / 360);
-      cols = asp < 0.9 ? 2 : 3;
-      rows = asp < 0.9 ? 3 : 2;
+      buildPath();
     }
 
     window.addEventListener('resize', resize);
@@ -398,25 +416,79 @@ void main(){
     function grid(i: number) {
       const vh = 2 * GZ * tanH;
       const vw = vh * asp;
-      const targetPx = Math.min(W - 48, 1400);
-      const gw = (targetPx / W) * vw;
-      const gap = gw * (cols === 3 ? 0.022 : 0.028);
-      const cw = (gw - gap * (cols - 1)) / cols;
-      const ch = cw / (CARD_W / CARD_H);
-      const gh = ch * rows + gap * 1.5 * (rows - 1);
-      const c = i % cols;
-      const r = Math.floor(i / cols);
-      const topShift = Math.max(0, (vh - gh) * 0.22);
-      return {
-        x: -gw / 2 + cw / 2 + c * (cw + gap),
-        y: gh / 2 - ch / 2 - r * (ch + gap * 1.5) + topShift,
-        w: cw,
-        h: ch,
-        vw,
-        vh,
-        c,
-        r,
-      };
+      const aspectRatio = CARD_W / CARD_H; // 2.1 / 1.32 = 1.5909
+
+      if (cols === 1) {
+        // Mobile 1-Column Layout
+        const navbarPx = 68;
+        const buttonPx = 80;
+        const safeHPx = Math.max(300, H - navbarPx - buttonPx);
+        const gapPx = 16;
+
+        let cwPx = Math.min(W - 32, 420);
+        let chPx = cwPx / aspectRatio;
+        let ghPx = chPx * 2 + gapPx;
+
+        // If 2 stacked cards exceed the safe vertical window, scale down to fit comfortably
+        if (ghPx > safeHPx) {
+          chPx = (safeHPx - gapPx) / 2;
+          cwPx = chPx * aspectRatio;
+          ghPx = safeHPx;
+        }
+
+        const gw = (cwPx / W) * vw;
+        const cw = gw;
+        const ch = (chPx / H) * vh;
+        const gap = (gapPx / H) * vh;
+        const gh = (ghPx / H) * vh;
+
+        const centerOffsetPx = (buttonPx - navbarPx) / 2;
+        const safeCenterY = (centerOffsetPx / H) * vh;
+        const r = i % 2; // 0 (top card) or 1 (bottom card)
+
+        return {
+          x: 0,
+          y: safeCenterY + gh / 2 - ch / 2 - r * (ch + gap),
+          w: cw,
+          h: ch,
+          vw,
+          vh,
+          c: 0,
+          r,
+        };
+      } else {
+        // Desktop 3-Column x 2-Row Layout
+        const navbarPx = Math.max(90, H * 0.115);
+        const buttonPx = Math.max(96, H * 0.125);
+        const safeHPx = Math.max(380, H - navbarPx - buttonPx);
+
+        // Ensure 2 rows never collide with navbar or CTA button
+        const maxGwFromHeight = safeHPx / 0.44;
+        const targetPx = Math.min(W - 64, 1380, maxGwFromHeight);
+
+        const gw = (targetPx / W) * vw;
+        const gap = gw * 0.022;
+        const cw = (gw - gap * (cols - 1)) / cols;
+        const ch = cw / aspectRatio;
+        const gh = ch * rows + gap * 1.5 * (rows - 1);
+        const c = i % cols;
+        const r = Math.floor(i / cols);
+
+        // Center the grid within the safe vertical viewport between navbar and button
+        const centerOffsetPx = (buttonPx - navbarPx) / 2;
+        const safeCenterY = (centerOffsetPx / H) * vh;
+
+        return {
+          x: -gw / 2 + cw / 2 + c * (cw + gap),
+          y: safeCenterY + gh / 2 - ch / 2 - r * (ch + gap * 1.5),
+          w: cw,
+          h: ch,
+          vw,
+          vh,
+          c,
+          r,
+        };
+      }
     }
 
     /* ---------- Scroll Tracking ---------- */
@@ -459,10 +531,10 @@ void main(){
       pos.needsUpdate = true;
     }
 
-    function poseGrid(c: CardObj, q: number) {
-      const g = grid(c.i);
+    function poseGrid(c: CardObj, q: number, localIndex: number) {
+      const g = grid(localIndex);
       const pos = c.geo.attributes.position;
-      const dx = (g.c - (cols - 1) / 2) * 1.2 + (cols === 3 && g.c === 1 ? 0 : 0);
+      const dx = (g.c - (cols - 1) / 2) * 1.2;
       const dy = g.r < rows / 2 ? 1 : -1;
       const ox = dx * g.vw * 0.62 * (1 - q);
       const oy = dy * g.vh * (g.c === 1 ? 0.95 : 0.34) * (1 - q);
@@ -495,32 +567,41 @@ void main(){
       // 1. Headline rises and slides in opposite directions
       const rise = 1 - out(span(pp, 0, 0.12));
       const run = mix(-50, 76, span(pp, 0, 0.58));
-      if (l1Ref.current) l1Ref.current.style.transform = `translate3d(${run}vw,${rise * 12}vh,0)`;
-      if (l2Ref.current) l2Ref.current.style.transform = `translate3d(${-run}vw,${rise * 12}vh,0)`;
+      const riseOffset = isMobile ? rise * 5 : rise * 8;
+      if (l1Ref.current) l1Ref.current.style.transform = `translate3d(${run}vw,${riseOffset}vh,0)`;
+      if (l2Ref.current) l2Ref.current.style.transform = `translate3d(${-run}vw,${riseOffset}vh,0)`;
 
       // 2. Caption
       const capA = 1 - span(pp, 0.52, 0.57);
       if (capRef.current) {
         capRef.current.style.opacity = `${capA}`;
-        capRef.current.style.transform = `translate(-50%,calc(-50% + ${rise * 12}vh))`;
+        capRef.current.style.transform = `translate(-50%,calc(-50% + ${riseOffset}vh))`;
       }
 
       // 3. Center Rule line scales across
       if (ruleRef.current) {
         ruleRef.current.style.transform = `scaleX(${ease(span(pp, 0.72, 0.86))})`;
-        ruleRef.current.style.top = '50%';
+        ruleRef.current.style.top = isMobile ? '45%' : '48%';
       }
 
-      // 5. Landed CTA bar
+      // 5. Landed CTA bar & Mobile Pager
       const ctaOpacity = span(pp, 0.82, 0.95);
       if (landedCtaRef.current) {
         landedCtaRef.current.style.opacity = `${ctaOpacity}`;
         landedCtaRef.current.style.pointerEvents = ctaOpacity > 0.5 ? 'auto' : 'none';
       }
+      if (mobilePagerRef.current) {
+        mobilePagerRef.current.style.opacity = `${ctaOpacity}`;
+        mobilePagerRef.current.style.pointerEvents = ctaOpacity > 0.5 ? 'auto' : 'none';
+      }
 
       // 6. 3D Ribbon & Grid cards
       const pr = span(pp, RIB_A, RIB_B);
       const head = mix(0, PATH_L + cards.length * STEP, pr);
+
+      const activePage = mobilePageRef.current;
+      const activeStart = isMobile ? activePage * 2 : 0;
+      const activeEnd = isMobile ? activeStart + 2 : cols * rows;
 
       for (const c of cards) {
         const s = head - c.i * STEP;
@@ -529,11 +610,12 @@ void main(){
           c.mesh.visible = s > CARD_W;
           c.rect = null;
           if (c.mesh.visible) poseRibbon(c, head);
-        } else if (c.i < cols * rows) {
+        } else if (c.i >= activeStart && c.i < activeEnd) {
+          const localIndex = c.i - activeStart;
           const st = mix(RIB_A, RIB_B, (end + c.i * STEP) / (PATH_L + cards.length * STEP));
           const q = out(span(pp, st, st + 0.13));
           c.mesh.visible = q > 0.001;
-          if (c.mesh.visible) poseGrid(c, q);
+          if (c.mesh.visible) poseGrid(c, q, localIndex);
         } else {
           c.mesh.visible = false;
           c.rect = null;
@@ -544,23 +626,28 @@ void main(){
     }
 
     /* ---------- Pointer Hover & Click Interaction ---------- */
+    const findHitCard = (clientX: number, clientY: number): CardObj | null => {
+      const rect = stage.getBoundingClientRect();
+      const xRel = clientX - rect.left;
+      const yRel = clientY - rect.top;
+      const nx = xRel / W - 0.5;
+      const ny = 0.5 - yRel / H;
+      for (const c of cards) {
+        const g = c.rect;
+        if (!g || !c.mesh.visible) continue;
+        const x = nx * g.vw;
+        const y = ny * g.vh;
+        if (Math.abs(x - g.x) < g.w / 2 && Math.abs(y - g.y) < g.h / 2) {
+          return c;
+        }
+      }
+      return null;
+    };
+
     const handlePointerMove = (e: PointerEvent) => {
       let hit: CardObj | null = null;
       if (p > 0.86) {
-        const rect = stage.getBoundingClientRect();
-        const clientX = e.clientX - rect.left;
-        const clientY = e.clientY - rect.top;
-        const nx = clientX / W - 0.5;
-        const ny = 0.5 - clientY / H;
-        for (const c of cards) {
-          const g = c.rect;
-          if (!g) continue;
-          const x = nx * g.vw;
-          const y = ny * g.vh;
-          if (Math.abs(x - g.x) < g.w / 2 && Math.abs(y - g.y) < g.h / 2) {
-            hit = c;
-          }
-        }
+        hit = findHitCard(e.clientX, e.clientY);
       }
       hoveredCardRef.current = hit;
       if (nameRef.current) {
@@ -575,9 +662,12 @@ void main(){
       }
     };
 
-    const handleStageClick = () => {
-      if (hoveredCardRef.current) {
-        setActiveModal(hoveredCardRef.current.item);
+    const handleStageClick = (e: MouseEvent) => {
+      if (p > 0.8) {
+        const hit = findHitCard(e.clientX, e.clientY);
+        if (hit) {
+          setActiveModal(hit.item);
+        }
       }
     };
 
@@ -634,6 +724,29 @@ void main(){
 
         {/* Three.js 3D WebGL Canvas */}
         <canvas id="gl" ref={canvasRef}></canvas>
+
+        {/* Mobile Service Switcher (1-column pagination) */}
+        <div id="mobilePager" ref={mobilePagerRef} className="mobile-services-pager">
+          <button
+            type="button"
+            onClick={() => setMobilePage((prev) => (prev > 0 ? prev - 1 : 2))}
+            className="mobile-pager-btn"
+            aria-label="Previous services"
+          >
+            ←
+          </button>
+          <span className="mobile-pager-text">
+            Services {mobilePage * 2 + 1}-{Math.min(mobilePage * 2 + 2, SERVICES_DATA.length)} of {SERVICES_DATA.length}
+          </span>
+          <button
+            type="button"
+            onClick={() => setMobilePage((prev) => (prev < 2 ? prev + 1 : 0))}
+            className="mobile-pager-btn"
+            aria-label="Next services"
+          >
+            →
+          </button>
+        </div>
 
         {/* Landed Grid Floating CTA Button */}
         <div id="landedCta" ref={landedCtaRef} className="landed-cta-wrap">
@@ -709,12 +822,6 @@ void main(){
           user-select: none;
         }
 
-        @media (max-width: 760px) {
-          .vante-services-section {
-            height: 220vh;
-          }
-        }
-
         .stage {
           position: sticky;
           top: 0;
@@ -749,11 +856,11 @@ void main(){
         }
 
         #l1 {
-          top: calc(34% - 0.95em);
+          top: calc(28% - 0.95em);
         }
 
         #l2 {
-          top: calc(34% + 0.05em);
+          top: calc(28% + 0.05em);
         }
 
         #l1 span, #l2 span {
@@ -771,7 +878,7 @@ void main(){
         #cap {
           position: absolute;
           left: 50%;
-          top: 34%;
+          top: 28%;
           transform: translate(-50%, -50%);
           width: 22em;
           text-align: center;
@@ -798,7 +905,7 @@ void main(){
           position: absolute;
           left: 3.5vw;
           right: 3.5vw;
-          top: 46%;
+          top: 48%;
           height: 1px;
           background: rgba(234, 179, 8, 0.35);
           transform-origin: left;
@@ -809,7 +916,7 @@ void main(){
 
         .landed-cta-wrap {
           position: absolute;
-          bottom: 28px;
+          bottom: 24px;
           left: 50%;
           transform: translateX(-50%);
           z-index: 15;
@@ -819,27 +926,31 @@ void main(){
         }
 
         .landed-cta-btn {
-          height: 52px;
+          height: 50px;
           padding: 0 32px;
           background: #FDD00B;
           color: #0f172a;
           border: 1.5px solid rgba(234, 179, 8, 0.6);
           border-radius: 99px;
           font-family: inherit;
-          font-size: 14.5px;
+          font-size: 14px;
           font-weight: 700;
           letter-spacing: 0.02em;
           display: inline-flex;
           align-items: center;
           gap: 12px;
           cursor: pointer;
-          box-shadow: 0 12px 35px rgba(253, 208, 11, 0.45);
+          box-shadow: 0 10px 30px rgba(253, 208, 11, 0.4), 0 2px 8px rgba(0, 0, 0, 0.06);
           transition: transform 0.2s ease, filter 0.2s ease;
         }
 
         .landed-cta-btn:hover {
           filter: brightness(1.06);
           transform: translateY(-2px);
+        }
+
+        .mobile-services-pager {
+          display: none;
         }
 
         #name {
@@ -996,45 +1107,106 @@ void main(){
           transform: translateY(-2px);
         }
 
-        @media (max-width: 760px) {
-          .top {
-            left: 18px;
-            right: 18px;
-            top: 18px;
+        @media (max-width: 768px) {
+          .vante-services-section {
+            height: 220vh;
           }
 
-          .bot {
-            left: 18px;
-            right: 18px;
-            bottom: 18px;
-            grid-template-columns: 1fr auto;
+          .hl {
+            font-size: clamp(48px, 13vw, 76px);
+            line-height: 0.94;
+            letter-spacing: -0.04em;
           }
 
-          .bot .mid {
-            display: none;
+          #l1 {
+            top: calc(20% - 0.92em);
           }
 
-          #hint, #pager {
-            display: none;
+          #l2 {
+            top: calc(20% + 0.08em);
           }
 
-          .bot p {
-            max-width: 17em;
+          #l1 span {
+            margin-right: 8vw;
+          }
+
+          #l2 span {
+            margin-left: 8vw;
+          }
+
+          #cap {
+            top: 20%;
+            width: 84%;
+            max-width: 310px;
             font-size: 11px;
+            letter-spacing: 0.04em;
+            line-height: 1.35;
+          }
+
+          .mobile-services-pager {
+            position: absolute;
+            bottom: 66px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 15;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(234, 179, 8, 0.45);
+            border-radius: 99px;
+            padding: 4px 14px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+          }
+
+          .mobile-pager-btn {
+            background: none;
+            border: none;
+            font-size: 17px;
+            font-weight: 700;
+            color: #0f172a;
+            cursor: pointer;
+            padding: 2px 6px;
+            line-height: 1;
+            display: grid;
+            place-items: center;
+          }
+
+          .mobile-pager-btn:active {
+            transform: scale(0.92);
+          }
+
+          .mobile-pager-text {
+            font-size: 11px;
+            font-weight: 600;
+            color: #334155;
+            font-family: 'IBM Plex Mono', monospace;
+            letter-spacing: 0.02em;
+          }
+
+          .landed-cta-wrap {
+            bottom: 14px;
+            width: calc(100% - 32px);
+            max-width: 380px;
+            display: flex;
+            justify-content: center;
+          }
+
+          .landed-cta-btn {
+            width: 100%;
+            height: 44px;
+            padding: 0 16px;
+            font-size: 13px;
+            justify-content: center;
+            gap: 8px;
           }
 
           .service-modal-deliverables {
             grid-template-columns: 1fr;
-          }
-
-          .landed-cta-wrap {
-            bottom: 16px;
-          }
-
-          .landed-cta-btn {
-            height: 44px;
-            padding: 0 20px;
-            font-size: 13px;
           }
         }
       `}</style>
