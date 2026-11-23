@@ -223,11 +223,7 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
   const l1Ref = useRef<HTMLDivElement>(null);
   const l2Ref = useRef<HTMLDivElement>(null);
   const capRef = useRef<HTMLDivElement>(null);
-  const glowRef = useRef<HTMLDivElement>(null);
-  const crossRef = useRef<HTMLDivElement>(null);
   const ruleRef = useRef<HTMLDivElement>(null);
-  const hintRef = useRef<HTMLDivElement>(null);
-  const pagerRef = useRef<HTMLDivElement>(null);
   const nameRef = useRef<HTMLDivElement>(null);
   const landedCtaRef = useRef<HTMLDivElement>(null);
 
@@ -510,14 +506,7 @@ void main(){
         capRef.current.style.transform = `translate(-50%,calc(-50% + ${rise * 34}vh))`;
       }
 
-      // 3. Technical intro elements fade out
-      const intro = 1 - span(pp, 0, 0.05);
-      if (hintRef.current) hintRef.current.style.opacity = `${intro}`;
-      if (pagerRef.current) pagerRef.current.style.opacity = `${intro}`;
-      if (crossRef.current) crossRef.current.style.opacity = `${intro}`;
-      if (glowRef.current) glowRef.current.style.opacity = `${intro}`;
-
-      // 4. Center Rule line scales across
+      // 3. Center Rule line scales across
       if (ruleRef.current) {
         ruleRef.current.style.transform = `scaleX(${ease(span(pp, 0.72, 0.86))})`;
         ruleRef.current.style.top = '50%';
@@ -641,95 +630,11 @@ void main(){
           Data-driven performance marketing engineered to scale revenue.
         </div>
 
-        {/* Technical First Frame Visuals */}
-        <div id="glow" ref={glowRef}></div>
-        <div id="cross" ref={crossRef}>
-          <i>+</i>
-        </div>
+        {/* Dynamic Center Hairline */}
         <div id="rule" ref={ruleRef}></div>
 
         {/* Three.js 3D WebGL Canvas */}
         <canvas id="gl" ref={canvasRef}></canvas>
-
-        {/* Top Hint */}
-        <div id="hint" ref={hintRef}>
-          SCROLL TO EXPLORE SERVICES &nbsp;↓
-        </div>
-
-        {/* Top Navigation Strip */}
-        <header className="top">
-          <div className="logo">
-            <svg viewBox="0 0 22 18">
-              <path d="M11 0l11 18h-6.200L11 9.600 6.200 18H0z" />
-            </svg>
-            GROW BIG
-          </div>
-          <div id="pager" ref={pagerRef}>
-            <span
-              onClick={() => {
-                if (trackRef.current) {
-                  window.scrollTo({ top: trackRef.current.offsetTop, behavior: 'smooth' });
-                }
-              }}
-            >
-              ↑
-            </span>
-            <span
-              onClick={() => {
-                if (trackRef.current) {
-                  window.scrollTo({
-                    top: trackRef.current.offsetTop + trackRef.current.offsetHeight - window.innerHeight,
-                    behavior: 'smooth',
-                  });
-                }
-              }}
-            >
-              ↓
-            </span>
-          </div>
-          <nav className="acts">
-            <a
-              href="#booking"
-              onClick={(e) => {
-                e.preventDefault();
-                onOpenBooking();
-              }}
-            >
-              <i></i>LET'S TALK
-            </a>
-            <a
-              href="#services"
-              onClick={(e) => {
-                e.preventDefault();
-                if (trackRef.current) {
-                  window.scrollTo({
-                    top: trackRef.current.offsetTop + trackRef.current.offsetHeight - window.innerHeight,
-                    behavior: 'smooth',
-                  });
-                }
-              }}
-            >
-              ALL SERVICES<b></b>
-            </a>
-          </nav>
-        </header>
-
-        {/* Bottom Status Bar */}
-        <footer className="bot">
-          <p>
-            High-ROI performance marketing, conversion funnels, and organic growth strategies engineered for ambitious brands.
-          </p>
-          <div className="mid">
-            PPC<s>/</s>SEO<s>/</s>CRO<s>/</s>SOCIAL<s>/</s>FUNNELS
-          </div>
-          <div
-            className="r"
-            onClick={() => onOpenBooking()}
-            title="Schedule an executive marketing consultation"
-          >
-            BOOK STRATEGY CALL
-          </div>
-        </footer>
 
         {/* Landed Grid Floating CTA Button */}
         <div id="landedCta" ref={landedCtaRef} className="landed-cta-wrap">
@@ -795,11 +700,17 @@ void main(){
       <style>{`
         .vante-services-section {
           position: relative;
-          height: 480vh;
+          height: 260vh;
           background: #0a0a0b;
           color: #f4f1ea;
           font-family: 'Inter Tight', system-ui, sans-serif;
           user-select: none;
+        }
+
+        @media (max-width: 760px) {
+          .vante-services-section {
+            height: 220vh;
+          }
         }
 
         .stage {
@@ -876,206 +787,6 @@ void main(){
           height: 100%;
           display: block;
           z-index: 1;
-        }
-
-        .top {
-          position: absolute;
-          left: 32px;
-          right: 32px;
-          top: 26px;
-          display: flex;
-          align-items: center;
-          justify-content: flex-start;
-          pointer-events: none;
-          z-index: 10;
-        }
-
-        .acts {
-          margin-left: auto;
-          display: flex;
-          align-items: center;
-          gap: 7px;
-          pointer-events: auto;
-        }
-
-        .acts a {
-          display: flex;
-          align-items: center;
-          gap: 9px;
-          height: 32px;
-          padding: 0 15px;
-          border: 1px solid rgba(244, 241, 234, 0.55);
-          border-radius: 99px;
-          color: #f4f1ea;
-          text-decoration: none;
-          font-size: 12px;
-          font-weight: 500;
-          letter-spacing: 0.06em;
-          transition: background 0.2s, color 0.2s;
-          cursor: pointer;
-        }
-
-        .acts a:hover {
-          background: #f4f1ea;
-          color: #0a0a0b;
-        }
-
-        .acts a i {
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          background: currentColor;
-        }
-
-        .acts a b {
-          display: block;
-          width: 13px;
-          height: 7px;
-          border-top: 1px solid currentColor;
-          border-bottom: 1px solid currentColor;
-        }
-
-        #pager {
-          display: flex;
-          margin: -26px 0 0 28px;
-          pointer-events: auto;
-        }
-
-        #pager span {
-          display: grid;
-          place-items: center;
-          width: 44px;
-          height: 50px;
-          border: 1px solid rgba(244, 241, 234, 0.14);
-          border-top: 0;
-          margin-left: -1px;
-          font: 400 11px 'IBM Plex Mono', monospace;
-          color: #8d8b86;
-          cursor: pointer;
-          transition: color 0.2s, border-color 0.2s;
-        }
-
-        #pager span:hover {
-          color: #f4f1ea;
-          border-color: rgba(244, 241, 234, 0.3);
-        }
-
-        #glow {
-          position: absolute;
-          left: 0;
-          right: 0;
-          top: 0;
-          height: 42%;
-          background: linear-gradient(rgba(244, 241, 234, 0.1), rgba(244, 241, 234, 0));
-          pointer-events: none;
-          z-index: 2;
-        }
-
-        #cross {
-          position: absolute;
-          left: 32px;
-          right: 32px;
-          top: 37.5%;
-          height: 1px;
-          background: rgba(244, 241, 234, 0.14);
-          pointer-events: none;
-          z-index: 2;
-        }
-
-        #cross i {
-          position: absolute;
-          left: 50%;
-          top: -0.62em;
-          margin-left: -0.3em;
-          font: 400 13px 'IBM Plex Mono', monospace;
-          color: #8d8b86;
-          background: #0a0a0b;
-          padding: 0 0.3em;
-          line-height: 1.2;
-        }
-
-        .logo {
-          display: flex;
-          align-items: center;
-          gap: 9px;
-          font-size: 19px;
-          font-weight: 600;
-          letter-spacing: 0.09em;
-          color: #f4f1ea;
-        }
-
-        .logo svg {
-          width: 22px;
-          height: 18px;
-          fill: #f4f1ea;
-        }
-
-        #hint {
-          position: absolute;
-          left: 50%;
-          top: 33px;
-          transform: translateX(-50%);
-          font: 400 11.5px 'IBM Plex Mono', monospace;
-          letter-spacing: 0.06em;
-          color: #f4f1ea;
-          padding-bottom: 6px;
-          border-bottom: 1px solid rgba(244, 241, 234, 0.14);
-          pointer-events: none;
-          white-space: nowrap;
-          z-index: 10;
-        }
-
-        .bot {
-          position: absolute;
-          left: 32px;
-          right: 32px;
-          bottom: 26px;
-          display: grid;
-          grid-template-columns: 1fr auto 1fr;
-          align-items: end;
-          font-size: 12.5px;
-          line-height: 1.35;
-          pointer-events: none;
-          z-index: 10;
-        }
-
-        .bot p {
-          color: #f4f1ea;
-          max-width: 23em;
-        }
-
-        .bot .mid {
-          font: 400 11.5px 'IBM Plex Mono', monospace;
-          letter-spacing: 0.06em;
-        }
-
-        .bot .mid s {
-          text-decoration: none;
-          color: #8d8b86;
-          margin: 0 0.9em;
-        }
-
-        .bot .r {
-          justify-self: end;
-          display: flex;
-          gap: 12px;
-          align-items: center;
-          font: 400 11.5px 'IBM Plex Mono', monospace;
-          letter-spacing: 0.06em;
-          pointer-events: auto;
-          cursor: pointer;
-          transition: color 0.2s;
-        }
-
-        .bot .r:hover {
-          color: #FDD00B;
-        }
-
-        .bot .r:after {
-          content: "";
-          width: 22px;
-          height: 1px;
-          background: #f4f1ea;
         }
 
         #rule {
