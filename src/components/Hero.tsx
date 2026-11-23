@@ -937,8 +937,9 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
           display: none;
         }
 
-        .stat-item-plant {
-          display: none;
+        .stat-item-plant,
+        .stat-item.stat-item-plant {
+          display: none !important;
         }
 
         .stats-lead {
@@ -1220,16 +1221,21 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
             box-shadow: none;
           }
 
-          .stat-item-plant {
-            display: flex;
-            align-items: flex-start;
-            justify-content: flex-start;
-            padding-top: 4px;
+          .stat-item-plant,
+          .stat-item.stat-item-plant {
+            display: flex !important;
+            align-items: flex-end !important;
+            justify-content: flex-end !important;
+            justify-self: end;
+            width: 100%;
+            padding-bottom: 2px;
           }
 
           .stat-item-plant .sprout-container {
             display: flex;
-            align-items: center;
+            align-items: flex-end;
+            justify-content: flex-end;
+            margin-left: auto;
             padding: 0;
           }
 
