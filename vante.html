@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vante — Services in Motion | Grow Big Marketers</title>
-  <meta name="description" content="A performance marketing studio portfolio where a continuous 3D ribbon of our core services sweeps through space, then lands in a calm 3x2 grid.">
+  <meta name="description" content="A performance marketing studio portfolio where a continuous 3D ribbon of our core services sweeps through space, then lands in a single-row 3D coverflow carousel.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -92,6 +92,7 @@
       width: 100%;
       height: 100%;
       display: block;
+      z-index: 4;
     }
     #rule {
       position: absolute;
@@ -100,13 +101,146 @@
       top: 48%;
       height: 1px;
       background: var(--line);
-      transform-origin: left;
+      transform-origin: center;
       transform: scaleX(0);
       pointer-events: none;
+      z-index: 2;
+    }
+
+    /* 3D Carousel UI Overlay */
+    .vante-carousel-ui {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 15;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+
+    .carousel-arrow-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      border: 1.5px solid rgba(234, 179, 8, 0.55);
+      color: #0f172a;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(253, 208, 11, 0.2);
+      transition: all 0.2s ease;
+      pointer-events: auto;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .carousel-arrow-btn:hover:not(:disabled) {
+      background: #FDD00B;
+      color: #0f172a;
+      transform: translateY(-50%) scale(1.08);
+      box-shadow: 0 12px 30px rgba(253, 208, 11, 0.45);
+    }
+
+    .carousel-arrow-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .carousel-arrow-left {
+      left: 28px;
+    }
+
+    .carousel-arrow-right {
+      right: 28px;
+    }
+
+    .carousel-indicator-bar {
+      position: absolute;
+      bottom: 84px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      pointer-events: auto;
+    }
+
+    .carousel-counter-text {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+      padding: 4px 14px;
+      border-radius: 99px;
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      white-space: nowrap;
+      color: #0f172a;
+    }
+
+    .carousel-dots-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .carousel-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 99px;
+      background: rgba(15, 23, 42, 0.22);
+      border: none;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      padding: 0;
+    }
+
+    .carousel-dot.active {
+      width: 28px;
+      background: #FDD00B;
+      box-shadow: 0 0 10px rgba(253, 208, 11, 0.6);
+    }
+
+    .landed-cta-wrap {
+      position: absolute;
+      bottom: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 15;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+
+    .landed-cta-btn {
+      height: 48px;
+      padding: 0 30px;
+      background: #FDD00B;
+      color: #0f172a;
+      border: 1.5px solid rgba(234, 179, 8, 0.6);
+      border-radius: 99px;
+      font-size: 14.5px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 10px 30px rgba(253, 208, 11, 0.35);
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .landed-cta-btn:hover {
+      background: #facc15;
+      transform: scale(1.03);
     }
 
     @media (max-width: 768px) {
-      #track { height: 220vh; }
       .hl {
         font-size: clamp(48px, 13vw, 76px);
         line-height: 0.94;
@@ -123,7 +257,30 @@
         font-size: 11px;
         line-height: 1.35;
       }
+      .carousel-arrow-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+      }
+      .carousel-arrow-left { left: 12px; }
+      .carousel-arrow-right { right: 12px; }
+      .carousel-indicator-bar { bottom: 74px; }
+      .carousel-counter-text { font-size: 10.5px; padding: 3px 12px; }
+      .carousel-dot.active { width: 22px; }
+      .landed-cta-wrap {
+        bottom: 16px;
+        width: calc(100% - 32px);
+        max-width: 380px;
+      }
+      .landed-cta-btn {
+        width: 100%;
+        height: 44px;
+        padding: 0 20px;
+        font-size: 13px;
+        justify-content: center;
+      }
     }
+
     #name {
       position: absolute;
       left: 0;
@@ -256,6 +413,7 @@
       gap: 10px;
       box-shadow: 0 10px 25px rgba(253, 208, 11, .35);
       transition: transform .2s, filter .2s;
+      text-decoration: none;
     }
     .modal-btn:hover {
       filter: brightness(1.06);
@@ -278,6 +436,25 @@
     <div id="cap">Data-driven performance marketing engineered to scale revenue.</div>
     <div id="rule"></div>
     <canvas id="gl"></canvas>
+
+    <!-- 3D Carousel UI Controls -->
+    <div id="carouselUi" class="vante-carousel-ui">
+      <button type="button" class="carousel-arrow-btn carousel-arrow-left" id="prevBtn" aria-label="Previous service">‹</button>
+      <button type="button" class="carousel-arrow-btn carousel-arrow-right" id="nextBtn" aria-label="Next service">›</button>
+      <div class="carousel-indicator-bar">
+        <div class="carousel-counter-text" id="counterText">01 / 08 • Performance Marketing</div>
+        <div class="carousel-dots-wrap" id="dotsWrap"></div>
+      </div>
+    </div>
+
+    <!-- Landed CTA Button -->
+    <div id="landedCta" class="landed-cta-wrap">
+      <a href="/#booking" class="landed-cta-btn">
+        <span>Book Custom Strategy Call</span>
+        <span>→</span>
+      </a>
+    </div>
+
     <div id="name"></div>
   </main>
 </div>
@@ -290,7 +467,7 @@
     <h3 class="modal-title" id="modalTitle">Performance Marketing</h3>
     <p class="modal-desc" id="modalDesc"></p>
     <div class="modal-deliverables" id="modalDeliverables"></div>
-    <button class="modal-btn" id="modalActionBtn">Book Strategy Call →</button>
+    <a href="/#booking" class="modal-btn" id="modalActionBtn">Book Strategy Call →</a>
   </div>
 </div>
 
@@ -387,16 +564,15 @@ function buildPath() {
   const pts = [];
   const isMob = innerWidth < 768;
   const depthScale = isMob ? 0.88 : 1.0;
-  const xFactor = isMob ? 0.36 : 0.561;
-  const yFactor = isMob ? 0.44 : 0.63;
+  const xFactor = isMob ? 0.38 : 0.561;
+  const yFactor = isMob ? 0.46 : 0.63;
   for (let i = 0; i <= 160; i++) {
     const t = i / 160, ph = mix(PH0, PH1, t), cs = Math.cos(ph), u = 2 * t - 1;
-    const depth = (cs > 0 ? 7.6 + 16.4 * cs ** .9 : 7.6 + 2.2 * cs) * depthScale;
+    const depth = (cs > 0 ? 7.6 + 16.4 * Math.pow(cs, .9) : 7.6 + 2.2 * cs) * depthScale;
     const edge = (isMob ? 0.65 : 0.84) + 0.5 * span(0.14 - t, 0, 0.14) + 0.8 * span(t, 0.84, 1);
-    pts.push(new THREE.Vector3(edge * Math.sin(ph) * depth * xFactor, 0.5 * Math.sign(u) * Math.abs(u) ** 1.4 * depth * yFactor, -depth));
+    pts.push(new THREE.Vector3(edge * Math.sin(ph) * depth * xFactor, 0.5 * Math.sign(u) * Math.pow(Math.abs(u), 1.4) * depth * yFactor, -depth));
   }
   path = new THREE.CatmullRomCurve3(pts, false, 'centripetal');
-  path.arcLengthDivisions = 1500;
   PATH_L = path.getLength(); pathP.length = pathT.length = 0;
   for (let i = 0; i <= SAMPLES; i++) { const u = i / SAMPLES; pathP.push(path.getPointAt(u)); pathT.push(path.getTangentAt(u)); }
 }
@@ -497,7 +673,7 @@ function drawServiceCardCanvas(ctx, img, item) {
   ctx.font = '400 24px "Inter Tight", sans-serif';
   ctx.fillText(item.desc.length > 70 ? item.desc.slice(0, 70) + '...' : item.desc, 52, H - 64);
 
-  // Border
+  // Subtle Border
   ctx.strokeStyle = 'rgba(253, 208, 11, 0.45)';
   ctx.lineWidth = 4;
   ctx.strokeRect(2, 2, W - 4, H - 4);
@@ -559,55 +735,96 @@ const cards = SERVICES.map((item, i) => {
 
 /* ---------- layout ---------- */
 const GZ = 8;
-let W = 1, H = 1, asp = 1, cols = 3, rows = 2, tanH = .3153, isMobile = false;
+let W = 1, H = 1, asp = 1, tanH = .3153, isMobile = false;
 function resize() {
   W = innerWidth; H = innerHeight; asp = W / H;
   isMobile = asp < 0.85 || W < 768;
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2)); renderer.setSize(W, H, false);
   camera.aspect = asp;
-  if (isMobile) {
-    camera.fov = 42;
-    cols = 1;
-    rows = 2;
-  } else {
-    camera.fov = asp < 16 / 9 ? Math.min(48, Math.atan(.561 / Math.max(asp, 0.72)) * 360 / Math.PI) : FOV;
-    cols = 3;
-    rows = 2;
-  }
+  camera.fov = isMobile ? 42 : (asp < 16 / 9 ? Math.min(46, Math.atan(.561 / Math.max(asp, 0.72)) * 360 / Math.PI) : FOV);
   camera.updateProjectionMatrix();
   tanH = Math.tan(camera.fov * Math.PI / 360);
   buildPath();
 }
 addEventListener('resize', resize); resize(); buildPath();
 
-function grid(i) {
-  const vh = 2 * GZ * tanH, vw = vh * asp;
-  const aspectRatio = CARD_W / CARD_H;
-  if (cols === 1) {
-    const navbarPx = 68, buttonPx = 80, safeHPx = Math.max(300, H - navbarPx - buttonPx), gapPx = 16;
-    let cwPx = Math.min(W - 32, 420), chPx = cwPx / aspectRatio, ghPx = chPx * 2 + gapPx;
-    if (ghPx > safeHPx) { chPx = (safeHPx - gapPx) / 2; cwPx = chPx * aspectRatio; ghPx = safeHPx; }
-    const gw = (cwPx / W) * vw, cw = gw, ch = (chPx / H) * vh, gap = (gapPx / H) * vh, gh = (ghPx / H) * vh;
-    const centerOffsetPx = (buttonPx - navbarPx) / 2, safeCenterY = (centerOffsetPx / H) * vh;
-    const r = i % 2;
-    return { x: 0, y: safeCenterY + gh / 2 - ch / 2 - r * (ch + gap), w: cw, h: ch, vw, vh, c: 0, r };
-  } else {
-    const navbarPx = Math.max(90, H * 0.115), buttonPx = Math.max(96, H * 0.125), safeHPx = Math.max(380, H - navbarPx - buttonPx);
-    const maxGwFromHeight = safeHPx / 0.44;
-    const targetPx = Math.min(W - 64, 1380, maxGwFromHeight);
-    const gw = (targetPx / W) * vw, gap = gw * 0.022, cw = (gw - gap * (cols - 1)) / cols, ch = cw / aspectRatio, gh = ch * rows + gap * 1.5 * (rows - 1);
-    const c = i % cols, r = Math.floor(i / cols);
-    const centerOffsetPx = (buttonPx - navbarPx) / 2, safeCenterY = (centerOffsetPx / H) * vh;
-    return { x: -gw / 2 + cw / 2 + c * (cw + gap), y: safeCenterY + gh / 2 - ch / 2 - r * (ch + gap * 1.5), w: cw, h: ch, vw, vh, c, r };
-  }
+/* ---------- Carousel & Scroll State ---------- */
+let activeIndex = 0;
+let targetCarouselOffset = 0;
+let currentCarouselOffset = 0;
+let isUserInteracting = false;
+let userInteractionTimer = null;
+
+function markUserInteraction() {
+  isUserInteracting = true;
+  if (userInteractionTimer) clearTimeout(userInteractionTimer);
+  userInteractionTimer = setTimeout(() => { isUserInteracting = false; }, 2800);
 }
 
-/* ---------- scroll ---------- */
-let target = 0, p = 0, frozen = false;
+function updateDots() {
+  const dots = document.querySelectorAll('.carousel-dot');
+  dots.forEach((dot, idx) => {
+    dot.classList.toggle('active', idx === activeIndex);
+  });
+  $('counterText').innerHTML = `<span style="color:#d97706;font-weight:bold;margin-right:6px">${String(activeIndex + 1).padStart(2, '0')} / ${String(SERVICES.length).padStart(2, '0')}</span><span style="font-weight:600">${SERVICES[activeIndex].title}</span>`;
+  $('prevBtn').disabled = activeIndex === 0;
+  $('nextBtn').disabled = activeIndex === SERVICES.length - 1;
+}
+
+function goToCard(idx) {
+  markUserInteraction();
+  activeIndex = clamp(idx, 0, SERVICES.length - 1);
+  targetCarouselOffset = activeIndex;
+  updateDots();
+}
+
+function nextCard() {
+  goToCard(activeIndex + 1);
+}
+
+function prevCard() {
+  goToCard(activeIndex - 1);
+}
+
+// Populate dots
+const dotsWrap = $('dotsWrap');
+SERVICES.forEach((_, idx) => {
+  const dot = document.createElement('button');
+  dot.className = 'carousel-dot' + (idx === 0 ? ' active' : '');
+  dot.addEventListener('click', (e) => {
+    e.stopPropagation();
+    goToCard(idx);
+  });
+  dotsWrap.appendChild(dot);
+});
+$('prevBtn').addEventListener('click', (e) => { e.stopPropagation(); prevCard(); });
+$('nextBtn').addEventListener('click', (e) => { e.stopPropagation(); nextCard(); });
+updateDots();
+
+// Touch swipe
+let touchStartX = 0, touchStartY = 0;
+$('stage').addEventListener('touchstart', e => {
+  if (e.touches.length === 1) {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }
+}, { passive: true });
+$('stage').addEventListener('touchend', e => {
+  if (e.changedTouches.length === 1 && p > 0.65) {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dx) > 35 && Math.abs(dx) > Math.abs(dy)) {
+      if (dx < 0) nextCard(); else prevCard();
+    }
+  }
+}, { passive: true });
+
+/* ---------- scroll tracking ---------- */
+let target = 0, p = 0;
 const readScroll = () => { const t = $('track'); target = clamp(scrollY / (t.offsetHeight - innerHeight)); };
 addEventListener('scroll', readScroll, {passive:true}); readScroll();
 
-/* ---------- pose ---------- */
+/* ---------- poses ---------- */
 const op = new THREE.Vector3(), ot = new THREE.Vector3(), up = new THREE.Vector3(), Y = new THREE.Vector3(0, 1, 0), vp = new THREE.Vector3();
 function poseRibbon(c, head) {
   const pos = c.geo.attributes.position, centre = head - c.i * STEP;
@@ -620,34 +837,89 @@ function poseRibbon(c, head) {
   }
   pos.needsUpdate = true;
 }
-function poseGrid(c, q) {
-  const g = grid(c.i), pos = c.geo.attributes.position;
-  const dx = (g.c - (cols - 1) / 2) * 1.2 + (cols === 3 && g.c === 1 ? 0 : 0), dy = g.r < rows / 2 ? 1 : -1;
-  const ox = dx * g.vw * .62 * (1 - q), oy = dy * g.vh * (g.c === 1 ? .95 : .34) * (1 - q), tilt = (1 - q) * .22 * (g.c - 1 || .5) * dy;
-  const cs = Math.cos(tilt), sn = Math.sin(tilt);
+
+function poseCarousel(c, q, currentOffset) {
+  const vh = 2 * GZ * tanH, vw = vh * asp;
+  const aspectRatio = CARD_W / CARD_H;
+  const cardWidthPx = isMobile ? Math.min(W - 48, 380) : Math.min(W * 0.42, 540);
+  const cardHeightPx = cardWidthPx / aspectRatio;
+  const cw = (cardWidthPx / W) * vw;
+  const ch = (cardHeightPx / H) * vh;
+  const gap = cw * 0.12;
+
+  const navbarPx = isMobile ? 65 : 85;
+  const buttonPx = isMobile ? 95 : 110;
+  const centerOffsetPx = (buttonPx - navbarPx) / 2;
+  const centerY = (centerOffsetPx / H) * vh;
+
+  const delta = c.i - currentOffset;
+  const xCenter = delta * (cw + gap);
+  const zOffset = -Math.abs(delta) * 0.55;
+  const zCenter = -GZ + zOffset;
+  const rotY = clamp(-delta * 0.22, -0.45, 0.45);
+  const scale = Math.max(0.78, 1 - Math.abs(delta) * 0.08);
+
+  const flyX = (1 - q) * (delta >= 0 ? 1 : -1) * vw * 0.4;
+  const flyY = (1 - q) * vh * 0.25;
+  const x = xCenter + flyX;
+  const y = centerY + flyY;
+  const z = zCenter - (1 - q) * 2.0;
+
+  const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+  const pos = c.geo.attributes.position;
   for (let iy = 0; iy <= NY; iy++) for (let ix = 0; ix <= NX; ix++) {
-    const k = iy * (NX + 1) + ix, x = (ix / NX - .5) * g.w, y = (.5 - iy / NY) * g.h;
-    pos.setXYZ(k, g.x + ox + x * cs - y * sn, g.y + oy + x * sn + y * cs, -GZ - (1 - q) * .6 * Math.sin(ix / NX * Math.PI));
+    const k = iy * (NX + 1) + ix;
+    const lx = (ix / NX - 0.5) * cw * scale;
+    const ly = (0.5 - iy / NY) * ch * scale;
+    const vx = lx * cosY, vz = -lx * sinY;
+    pos.setXYZ(k, x + vx, y + ly, z + vz);
   }
   pos.needsUpdate = true;
-  c.rect = g;
+  c.mesh.renderOrder = Math.max(1, 100 - Math.round(Math.abs(delta) * 10));
+  c.rect = { x, y, w: cw * scale, h: ch * scale, vw, vh, i: c.i };
 }
 
-const RIB_A = .14, RIB_B = .63;
+const RIB_A = .12, RIB_B = .58;
 function render() {
   const pp = p;
   const rise = 1 - out(span(pp, 0, .12));
-  const run = mix(-50, 76, span(pp, 0, .58));
-  const hlFade = 1 - span(pp, 0.52, 0.62);
+  const run = mix(-50, 76, span(pp, 0, .55));
+  const hlFade = 1 - span(pp, 0.48, 0.58);
   const riseOffset = isMobile ? rise * 5 : rise * 8;
+  
   $('l1').style.transform = `translate3d(${run}vw,${riseOffset}vh,0)`;
   $('l1').style.opacity = hlFade;
+  $('l1').style.visibility = hlFade <= 0.005 ? 'hidden' : 'visible';
   $('l2').style.transform = `translate3d(${-run}vw,${riseOffset}vh,0)`;
   $('l2').style.opacity = hlFade;
-  const capA = 1 - span(pp, .52, .57);
-  $('cap').style.opacity = capA; $('cap').style.transform = `translate(-50%,calc(-50% + ${riseOffset}vh))`;
-  $('rule').style.transform = `scaleX(${ease(span(pp, .72, .86))})`;
+  $('l2').style.visibility = hlFade <= 0.005 ? 'hidden' : 'visible';
+
+  const capA = 1 - span(pp, .48, .56);
+  $('cap').style.opacity = capA;
+  $('cap').style.transform = `translate(-50%,calc(-50% + ${riseOffset}vh))`;
+  $('cap').style.visibility = capA <= 0.005 ? 'hidden' : 'visible';
+
+  $('rule').style.transform = `scaleX(${ease(span(pp, .65, .82))})`;
   $('rule').style.top = isMobile ? '45%' : '48%';
+
+  // Smooth carousel scroll progression
+  if (!isUserInteracting && pp >= 0.64) {
+    const carouselScroll = span(pp, 0.64, 0.96);
+    targetCarouselOffset = carouselScroll * (cards.length - 1);
+    const roundedIdx = Math.round(targetCarouselOffset);
+    if (roundedIdx !== activeIndex) {
+      activeIndex = roundedIdx;
+      updateDots();
+    }
+  }
+
+  currentCarouselOffset += (targetCarouselOffset - currentCarouselOffset) * 0.12;
+
+  const carouselUIAlpha = span(pp, 0.70, 0.85);
+  $('carouselUi').style.opacity = carouselUIAlpha;
+  $('carouselUi').style.pointerEvents = carouselUIAlpha > 0.5 ? 'auto' : 'none';
+  $('landedCta').style.opacity = carouselUIAlpha;
+  $('landedCta').style.pointerEvents = carouselUIAlpha > 0.5 ? 'auto' : 'none';
 
   const pr = span(pp, RIB_A, RIB_B), head = mix(0, PATH_L + cards.length * STEP, pr);
   for (const c of cards) {
@@ -655,11 +927,12 @@ function render() {
     if (s < end) {
       c.mesh.visible = s > CARD_W; c.rect = null;
       if (c.mesh.visible) poseRibbon(c, head);
-    } else if (c.i < cols * rows) {
-      const st = mix(RIB_A, RIB_B, (end + c.i * STEP) / (PATH_L + cards.length * STEP)), q = out(span(pp, st, st + .13));
-      c.mesh.visible = q > .001;
-      if (c.mesh.visible) poseGrid(c, q);
-    } else { c.mesh.visible = false; c.rect = null; }
+    } else {
+      const st = mix(RIB_A, RIB_B, (end + c.i * STEP) / (PATH_L + cards.length * STEP));
+      const q = out(span(pp, st, st + 0.12));
+      c.mesh.visible = q > 0.001;
+      if (c.mesh.visible) poseCarousel(c, q, currentCarouselOffset);
+    }
   }
   renderer.render(scene, camera);
 }
@@ -668,16 +941,30 @@ function render() {
 const nameEl = $('name');
 let hoveredCard = null;
 
+function findHitCard(clientX, clientY) {
+  const nx = clientX / W - 0.5;
+  const ny = 0.5 - clientY / H;
+  const vh = 2 * GZ * tanH, vw = vh * asp;
+  const clickX = nx * vw, clickY = ny * vh;
+
+  const sortedCards = [...cards].sort((a, b) => {
+    return Math.abs(a.i - currentCarouselOffset) - Math.abs(b.i - currentCarouselOffset);
+  });
+
+  for (const c of sortedCards) {
+    const g = c.rect;
+    if (!g || !c.mesh.visible) continue;
+    if (Math.abs(clickX - g.x) < g.w / 2 && Math.abs(clickY - g.y) < g.h / 2) {
+      return c;
+    }
+  }
+  return null;
+}
+
 $('stage').addEventListener('pointermove', e => {
   let hit = null;
-  if (p > .86) {
-    const nx = (e.clientX / W - .5), ny = (.5 - e.clientY / H);
-    for (const c of cards) {
-      const g = c.rect;
-      if (!g) continue;
-      const x = nx * g.vw, y = ny * g.vh;
-      if (Math.abs(x - g.x) < g.w / 2 && Math.abs(y - g.y) < g.h / 2) hit = c;
-    }
+  if (p > 0.65) {
+    hit = findHitCard(e.clientX, e.clientY);
   }
   hoveredCard = hit;
   nameEl.style.opacity = hit ? 1 : 0;
@@ -706,8 +993,15 @@ function openServiceModal(item) {
 }
 
 $('stage').addEventListener('click', e => {
-  if (hoveredCard) {
-    openServiceModal(hoveredCard.item);
+  if (p > 0.65) {
+    const hit = findHitCard(e.clientX, e.clientY);
+    if (hit) {
+      if (hit.i === activeIndex) {
+        openServiceModal(hit.item);
+      } else {
+        goToCard(hit.i);
+      }
+    }
   }
 });
 
@@ -719,16 +1013,13 @@ $('serviceModal').addEventListener('click', e => {
 });
 $('modalActionBtn').addEventListener('click', () => {
   $('serviceModal').classList.remove('open');
-  window.location.href = '/#booking';
 });
 
 /* ---------- loop ---------- */
 function loop() {
-  if (!frozen) {
-    p += (target - p) * .08;
-    if (Math.abs(target - p) < .00005) p = target;
-    render();
-  }
+  p += (target - p) * 0.09;
+  if (Math.abs(target - p) < 0.00005) p = target;
+  render();
   requestAnimationFrame(loop);
 }
 loop();

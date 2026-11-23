@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as THREE from 'three';
-import { CheckCircle2, X, PhoneCall, ArrowRight } from 'lucide-react';
+import { CheckCircle2, X, PhoneCall, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface ServicesProps {
   onOpenBooking: () => void;
@@ -110,7 +110,7 @@ function drawCardCanvas(ctx: CanvasRenderingContext2D, img: HTMLImageElement | n
   const W = 1400;
   const H = 880;
 
-  // Dark slate background
+  // Dark slate base
   ctx.fillStyle = '#0f172a';
   ctx.fillRect(0, 0, W, H);
 
@@ -213,6 +213,15 @@ function drawCardCanvas(ctx: CanvasRenderingContext2D, img: HTMLImageElement | n
 
 export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
   const [activeModal, setActiveModal] = useState<ServiceCardData | null>(null);
+  const [activeCardIndex, setActiveCardIndex] = useState(0);
+
+  const activeCardRef = useRef(0);
+  activeCardRef.current = activeCardIndex;
+
+  const targetCarouselOffset = useRef(0);
+  const currentCarouselOffset = useRef(0);
+  const isUserInteractingRef = useRef(false);
+  const userInteractionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const trackRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -223,8 +232,41 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
   const ruleRef = useRef<HTMLDivElement>(null);
   const nameRef = useRef<HTMLDivElement>(null);
   const landedCtaRef = useRef<HTMLDivElement>(null);
+  const carouselControlsRef = useRef<HTMLDivElement>(null);
 
   const hoveredCardRef = useRef<{ item: ServiceCardData } | null>(null);
+
+  const markUserInteraction = () => {
+    isUserInteractingRef.current = true;
+    if (userInteractionTimeoutRef.current) clearTimeout(userInteractionTimeoutRef.current);
+    userInteractionTimeoutRef.current = setTimeout(() => {
+      isUserInteractingRef.current = false;
+    }, 2800);
+  };
+
+  const nextCard = useCallback(() => {
+    markUserInteraction();
+    setActiveCardIndex((prev) => {
+      const next = Math.min(SERVICES_DATA.length - 1, prev + 1);
+      targetCarouselOffset.current = next;
+      return next;
+    });
+  }, []);
+
+  const prevCard = useCallback(() => {
+    markUserInteraction();
+    setActiveCardIndex((prev) => {
+      const next = Math.max(0, prev - 1);
+      targetCarouselOffset.current = next;
+      return next;
+    });
+  }, []);
+
+  const goToCard = useCallback((idx: number) => {
+    markUserInteraction();
+    setActiveCardIndex(idx);
+    targetCarouselOffset.current = idx;
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -251,17 +293,21 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
 
     function buildPath() {
       const pts: THREE.Vector3[] = [];
+      const isMob = window.innerWidth < 768;
+      const depthScale = isMob ? 0.88 : 1.0;
+      const xFactor = isMob ? 0.38 : 0.561;
+      const yFactor = isMob ? 0.46 : 0.63;
       for (let i = 0; i <= 160; i++) {
         const t = i / 160;
         const ph = mix(PH0, PH1, t);
         const cs = Math.cos(ph);
         const u = 2 * t - 1;
-        const depth = cs > 0 ? 7.6 + 16.4 * Math.pow(cs, 0.9) : 7.6 + 2.2 * cs;
-        const edge = 0.84 + 0.5 * span(0.14 - t, 0, 0.14) + 0.8 * span(t, 0.84, 1);
+        const depth = (cs > 0 ? 7.6 + 16.4 * Math.pow(cs, 0.9) : 7.6 + 2.2 * cs) * depthScale;
+        const edge = (isMob ? 0.65 : 0.84) + 0.5 * span(0.14 - t, 0, 0.14) + 0.8 * span(t, 0.84, 1);
         pts.push(
           new THREE.Vector3(
-            edge * Math.sin(ph) * depth * 0.561,
-            0.5 * Math.sign(u) * Math.pow(Math.abs(u), 1.4) * depth * 0.63,
+            edge * Math.sin(ph) * depth * xFactor,
+            0.5 * Math.sign(u) * Math.pow(Math.abs(u), 1.4) * depth * yFactor,
             -depth
           )
         );
@@ -315,7 +361,7 @@ void main(){
       geo: THREE.PlaneGeometry;
       mat: THREE.ShaderMaterial;
       mesh: THREE.Mesh;
-      rect: { x: number; y: number; w: number; h: number; vw: number; vh: number } | null;
+      rect: { x: number; y: number; w: number; h: number; vw: number; vh: number; i: number } | null;
     }
 
     const cards: CardObj[] = SERVICES_DATA.map((item, i) => {
@@ -372,83 +418,31 @@ void main(){
       return cardObj;
     });
 
-    /* ---------- Responsive Layout (Desktop 3x2 Grid) ---------- */
+    /* ---------- Responsive Layout ---------- */
     const GZ = 8;
-    let W = 1, H = 1, asp = 1, cols = 3, rows = 2, tanH = 0.3153;
+    let W = 1, H = 1, asp = 1, tanH = 0.3153;
+    let isMobile = false;
 
     function resize() {
-      if (!stage || stage.clientWidth === 0 || stage.clientHeight === 0) return;
-      W = stage.clientWidth;
-      H = stage.clientHeight;
+      if (!stage) return;
+      W = stage.clientWidth || window.innerWidth;
+      H = stage.clientHeight || window.innerHeight;
       asp = W / H;
+      isMobile = asp < 0.85 || W < 768;
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.setSize(W, H, false);
       camera.aspect = asp;
-      camera.fov = asp < 16 / 9 ? Math.min(48, (Math.atan(0.561 / Math.max(asp, 0.72)) * 360) / Math.PI) : FOV;
+      camera.fov = isMobile
+        ? 42
+        : (asp < 16 / 9 ? Math.min(46, (Math.atan(0.561 / Math.max(asp, 0.72)) * 360) / Math.PI) : FOV);
       camera.updateProjectionMatrix();
       tanH = Math.tan((camera.fov * Math.PI) / 360);
-      cols = 3;
-      rows = 2;
       buildPath();
     }
 
     window.addEventListener('resize', resize);
     resize();
     buildPath();
-
-    function grid(i: number) {
-      const vh = 2 * GZ * tanH;
-      const vw = vh * asp;
-      const aspectRatio = CARD_W / CARD_H; // 2.1 / 1.32 = 1.5909
-
-      // Desktop 3-Column x 2-Row Layout with Safe Margins
-      const navbarPx = Math.max(90, H * 0.115);
-      const buttonPx = Math.max(96, H * 0.125);
-      const safeHPx = Math.max(380, H - navbarPx - buttonPx);
-
-      // Ensure 2 rows never collide with navbar or CTA button
-      const maxGwFromHeight = safeHPx / 0.44;
-      const targetPx = Math.min(W - 64, 1380, maxGwFromHeight);
-
-      const gw = (targetPx / W) * vw;
-      const gap = gw * 0.022;
-      const cw = (gw - gap * (cols - 1)) / cols;
-      const ch = cw / aspectRatio;
-      const gh = ch * rows + gap * 1.5 * (rows - 1);
-      const c = i % cols;
-      const r = Math.floor(i / cols);
-
-      // Center the grid within the safe vertical viewport between navbar and button
-      const centerOffsetPx = (buttonPx - navbarPx) / 2;
-      const safeCenterY = (centerOffsetPx / H) * vh;
-
-      return {
-        x: -gw / 2 + cw / 2 + c * (cw + gap),
-        y: safeCenterY + gh / 2 - ch / 2 - r * (ch + gap * 1.5),
-        w: cw,
-        h: ch,
-        vw,
-        vh,
-        c,
-        r,
-      };
-    }
-
-    /* ---------- Scroll Tracking ---------- */
-    let target = 0;
-    let p = 0;
-
-    const readScroll = () => {
-      if (!track) return;
-      const rect = track.getBoundingClientRect();
-      const scrollDistance = track.offsetHeight - window.innerHeight;
-      if (scrollDistance <= 0) return;
-      const currentScroll = -rect.top;
-      target = clamp(currentScroll / scrollDistance);
-    };
-
-    window.addEventListener('scroll', readScroll, { passive: true });
-    readScroll();
 
     /* ---------- Poses ---------- */
     const op = new THREE.Vector3();
@@ -474,74 +468,142 @@ void main(){
       pos.needsUpdate = true;
     }
 
-    function poseGrid(c: CardObj, q: number) {
-      const g = grid(c.i);
+    /* ---------- Single-Row 3D Carousel Pose ---------- */
+    function poseCarousel(c: CardObj, q: number, currentOffset: number) {
+      const vh = 2 * GZ * tanH;
+      const vw = vh * asp;
+      const aspectRatio = CARD_W / CARD_H; // 2.1 / 1.32 = 1.5909
+
+      // Card sizing in world units
+      const cardWidthPx = isMobile ? Math.min(W - 48, 380) : Math.min(W * 0.42, 540);
+      const cardHeightPx = cardWidthPx / aspectRatio;
+      const cw = (cardWidthPx / W) * vw;
+      const ch = (cardHeightPx / H) * vh;
+      const gap = cw * 0.12;
+
+      // Safe vertical center between navbar and bottom controls
+      const navbarPx = isMobile ? 65 : 85;
+      const buttonPx = isMobile ? 95 : 110;
+      const centerOffsetPx = (buttonPx - navbarPx) / 2;
+      const centerY = (centerOffsetPx / H) * vh;
+
+      const delta = c.i - currentOffset;
+      const xCenter = delta * (cw + gap);
+      const zOffset = -Math.abs(delta) * 0.55;
+      const zCenter = -GZ + zOffset;
+      const rotY = clamp(-delta * 0.22, -0.45, 0.45);
+      const scale = Math.max(0.78, 1 - Math.abs(delta) * 0.08);
+
+      // Smooth landing from ribbon rail into carousel slot
+      const flyX = (1 - q) * (delta >= 0 ? 1 : -1) * vw * 0.4;
+      const flyY = (1 - q) * vh * 0.25;
+      const x = xCenter + flyX;
+      const y = centerY + flyY;
+      const z = zCenter - (1 - q) * 2.0;
+
+      const cosY = Math.cos(rotY);
+      const sinY = Math.sin(rotY);
+
       const pos = c.geo.attributes.position;
-      const dx = (g.c - (cols - 1) / 2) * 1.2;
-      const dy = g.r < rows / 2 ? 1 : -1;
-      const ox = dx * g.vw * 0.62 * (1 - q);
-      const oy = dy * g.vh * (g.c === 1 ? 0.95 : 0.34) * (1 - q);
-      const tilt = (1 - q) * 0.22 * (g.c - 1 || 0.5) * dy;
-      const cs = Math.cos(tilt);
-      const sn = Math.sin(tilt);
       for (let iy = 0; iy <= NY; iy++) {
         for (let ix = 0; ix <= NX; ix++) {
           const k = iy * (NX + 1) + ix;
-          const x = (ix / NX - 0.5) * g.w;
-          const y = (0.5 - iy / NY) * g.h;
+          const lx = (ix / NX - 0.5) * cw * scale;
+          const ly = (0.5 - iy / NY) * ch * scale;
+
+          const vx = lx * cosY;
+          const vz = -lx * sinY;
+
           pos.setXYZ(
             k,
-            g.x + ox + x * cs - y * sn,
-            g.y + oy + x * sn + y * cs,
-            -GZ - (1 - q) * 0.6 * Math.sin((ix / NX) * Math.PI)
+            x + vx,
+            y + ly,
+            z + vz
           );
         }
       }
       pos.needsUpdate = true;
-      c.rect = g;
+      c.mesh.renderOrder = Math.max(1, 100 - Math.round(Math.abs(delta) * 10));
+      c.rect = { x, y, w: cw * scale, h: ch * scale, vw, vh, i: c.i };
     }
 
-    const RIB_A = 0.14;
-    const RIB_B = 0.63;
+    /* ---------- Scroll Tracking ---------- */
+    let target = 0;
+    let p = 0;
+
+    const readScroll = () => {
+      if (!track) return;
+      const rect = track.getBoundingClientRect();
+      const scrollDistance = track.offsetHeight - window.innerHeight;
+      if (scrollDistance <= 0) return;
+      const currentScroll = -rect.top;
+      target = clamp(currentScroll / scrollDistance);
+    };
+
+    window.addEventListener('scroll', readScroll, { passive: true });
+    readScroll();
+
+    const RIB_A = 0.12;
+    const RIB_B = 0.58;
 
     function render() {
       const pp = p;
 
-      // 1. Headline rises, slides across, and fades out cleanly as cards land
+      // 1. Headline rises and slides in opposite directions, fading before carousel lands
       const rise = 1 - out(span(pp, 0, 0.12));
-      const run = mix(-50, 76, span(pp, 0, 0.58));
-      const hlFade = 1 - span(pp, 0.52, 0.62);
-      const riseOffset = rise * 8;
+      const run = mix(-50, 76, span(pp, 0, 0.55));
+      const hlFade = 1 - span(pp, 0.48, 0.58);
+      const riseOffset = isMobile ? rise * 5 : rise * 8;
       if (l1Ref.current) {
         l1Ref.current.style.transform = `translate3d(${run}vw,${riseOffset}vh,0)`;
         l1Ref.current.style.opacity = `${hlFade}`;
+        l1Ref.current.style.visibility = hlFade <= 0.005 ? 'hidden' : 'visible';
       }
       if (l2Ref.current) {
         l2Ref.current.style.transform = `translate3d(${-run}vw,${riseOffset}vh,0)`;
         l2Ref.current.style.opacity = `${hlFade}`;
+        l2Ref.current.style.visibility = hlFade <= 0.005 ? 'hidden' : 'visible';
       }
 
       // 2. Caption
-      const capA = 1 - span(pp, 0.52, 0.58);
+      const capA = 1 - span(pp, 0.48, 0.56);
       if (capRef.current) {
         capRef.current.style.opacity = `${capA}`;
         capRef.current.style.transform = `translate(-50%,calc(-50% + ${riseOffset}vh))`;
+        capRef.current.style.visibility = capA <= 0.005 ? 'hidden' : 'visible';
       }
 
       // 3. Center Rule line scales across
       if (ruleRef.current) {
-        ruleRef.current.style.transform = `scaleX(${ease(span(pp, 0.72, 0.86))})`;
-        ruleRef.current.style.top = '48%';
+        ruleRef.current.style.transform = `scaleX(${ease(span(pp, 0.65, 0.82))})`;
+        ruleRef.current.style.top = isMobile ? '45%' : '48%';
       }
 
-      // 5. Landed CTA bar
-      const ctaOpacity = span(pp, 0.82, 0.95);
+      // 4. Smooth carousel scroll progression (if user is not actively tapping arrows)
+      if (!isUserInteractingRef.current && pp >= 0.64) {
+        const carouselScroll = span(pp, 0.64, 0.96);
+        targetCarouselOffset.current = carouselScroll * (cards.length - 1);
+        const roundedIdx = Math.round(targetCarouselOffset.current);
+        if (roundedIdx !== activeCardRef.current) {
+          setActiveCardIndex(roundedIdx);
+        }
+      }
+
+      // Smooth interpolation for carousel horizontal position
+      currentCarouselOffset.current += (targetCarouselOffset.current - currentCarouselOffset.current) * 0.12;
+
+      // 5. Landed Carousel Controls & CTA bar
+      const carouselUIAlpha = span(pp, 0.70, 0.85);
+      if (carouselControlsRef.current) {
+        carouselControlsRef.current.style.opacity = `${carouselUIAlpha}`;
+        carouselControlsRef.current.style.pointerEvents = carouselUIAlpha > 0.5 ? 'auto' : 'none';
+      }
       if (landedCtaRef.current) {
-        landedCtaRef.current.style.opacity = `${ctaOpacity}`;
-        landedCtaRef.current.style.pointerEvents = ctaOpacity > 0.5 ? 'auto' : 'none';
+        landedCtaRef.current.style.opacity = `${carouselUIAlpha}`;
+        landedCtaRef.current.style.pointerEvents = carouselUIAlpha > 0.5 ? 'auto' : 'none';
       }
 
-      // 6. 3D Ribbon & Grid cards
+      // 6. 3D Ribbon & Single-Row Carousel Cards
       const pr = span(pp, RIB_A, RIB_B);
       const head = mix(0, PATH_L + cards.length * STEP, pr);
 
@@ -552,14 +614,14 @@ void main(){
           c.mesh.visible = s > CARD_W;
           c.rect = null;
           if (c.mesh.visible) poseRibbon(c, head);
-        } else if (c.i < cols * rows) {
-          const st = mix(RIB_A, RIB_B, (end + c.i * STEP) / (PATH_L + cards.length * STEP));
-          const q = out(span(pp, st, st + 0.13));
-          c.mesh.visible = q > 0.001;
-          if (c.mesh.visible) poseGrid(c, q);
         } else {
-          c.mesh.visible = false;
-          c.rect = null;
+          // Card has left the rail -> smoothly transitions into its single-row carousel slot!
+          const st = mix(RIB_A, RIB_B, (end + c.i * STEP) / (PATH_L + cards.length * STEP));
+          const q = out(span(pp, st, st + 0.12));
+          c.mesh.visible = q > 0.001;
+          if (c.mesh.visible) {
+            poseCarousel(c, q, currentCarouselOffset.current);
+          }
         }
       }
 
@@ -573,12 +635,22 @@ void main(){
       const yRel = clientY - rect.top;
       const nx = xRel / W - 0.5;
       const ny = 0.5 - yRel / H;
-      for (const c of cards) {
+      const vh = 2 * GZ * tanH;
+      const vw = vh * asp;
+      const clickX = nx * vw;
+      const clickY = ny * vh;
+
+      // Check cards from closest to camera (nearest to active carousel center) to furthest
+      const sortedCards = [...cards].sort((a, b) => {
+        const distA = Math.abs(a.i - currentCarouselOffset.current);
+        const distB = Math.abs(b.i - currentCarouselOffset.current);
+        return distA - distB;
+      });
+
+      for (const c of sortedCards) {
         const g = c.rect;
         if (!g || !c.mesh.visible) continue;
-        const x = nx * g.vw;
-        const y = ny * g.vh;
-        if (Math.abs(x - g.x) < g.w / 2 && Math.abs(y - g.y) < g.h / 2) {
+        if (Math.abs(clickX - g.x) < g.w / 2 && Math.abs(clickY - g.y) < g.h / 2) {
           return c;
         }
       }
@@ -587,7 +659,7 @@ void main(){
 
     const handlePointerMove = (e: PointerEvent) => {
       let hit: CardObj | null = null;
-      if (p > 0.86) {
+      if (p > 0.65) {
         hit = findHitCard(e.clientX, e.clientY);
       }
       hoveredCardRef.current = hit;
@@ -604,10 +676,14 @@ void main(){
     };
 
     const handleStageClick = (e: MouseEvent) => {
-      if (p > 0.8) {
+      if (p > 0.65) {
         const hit = findHitCard(e.clientX, e.clientY);
         if (hit) {
-          setActiveModal(hit.item);
+          if (hit.i === activeCardRef.current) {
+            setActiveModal(hit.item);
+          } else {
+            goToCard(hit.i);
+          }
         }
       }
     };
@@ -615,14 +691,40 @@ void main(){
     stage.addEventListener('pointermove', handlePointerMove);
     stage.addEventListener('click', handleStageClick);
 
+    /* ---------- Touch Swipe Interaction ---------- */
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length === 1) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+      }
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (e.changedTouches.length === 1 && p > 0.65) {
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const dy = e.changedTouches[0].clientY - touchStartY;
+        if (Math.abs(dx) > 35 && Math.abs(dx) > Math.abs(dy)) {
+          if (dx < 0) {
+            nextCard();
+          } else {
+            prevCard();
+          }
+        }
+      }
+    };
+
+    stage.addEventListener('touchstart', handleTouchStart, { passive: true });
+    stage.addEventListener('touchend', handleTouchEnd, { passive: true });
+
     /* ---------- Animation Loop ---------- */
     let animId: number;
     function loop() {
-      if (stage && stage.clientWidth > 0) {
-        p += (target - p) * 0.09;
-        if (Math.abs(target - p) < 0.00005) p = target;
-        render();
-      }
+      p += (target - p) * 0.09;
+      if (Math.abs(target - p) < 0.00005) p = target;
+      render();
       animId = requestAnimationFrame(loop);
     }
     loop();
@@ -634,6 +736,8 @@ void main(){
       window.removeEventListener('scroll', readScroll);
       stage.removeEventListener('pointermove', handlePointerMove);
       stage.removeEventListener('click', handleStageClick);
+      stage.removeEventListener('touchstart', handleTouchStart);
+      stage.removeEventListener('touchend', handleTouchEnd);
 
       cards.forEach((c) => {
         c.geo.dispose();
@@ -642,159 +746,105 @@ void main(){
       });
       renderer.dispose();
     };
-  }, []);
+  }, [nextCard, prevCard, goToCard]);
 
   return (
-    <section id="services" className="w-full relative">
-      {/* Desktop View: Full-Viewport 3D Ribbon & 3x2 Grid */}
-      <div className="hidden md:block">
-        <div ref={trackRef} className="vante-services-section">
-          <main className="stage" ref={stageRef} id="services-stage">
-            {/* Opposing Two-Part Headline */}
-            <h2 aria-label="Services in motion" className="vante-headline-wrap">
-              <div className="hl" id="l1" ref={l1Ref} aria-hidden="true">
-                <span>SERVICES IN</span>
-              </div>
-              <div className="hl" id="l2" ref={l2Ref} aria-hidden="true">
-                <span>MOTION</span>
-              </div>
-            </h2>
+    <section id="services" ref={trackRef} className="vante-services-section">
+      <main className="stage" ref={stageRef} id="services-stage">
+        {/* Opposing Two-Part Headline */}
+        <h2 aria-label="Services in motion" className="vante-headline-wrap">
+          <div className="hl" id="l1" ref={l1Ref} aria-hidden="true">
+            <span>SERVICES IN</span>
+          </div>
+          <div className="hl" id="l2" ref={l2Ref} aria-hidden="true">
+            <span>MOTION</span>
+          </div>
+        </h2>
 
-            {/* Central Strategic Caption */}
-            <div id="cap" ref={capRef}>
-              Data-driven performance marketing engineered to scale revenue.
-            </div>
-
-            {/* Dynamic Center Hairline */}
-            <div id="rule" ref={ruleRef}></div>
-
-            {/* Three.js 3D WebGL Canvas */}
-            <canvas id="gl" ref={canvasRef}></canvas>
-
-            {/* Landed Grid Floating CTA Button */}
-            <div id="landedCta" ref={landedCtaRef} className="landed-cta-wrap">
-              <button
-                type="button"
-                onClick={onOpenBooking}
-                className="landed-cta-btn"
-              >
-                <PhoneCall size={18} />
-                <span>Book Custom Strategy Call</span>
-                <ArrowRight size={18} />
-              </button>
-            </div>
-
-            {/* Cursor-Following Hover Name Tag */}
-            <div id="name" ref={nameRef}></div>
-          </main>
+        {/* Central Strategic Caption */}
+        <div id="cap" ref={capRef}>
+          Data-driven performance marketing engineered to scale revenue.
         </div>
-      </div>
 
-      {/* Mobile View: Clean Vertical Stack of ALL 8 Cards (One Below Another) */}
-      <div className="block md:hidden bg-[#fefce8] bg-[radial-gradient(circle_at_85%_18%,rgba(253,208,11,0.22)_0%,transparent_55%),radial-gradient(circle_at_12%_82%,rgba(254,240,138,0.28)_0%,transparent_60%),linear-gradient(180deg,#f8fafc_0%,#fefce8_10%,#fffbeb_50%,#fefce8_90%,#f8fafc_100%)] px-4 py-12">
-        <div className="max-w-lg mx-auto">
-          {/* Mobile Header (No overlay with cards) */}
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FDD00B]/25 border border-[#FDD00B] text-xs font-bold font-mono text-[#0f172a] uppercase tracking-wider mb-3">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#0f172a]" />
-              <span>SERVICES</span>
+        {/* Dynamic Center Hairline */}
+        <div id="rule" ref={ruleRef}></div>
+
+        {/* Three.js 3D WebGL Canvas */}
+        <canvas id="gl" ref={canvasRef}></canvas>
+
+        {/* 3D Single-Row Carousel Controls */}
+        <div ref={carouselControlsRef} className="vante-carousel-ui">
+          {/* Flanking Arrow Buttons */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              prevCard();
+            }}
+            disabled={activeCardIndex === 0}
+            className="carousel-arrow-btn carousel-arrow-left"
+            aria-label="Previous service"
+          >
+            <ChevronLeft size={22} />
+          </button>
+
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              nextCard();
+            }}
+            disabled={activeCardIndex === SERVICES_DATA.length - 1}
+            className="carousel-arrow-btn carousel-arrow-right"
+            aria-label="Next service"
+          >
+            <ChevronRight size={22} />
+          </button>
+
+          {/* Carousel Counter & Dots Indicator */}
+          <div className="carousel-indicator-bar">
+            <div className="carousel-counter-text">
+              <span className="text-[#d97706] font-bold mr-1.5">
+                {String(activeCardIndex + 1).padStart(2, '0')} / {String(SERVICES_DATA.length).padStart(2, '0')}
+              </span>
+              <span className="text-[#0f172a] font-semibold">{SERVICES_DATA[activeCardIndex].title}</span>
             </div>
-            <h2 className="text-3xl font-extrabold text-[#0f172a] tracking-tight leading-tight mb-2.5">
-              Services in Motion
-            </h2>
-            <p className="text-xs text-slate-600 max-w-xs mx-auto leading-relaxed">
-              Data-driven performance marketing engineered to scale revenue.
-            </p>
-          </div>
 
-          {/* ALL 8 Cards Stacked One Below Another */}
-          <div className="flex flex-col gap-5">
-            {SERVICES_DATA.map((item) => (
-              <div
-                key={item.id}
-                onClick={() => setActiveModal(item)}
-                className="group relative bg-white rounded-2xl overflow-hidden border border-amber-300/40 shadow-md shadow-amber-900/5 cursor-pointer transition-all duration-200 active:scale-[0.98]"
-              >
-                {/* Cover Image & Badges */}
-                <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-900">
-                  <img
-                    src={item.imageSrc}
-                    alt={item.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  {/* Top gradient scrim */}
-                  <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-slate-950/70 to-transparent pointer-events-none" />
-                  {/* Bottom gradient scrim */}
-                  <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-slate-950/95 via-slate-950/65 to-transparent pointer-events-none" />
-
-                  {/* Category Pill (Top Left) */}
-                  <div className="absolute top-3 left-3 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#FDD00B] text-[#0f172a] font-mono text-[10.5px] font-bold uppercase tracking-wider shadow-sm">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#0f172a]" />
-                    <span>{item.category}</span>
-                  </div>
-
-                  {/* Metric Pill (Top Right) */}
-                  <div className="absolute top-3 right-3 px-2.5 py-0.5 rounded-full bg-white/95 border border-[#FDD00B] text-[#0f172a] font-mono text-[10.5px] font-bold tracking-tight shadow-sm">
-                    {item.metric}
-                  </div>
-
-                  {/* Title overlay */}
-                  <div className="absolute bottom-2.5 left-3.5 right-3.5">
-                    <h3 className="text-lg font-bold text-white tracking-tight drop-shadow-md">
-                      {item.title}
-                    </h3>
-                  </div>
-                </div>
-
-                {/* Card Body */}
-                <div className="p-4">
-                  <p className="text-[11.5px] text-[#3d6ab3] font-semibold mb-1.5 line-clamp-1">
-                    {item.subtitle}
-                  </p>
-                  <p className="text-xs text-slate-600 leading-relaxed mb-3 line-clamp-2">
-                    {item.desc}
-                  </p>
-
-                  {/* Deliverables snippet */}
-                  <div className="flex flex-col gap-1.5 mb-3 pt-2.5 border-t border-slate-100">
-                    {item.deliverables.slice(0, 2).map((deliv, idx) => (
-                      <div key={idx} className="flex items-center gap-2 text-xs text-slate-700">
-                        <CheckCircle2 size={13} className="text-[#FDD00B] shrink-0" />
-                        <span className="truncate">{deliv}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Action Link */}
-                  <div className="flex items-center justify-between pt-1 text-[#0f172a] text-xs font-semibold">
-                    <span className="flex items-center gap-1 text-[#d97706] font-bold">
-                      <span>View Deliverables</span>
-                      <ArrowRight size={13} />
-                    </span>
-                    <span className="text-[10.5px] font-mono text-slate-400">Tap for details</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Mobile Bottom CTA Button */}
-          <div className="mt-8 text-center">
-            <button
-              type="button"
-              onClick={onOpenBooking}
-              className="w-full h-12 px-6 bg-[#FDD00B] active:scale-95 text-[#0f172a] border border-[#FDD00B] rounded-full font-bold text-sm tracking-wide shadow-lg shadow-amber-400/30 flex items-center justify-center gap-2 transition-transform"
-            >
-              <PhoneCall size={18} />
-              <span>Book Custom Strategy Call</span>
-              <ArrowRight size={18} />
-            </button>
+            <div className="carousel-dots-wrap">
+              {SERVICES_DATA.map((_, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    goToCard(idx);
+                  }}
+                  className={`carousel-dot ${idx === activeCardIndex ? 'active' : ''}`}
+                  aria-label={`Go to service ${idx + 1}`}
+                />
+              ))}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Service Details Interactive Modal (Shared for both Desktop and Mobile) */}
+        {/* Landed Grid / Carousel Floating CTA Button */}
+        <div id="landedCta" ref={landedCtaRef} className="landed-cta-wrap">
+          <button
+            type="button"
+            onClick={onOpenBooking}
+            className="landed-cta-btn"
+          >
+            <PhoneCall size={18} />
+            <span>Book Custom Strategy Call</span>
+            <ArrowRight size={18} />
+          </button>
+        </div>
+
+        {/* Cursor-Following Hover Name Tag */}
+        <div id="name" ref={nameRef}></div>
+      </main>
+
+      {/* Service Details Interactive Modal */}
       {activeModal && (
         <div className="service-modal-backdrop" onClick={() => setActiveModal(null)}>
           <div className="service-modal-box" onClick={(e) => e.stopPropagation()}>
@@ -841,7 +891,7 @@ void main(){
       <style>{`
         .vante-services-section {
           position: relative;
-          height: 260vh;
+          height: 380vh;
           background-color: #fefce8;
           background: radial-gradient(circle at 85% 18%, rgba(253, 208, 11, 0.22) 0%, transparent 55%),
                       radial-gradient(circle at 12% 82%, rgba(254, 240, 138, 0.28) 0%, transparent 60%),
@@ -849,6 +899,12 @@ void main(){
           color: #0f172a;
           font-family: 'Inter Tight', system-ui, sans-serif;
           user-select: none;
+        }
+
+        @media (max-width: 768px) {
+          .vante-services-section {
+            height: 320vh;
+          }
         }
 
         .stage {
@@ -882,7 +938,7 @@ void main(){
           color: #0f172a;
           user-select: none;
           z-index: 2;
-          transition: opacity 0.2s ease;
+          transition: opacity 0.25s ease;
         }
 
         #l1 {
@@ -920,7 +976,7 @@ void main(){
           color: #475569;
           user-select: none;
           z-index: 2;
-          transition: opacity 0.2s ease;
+          transition: opacity 0.25s ease;
         }
 
         #gl {
@@ -945,9 +1001,105 @@ void main(){
           z-index: 2;
         }
 
+        /* 3D Carousel UI */
+        .vante-carousel-ui {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          z-index: 15;
+          opacity: 0;
+          transition: opacity 0.25s ease;
+        }
+
+        .carousel-arrow-btn {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.92);
+          backdrop-filter: blur(12px);
+          border: 1.5px solid rgba(234, 179, 8, 0.55);
+          color: #0f172a;
+          display: grid;
+          place-items: center;
+          cursor: pointer;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(253, 208, 11, 0.2);
+          transition: all 0.2s ease;
+          pointer-events: auto;
+        }
+
+        .carousel-arrow-btn:hover:not(:disabled) {
+          background: #FDD00B;
+          color: #0f172a;
+          transform: translateY(-50%) scale(1.08);
+          box-shadow: 0 12px 30px rgba(253, 208, 11, 0.45);
+        }
+
+        .carousel-arrow-btn:disabled {
+          opacity: 0.35;
+          cursor: not-allowed;
+        }
+
+        .carousel-arrow-left {
+          left: 28px;
+        }
+
+        .carousel-arrow-right {
+          right: 28px;
+        }
+
+        .carousel-indicator-bar {
+          position: absolute;
+          bottom: 84px;
+          left: 50%;
+          transform: translateX(-50%);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+          pointer-events: auto;
+        }
+
+        .carousel-counter-text {
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 12px;
+          background: rgba(255, 255, 255, 0.92);
+          backdrop-filter: blur(10px);
+          padding: 4px 14px;
+          border-radius: 99px;
+          border: 1px solid rgba(234, 179, 8, 0.35);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+          white-space: nowrap;
+        }
+
+        .carousel-dots-wrap {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+
+        .carousel-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 99px;
+          background: rgba(15, 23, 42, 0.22);
+          border: none;
+          cursor: pointer;
+          transition: all 0.25s ease;
+          padding: 0;
+        }
+
+        .carousel-dot.active {
+          width: 28px;
+          background: #FDD00B;
+          box-shadow: 0 0 10px rgba(253, 208, 11, 0.6);
+        }
+
         .landed-cta-wrap {
           position: absolute;
-          bottom: 24px;
+          bottom: 22px;
           left: 50%;
           transform: translateX(-50%);
           z-index: 15;
@@ -957,8 +1109,8 @@ void main(){
         }
 
         .landed-cta-btn {
-          height: 50px;
-          padding: 0 32px;
+          height: 48px;
+          padding: 0 30px;
           background: #FDD00B;
           color: #0f172a;
           border: 1.5px solid rgba(234, 179, 8, 0.6);
@@ -1135,6 +1287,77 @@ void main(){
         }
 
         @media (max-width: 768px) {
+          .hl {
+            font-size: clamp(48px, 13vw, 76px);
+            line-height: 0.94;
+            letter-spacing: -0.04em;
+          }
+
+          #l1 {
+            top: calc(20% - 0.92em);
+          }
+
+          #l2 {
+            top: calc(20% + 0.08em);
+          }
+
+          #l1 span {
+            margin-right: 8vw;
+          }
+
+          #l2 span {
+            margin-left: 8vw;
+          }
+
+          #cap {
+            top: 20%;
+            width: 84%;
+            max-width: 310px;
+            font-size: 11px;
+            letter-spacing: 0.04em;
+            line-height: 1.35;
+          }
+
+          .carousel-arrow-btn {
+            width: 40px;
+            height: 40px;
+          }
+
+          .carousel-arrow-left {
+            left: 12px;
+          }
+
+          .carousel-arrow-right {
+            right: 12px;
+          }
+
+          .carousel-indicator-bar {
+            bottom: 74px;
+          }
+
+          .carousel-counter-text {
+            font-size: 10.5px;
+            padding: 3px 12px;
+          }
+
+          .carousel-dot.active {
+            width: 22px;
+          }
+
+          .landed-cta-btn {
+            width: 100%;
+            height: 44px;
+            padding: 0 20px;
+            font-size: 13px;
+            justify-content: center;
+          }
+
+          .landed-cta-wrap {
+            bottom: 16px;
+            width: calc(100% - 32px);
+            max-width: 380px;
+          }
+
           .service-modal-deliverables {
             grid-template-columns: 1fr;
           }
