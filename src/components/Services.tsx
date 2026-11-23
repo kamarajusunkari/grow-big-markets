@@ -131,56 +131,53 @@ function drawCardCanvas(ctx: CanvasRenderingContext2D, img: HTMLImageElement | n
     ctx.restore();
   }
 
-  // Top Scrim
-  const topGrad = ctx.createLinearGradient(0, 0, 0, 240);
-  topGrad.addColorStop(0, 'rgba(10, 10, 11, 0.80)');
-  topGrad.addColorStop(1, 'rgba(10, 10, 11, 0)');
+  // Top Light Scrim
+  const topGrad = ctx.createLinearGradient(0, 0, 0, 220);
+  topGrad.addColorStop(0, 'rgba(15, 23, 42, 0.70)');
+  topGrad.addColorStop(1, 'rgba(15, 23, 42, 0)');
   ctx.fillStyle = topGrad;
-  ctx.fillRect(0, 0, W, 240);
+  ctx.fillRect(0, 0, W, 220);
 
-  // Bottom Deep Scrim
-  const botGrad = ctx.createLinearGradient(0, H - 360, 0, H);
-  botGrad.addColorStop(0, 'rgba(10, 10, 11, 0)');
-  botGrad.addColorStop(0.35, 'rgba(10, 10, 11, 0.72)');
-  botGrad.addColorStop(0.75, 'rgba(10, 10, 11, 0.94)');
-  botGrad.addColorStop(1, 'rgba(10, 10, 11, 0.98)');
+  // Bottom Deep Scrim for text readability
+  const botGrad = ctx.createLinearGradient(0, H - 380, 0, H);
+  botGrad.addColorStop(0, 'rgba(15, 23, 42, 0)');
+  botGrad.addColorStop(0.35, 'rgba(15, 23, 42, 0.75)');
+  botGrad.addColorStop(0.75, 'rgba(15, 23, 42, 0.94)');
+  botGrad.addColorStop(1, 'rgba(15, 23, 42, 0.98)');
   ctx.fillStyle = botGrad;
-  ctx.fillRect(0, H - 360, W, 360);
+  ctx.fillRect(0, H - 380, W, 380);
 
-  // Category Tag Pill (Top Left)
+  // Category Tag Pill (Top Left) - Sunburst Gold Theme
   ctx.save();
-  ctx.fillStyle = 'rgba(10, 10, 11, 0.85)';
-  ctx.strokeStyle = 'rgba(244, 241, 234, 0.3)';
-  ctx.lineWidth = 2;
+  ctx.fillStyle = '#FDD00B';
   const pillW = 310;
-  const pillH = 46;
+  const pillH = 48;
   const pillX = 48;
   const pillY = 46;
-  const rad = 23;
+  const rad = 24;
   ctx.beginPath();
   ctx.roundRect(pillX, pillY, pillW, pillH, rad);
   ctx.fill();
-  ctx.stroke();
 
-  // Accent Dot
-  ctx.fillStyle = '#FDD00B';
+  // Dark dot
+  ctx.fillStyle = '#0f172a';
   ctx.beginPath();
-  ctx.arc(pillX + 24, pillY + 23, 5, 0, Math.PI * 2);
+  ctx.arc(pillX + 24, pillY + 24, 5, 0, Math.PI * 2);
   ctx.fill();
 
   // Category Text
-  ctx.fillStyle = '#f4f1ea';
-  ctx.font = '600 18px "IBM Plex Mono", monospace';
-  ctx.fillText(item.category, pillX + 42, pillY + 29);
+  ctx.fillStyle = '#0f172a';
+  ctx.font = '700 18px "IBM Plex Mono", monospace';
+  ctx.fillText(item.category, pillX + 42, pillY + 31);
   ctx.restore();
 
   // Metric Badge (Top Right)
   ctx.save();
-  ctx.fillStyle = 'rgba(10, 10, 11, 0.85)';
-  ctx.strokeStyle = 'rgba(61, 106, 179, 0.6)';
-  ctx.lineWidth = 2;
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+  ctx.strokeStyle = 'rgba(253, 208, 11, 0.8)';
+  ctx.lineWidth = 2.5;
   const mW = 250;
-  const mH = 46;
+  const mH = 48;
   const mX = W - mW - 48;
   const mY = 46;
   ctx.beginPath();
@@ -188,10 +185,10 @@ function drawCardCanvas(ctx: CanvasRenderingContext2D, img: HTMLImageElement | n
   ctx.fill();
   ctx.stroke();
 
-  ctx.fillStyle = '#FDD00B';
+  ctx.fillStyle = '#0f172a';
   ctx.font = '700 18px "IBM Plex Mono", monospace';
   ctx.textAlign = 'center';
-  ctx.fillText(item.metric, mX + mW / 2, mY + 29);
+  ctx.fillText(item.metric, mX + mW / 2, mY + 31);
   ctx.restore();
 
   // Title (Bottom Left)
@@ -203,14 +200,14 @@ function drawCardCanvas(ctx: CanvasRenderingContext2D, img: HTMLImageElement | n
   ctx.shadowBlur = 0;
 
   // Description (Bottom Left)
-  ctx.fillStyle = 'rgba(244, 241, 234, 0.88)';
+  ctx.fillStyle = 'rgba(244, 241, 234, 0.92)';
   ctx.font = '400 24px "Inter Tight", sans-serif';
   const cleanDesc = item.desc.length > 70 ? item.desc.slice(0, 70) + '...' : item.desc;
   ctx.fillText(cleanDesc, 52, H - 64);
 
-  // Subtle Border
-  ctx.strokeStyle = 'rgba(244, 241, 234, 0.16)';
-  ctx.lineWidth = 3;
+  // Subtle Outer Gold Border
+  ctx.strokeStyle = 'rgba(253, 208, 11, 0.45)';
+  ctx.lineWidth = 4;
   ctx.strokeRect(2, 2, W - 4, H - 4);
 }
 
@@ -305,9 +302,9 @@ void main(){
   float px=fwidth(d),a=1.-smoothstep(-px,px,d);
   if(a<.01)discard;
   vec2 uv=vUv;if(!gl_FrontFacing)uv.x=1.-uv.x;
-  vec3 c=mix(vec3(.075),texture2D(map,(uv-.5)*cover+.5).rgb,ready);
-  float edge=smoothstep(-.012-px,-.012,d);
-  gl_FragColor=vec4(mix(c,vec3(1.),edge*.1),a);
+  vec3 c=mix(vec3(0.98, 0.97, 0.92),texture2D(map,(uv-.5)*cover+.5).rgb,ready);
+  float edge=smoothstep(-.014-px,-.014,d);
+  gl_FragColor=vec4(mix(c,vec3(0.99, 0.82, 0.04),edge*.35),a);
 }`;
 
     interface CardObj {
@@ -401,16 +398,18 @@ void main(){
     function grid(i: number) {
       const vh = 2 * GZ * tanH;
       const vw = vh * asp;
-      const gw = vw * (cols === 3 ? 0.74 : 0.88);
-      const gap = gw * 0.017;
+      const targetPx = Math.min(W - 48, 1400);
+      const gw = (targetPx / W) * vw;
+      const gap = gw * (cols === 3 ? 0.022 : 0.028);
       const cw = (gw - gap * (cols - 1)) / cols;
       const ch = cw / (CARD_W / CARD_H);
-      const gh = ch * rows + gap * 1.6 * (rows - 1);
+      const gh = ch * rows + gap * 1.5 * (rows - 1);
       const c = i % cols;
       const r = Math.floor(i / cols);
+      const topShift = Math.max(0, (vh - gh) * 0.22);
       return {
         x: -gw / 2 + cw / 2 + c * (cw + gap),
-        y: gh / 2 - ch / 2 - r * (ch + gap * 1.6),
+        y: gh / 2 - ch / 2 - r * (ch + gap * 1.5) + topShift,
         w: cw,
         h: ch,
         vw,
@@ -496,14 +495,14 @@ void main(){
       // 1. Headline rises and slides in opposite directions
       const rise = 1 - out(span(pp, 0, 0.12));
       const run = mix(-50, 76, span(pp, 0, 0.58));
-      if (l1Ref.current) l1Ref.current.style.transform = `translate3d(${run}vw,${rise * 34}vh,0)`;
-      if (l2Ref.current) l2Ref.current.style.transform = `translate3d(${-run}vw,${rise * 34}vh,0)`;
+      if (l1Ref.current) l1Ref.current.style.transform = `translate3d(${run}vw,${rise * 12}vh,0)`;
+      if (l2Ref.current) l2Ref.current.style.transform = `translate3d(${-run}vw,${rise * 12}vh,0)`;
 
       // 2. Caption
       const capA = 1 - span(pp, 0.52, 0.57);
       if (capRef.current) {
         capRef.current.style.opacity = `${capA}`;
-        capRef.current.style.transform = `translate(-50%,calc(-50% + ${rise * 34}vh))`;
+        capRef.current.style.transform = `translate(-50%,calc(-50% + ${rise * 12}vh))`;
       }
 
       // 3. Center Rule line scales across
@@ -701,8 +700,11 @@ void main(){
         .vante-services-section {
           position: relative;
           height: 260vh;
-          background: #0a0a0b;
-          color: #f4f1ea;
+          background-color: #fefce8;
+          background: radial-gradient(circle at 85% 18%, rgba(253, 208, 11, 0.22) 0%, transparent 55%),
+                      radial-gradient(circle at 12% 82%, rgba(254, 240, 138, 0.28) 0%, transparent 60%),
+                      linear-gradient(180deg, #f8fafc 0%, #fefce8 10%, #fffbeb 50%, #fefce8 90%, #f8fafc 100%);
+          color: #0f172a;
           font-family: 'Inter Tight', system-ui, sans-serif;
           user-select: none;
         }
@@ -719,7 +721,10 @@ void main(){
           height: 100vh;
           height: 100svh;
           overflow: hidden;
-          background: #0a0a0b;
+          background-color: #fefce8;
+          background: radial-gradient(circle at 85% 20%, rgba(253, 208, 11, 0.20) 0%, transparent 52%),
+                      radial-gradient(circle at 10% 80%, rgba(254, 240, 138, 0.25) 0%, transparent 58%),
+                      linear-gradient(180deg, #f8fafc 0%, #fefce8 12%, #fffbeb 50%, #fefce8 88%, #f8fafc 100%);
         }
 
         .vante-headline-wrap {
@@ -731,24 +736,24 @@ void main(){
           position: absolute;
           left: 0;
           right: 0;
-          font-weight: 400;
-          font-size: clamp(40px, 6.7vw, 130px);
+          font-weight: 500;
+          font-size: clamp(38px, 6.2vw, 110px);
           line-height: 1;
-          letter-spacing: -0.055em;
+          letter-spacing: -0.05em;
           white-space: nowrap;
           text-align: center;
           will-change: transform;
-          color: #f4f1ea;
+          color: #0f172a;
           user-select: none;
           z-index: 2;
         }
 
         #l1 {
-          top: calc(50% - 0.98em);
+          top: calc(34% - 0.95em);
         }
 
         #l2 {
-          top: calc(50% + 0.03em);
+          top: calc(34% + 0.05em);
         }
 
         #l1 span, #l2 span {
@@ -766,16 +771,16 @@ void main(){
         #cap {
           position: absolute;
           left: 50%;
-          top: 50%;
+          top: 34%;
           transform: translate(-50%, -50%);
-          width: 18em;
+          width: 22em;
           text-align: center;
-          font-size: clamp(9px, 0.74vw, 13px);
-          font-weight: 500;
-          line-height: 1.35;
-          letter-spacing: 0.03em;
+          font-size: clamp(10px, 0.8vw, 14px);
+          font-weight: 600;
+          line-height: 1.4;
+          letter-spacing: 0.04em;
           text-transform: uppercase;
-          color: #f4f1ea;
+          color: #475569;
           user-select: none;
           z-index: 2;
         }
@@ -793,9 +798,9 @@ void main(){
           position: absolute;
           left: 3.5vw;
           right: 3.5vw;
-          top: 50%;
+          top: 46%;
           height: 1px;
-          background: rgba(244, 241, 234, 0.14);
+          background: rgba(234, 179, 8, 0.35);
           transform-origin: left;
           transform: scaleX(0);
           pointer-events: none;
@@ -804,7 +809,7 @@ void main(){
 
         .landed-cta-wrap {
           position: absolute;
-          bottom: 24px;
+          bottom: 28px;
           left: 50%;
           transform: translateX(-50%);
           z-index: 15;
@@ -814,26 +819,26 @@ void main(){
         }
 
         .landed-cta-btn {
-          height: 50px;
-          padding: 0 28px;
+          height: 52px;
+          padding: 0 32px;
           background: #FDD00B;
-          color: #0a0a0b;
-          border: none;
+          color: #0f172a;
+          border: 1.5px solid rgba(234, 179, 8, 0.6);
           border-radius: 99px;
           font-family: inherit;
-          font-size: 14px;
+          font-size: 14.5px;
           font-weight: 700;
           letter-spacing: 0.02em;
           display: inline-flex;
           align-items: center;
-          gap: 10px;
+          gap: 12px;
           cursor: pointer;
-          box-shadow: 0 10px 30px rgba(253, 208, 11, 0.4);
+          box-shadow: 0 12px 35px rgba(253, 208, 11, 0.45);
           transition: transform 0.2s ease, filter 0.2s ease;
         }
 
         .landed-cta-btn:hover {
-          filter: brightness(1.08);
+          filter: brightness(1.06);
           transform: translateY(-2px);
         }
 
@@ -841,11 +846,11 @@ void main(){
           position: absolute;
           left: 0;
           top: 0;
-          padding: 7px 14px;
-          background: #f4f1ea;
-          color: #0a0a0b;
+          padding: 8px 16px;
+          background: #0f172a;
+          color: #ffffff;
           border-radius: 99px;
-          font-size: 11.5px;
+          font-size: 12px;
           font-weight: 600;
           letter-spacing: 0.04em;
           pointer-events: none;
@@ -855,16 +860,16 @@ void main(){
           z-index: 20;
           display: flex;
           align-items: center;
-          gap: 8px;
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+          gap: 10px;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
         }
 
         /* Modal Styles */
         .service-modal-backdrop {
           position: fixed;
           inset: 0;
-          background: rgba(10, 10, 11, 0.85);
-          backdrop-filter: blur(14px);
+          background: rgba(15, 23, 42, 0.55);
+          backdrop-filter: blur(16px);
           z-index: 1000;
           display: grid;
           place-items: center;
@@ -878,15 +883,15 @@ void main(){
         }
 
         .service-modal-box {
-          background: #141416;
-          border: 1px solid rgba(244, 241, 234, 0.18);
+          background: #ffffff;
+          border: 1px solid rgba(234, 179, 8, 0.45);
           border-radius: 24px;
           max-width: 620px;
           width: 100%;
           padding: 36px;
           position: relative;
-          color: #f4f1ea;
-          box-shadow: 0 25px 70px rgba(0, 0, 0, 0.75);
+          color: #0f172a;
+          box-shadow: 0 25px 70px rgba(0, 0, 0, 0.18), 0 0 35px rgba(253, 208, 11, 0.15);
           max-height: 90vh;
           overflow-y: auto;
         }
@@ -898,9 +903,9 @@ void main(){
           width: 36px;
           height: 36px;
           border-radius: 50%;
-          border: 1px solid rgba(244, 241, 234, 0.2);
-          background: rgba(244, 241, 234, 0.05);
-          color: #f4f1ea;
+          border: 1px solid rgba(15, 23, 42, 0.15);
+          background: rgba(15, 23, 42, 0.04);
+          color: #0f172a;
           display: grid;
           place-items: center;
           cursor: pointer;
@@ -908,14 +913,14 @@ void main(){
         }
 
         .service-modal-close:hover {
-          background: #f4f1ea;
-          color: #0a0a0b;
+          background: #0f172a;
+          color: #ffffff;
         }
 
         .service-modal-tag {
-          font: 600 11.5px 'IBM Plex Mono', monospace;
+          font: 700 11.5px 'IBM Plex Mono', monospace;
           letter-spacing: 0.12em;
-          color: #FDD00B;
+          color: #d97706;
           text-transform: uppercase;
           margin-bottom: 8px;
         }
@@ -923,12 +928,13 @@ void main(){
         .service-modal-title {
           font-size: 28px;
           font-weight: 700;
+          color: #0f172a;
           line-height: 1.2;
           margin-bottom: 6px;
         }
 
         .service-modal-subtitle {
-          font-size: 14.5px;
+          font-size: 15px;
           color: #3d6ab3;
           font-weight: 600;
           margin-bottom: 14px;
@@ -936,7 +942,7 @@ void main(){
 
         .service-modal-desc {
           font-size: 14.5px;
-          color: #b3b1ab;
+          color: #475569;
           line-height: 1.6;
           margin-bottom: 24px;
         }
@@ -945,7 +951,7 @@ void main(){
           font-size: 13px;
           font-weight: 700;
           letter-spacing: 0.04em;
-          color: #f4f1ea;
+          color: #0f172a;
           margin-bottom: 12px;
           text-transform: uppercase;
         }
@@ -962,15 +968,15 @@ void main(){
           align-items: center;
           gap: 8px;
           font-size: 13px;
-          color: #d8d6ce;
+          color: #334155;
         }
 
         .service-modal-action-btn {
           width: 100%;
           height: 50px;
           background: #FDD00B;
-          color: #0a0a0b;
-          border: none;
+          color: #0f172a;
+          border: 1px solid rgba(234, 179, 8, 0.6);
           border-radius: 99px;
           font-family: inherit;
           font-size: 14.5px;
@@ -981,11 +987,12 @@ void main(){
           align-items: center;
           justify-content: center;
           gap: 10px;
+          box-shadow: 0 10px 25px rgba(253, 208, 11, 0.35);
           transition: transform 0.2s, filter 0.2s;
         }
 
         .service-modal-action-btn:hover {
-          filter: brightness(1.08);
+          filter: brightness(1.06);
           transform: translateY(-2px);
         }
 
