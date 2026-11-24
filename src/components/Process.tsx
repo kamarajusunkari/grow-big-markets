@@ -1,10 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {
-  Sparkles,
-  TrendingUp,
-  ArrowUpRight,
-  CheckCircle2,
-} from 'lucide-react';
+import { Sparkles, CheckCircle2 } from 'lucide-react';
 
 interface ProcessProps {
   onOpenBooking?: () => void;
@@ -79,7 +74,7 @@ const STEPS_DATA: StepItem[] = [
   },
 ];
 
-export const Process: React.FC<ProcessProps> = ({ onOpenBooking }) => {
+export const Process: React.FC<ProcessProps> = () => {
   const [isInView, setIsInView] = useState(false);
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
@@ -236,28 +231,6 @@ export const Process: React.FC<ProcessProps> = ({ onOpenBooking }) => {
                           </div>
                         )}
                       </div>
-
-                      {/* Integrated Stepped Growth Progress Bar */}
-                      <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[10.5px] mt-auto">
-                        <span className="font-mono text-slate-400 font-semibold">
-                          Step 0{idx + 1}/05
-                        </span>
-                        <div className="w-16 h-1 bg-slate-100 rounded-full overflow-hidden mx-2">
-                          <div
-                            className="h-full rounded-full transition-all duration-700"
-                            style={{
-                              width: `${(idx + 1) * 20}%`,
-                              background: isSummit ? '#10b981' : step.badgeColor,
-                            }}
-                          />
-                        </div>
-                        <span
-                          className="font-bold text-[10px] uppercase font-mono"
-                          style={{ color: isSummit ? '#10b981' : step.badgeColor }}
-                        >
-                          {isSummit ? 'PEAK ↗' : `+${(idx + 1) * 20}%`}
-                        </span>
-                      </div>
                     </div>
 
                     {/* Top Accent Stripe */}
@@ -273,32 +246,6 @@ export const Process: React.FC<ProcessProps> = ({ onOpenBooking }) => {
                 </div>
               );
             })}
-          </div>
-
-          {/* ====================================================================
-              SHARED BOTTOM GROUND LINE: All cards anchor to this same bottom!
-              ==================================================================== */}
-          <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t-2 border-slate-200 text-xs text-slate-500 mt-0">
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#3d6ab3]" />
-              <span className="font-bold text-slate-700">Step 01 Ground Baseline</span>
-              <span className="font-mono text-slate-300">────────────────────────▶</span>
-              <span className="flex items-center gap-1 font-bold text-[#10b981]">
-                <TrendingUp size={14} />
-                Step 05 Peak Elevation
-              </span>
-            </div>
-
-            {onOpenBooking && (
-              <button
-                type="button"
-                onClick={onOpenBooking}
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-[#1e3a8a] hover:text-[#3d6ab3] transition-colors"
-              >
-                <span>Discuss Your Growth Architecture</span>
-                <ArrowUpRight size={13} />
-              </button>
-            )}
           </div>
         </div>
       </div>
