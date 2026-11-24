@@ -3,6 +3,7 @@ import {
   CheckCircle2,
   TrendingUp,
   ArrowUpRight,
+  ArrowRight,
 } from 'lucide-react';
 
 interface ProcessProps {
@@ -31,8 +32,8 @@ const STEPS_DATA: StepItem[] = [
     desc: 'Deep-dive digital systems audit, customer persona mapping & measurable ROI benchmark roadmap.',
     imageSrc: '/08bb2c3d-c44b-4a7c-a619-827e21876041.png',
     badgeColor: '#3d6ab3', // Grow Big Blue
-    cardHeight: 310, // Step 1: Baseline elevation
-    imageHeight: 145,
+    cardHeight: 370, // Step 1: Base elevation (tightens vertical gap with button)
+    imageHeight: 170,
     deliverables: ['Digital Systems Audit', 'ROI Benchmark Roadmap'],
   },
   {
@@ -43,8 +44,8 @@ const STEPS_DATA: StepItem[] = [
     desc: 'Scalable cloud database schemas, interactive Figma prototypes & multi-channel funnel blueprints.',
     imageSrc: '/9f493760-7736-405f-91a5-9e820c7437bd.png',
     badgeColor: '#0ea5e9', // Sky Blue
-    cardHeight: 370, // Step 2: Increases height (+60px)
-    imageHeight: 175,
+    cardHeight: 420, // Step 2: Smooth +50px rise
+    imageHeight: 195,
     deliverables: ['Figma UI/UX Prototypes', 'Funnel Architecture'],
   },
   {
@@ -55,8 +56,8 @@ const STEPS_DATA: StepItem[] = [
     desc: 'High-velocity full-stack codebase, native mobile apps & autonomous AI workflow integrations.',
     imageSrc: '/fd555308-e374-46dc-b0dd-845fb535289d.png',
     badgeColor: '#8b5cf6', // Royal Violet
-    cardHeight: 440, // Step 3: Increases height (+70px)
-    imageHeight: 210,
+    cardHeight: 470, // Step 3: Smooth +50px rise
+    imageHeight: 220,
     deliverables: ['React & Mobile Codebase', 'Autonomous AI Engines'],
   },
   {
@@ -67,15 +68,14 @@ const STEPS_DATA: StepItem[] = [
     desc: 'Zero-downtime deployment on AWS/Azure, multi-channel viral ads & compound revenue scaling.',
     imageSrc: '/61c21095-46e4-4d45-b98c-8325f99d614c.png',
     badgeColor: '#10b981', // Emerald Summit & Sunburst Gold
-    cardHeight: 515, // Step 4: Summit Peak (+75px)
+    cardHeight: 520, // Step 4: Summit Peak (+50px) - Perfectly parallel with heading top
     imageHeight: 245,
     deliverables: ['Zero-Downtime Launch', 'Paid Acquisition Funnels', 'Compound Revenue Scale'],
   },
 ];
 
-export const Process: React.FC<ProcessProps> = () => {
+export const Process: React.FC<ProcessProps> = ({ onOpenBooking }) => {
   const [isInView, setIsInView] = useState(false);
-  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -114,46 +114,72 @@ export const Process: React.FC<ProcessProps> = () => {
             while Cards 3 & 4 rise high up on the right!
             ==================================================================== */}
         <div className="relative w-full">
-          {/* Main Headline: Positioned on Top-Left above Cards 1 & 2 */}
-          <div className="lg:absolute lg:top-2 lg:left-0 z-20 mb-8 lg:mb-0 max-w-xl">
-            <h2 className="text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-slate-900 tracking-tight leading-[1.18]">
+          {/* Main Headline & Action Button: Positioned on Top-Left above Cards 1 & 2 */}
+          <div
+            className="lg:absolute lg:top-0 lg:left-0 z-20 mb-6 lg:mb-0 max-w-lg"
+            style={{
+              opacity: isInView ? 1 : 0,
+              transform: isInView ? 'translateY(0)' : 'translateY(16px)',
+              transition: 'opacity 0.6s ease-out, transform 0.6s ease-out',
+            }}
+          >
+            <h2 className="text-2xl sm:text-3xl lg:text-[30px] font-extrabold text-slate-900 tracking-tight leading-[1.18]">
               Smart Systems Built for Every <br className="hidden sm:inline" />
               Growing Business
             </h2>
+
+            {/* Ready to Grow Action Button */}
+            <button
+              type="button"
+              onClick={onOpenBooking}
+              className="mt-2.5 inline-flex items-center gap-2 px-4.5 py-2 rounded-full bg-[#FDD00B] hover:bg-[#facc15] text-[#0f172a] font-bold text-xs sm:text-[13px] shadow-sm shadow-[#FDD00B]/25 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
+            >
+              <span>Ready to Grow? Let's Talk</span>
+              <ArrowRight size={14} />
+            </button>
           </div>
 
           {/* 4 Cards Ascending Staircase Grid (All aligned to the SAME bottom) */}
-          <div className="flex lg:grid lg:grid-cols-4 items-end gap-5 sm:gap-6 overflow-x-auto lg:overflow-visible pb-2 pt-6 lg:pt-8 scrollbar-none snap-x snap-mandatory min-h-[530px]">
+          <div className="flex lg:grid lg:grid-cols-4 items-end gap-5 sm:gap-6 overflow-x-auto lg:overflow-visible pb-2 pt-0 lg:pt-0 scrollbar-none snap-x snap-mandatory min-h-[520px]">
             {STEPS_DATA.map((step, idx) => {
-              const isHovered = hoveredIdx === idx;
               const isSummit = idx === 3;
 
-              // Staggered Growth Reveal Delay: 0ms, 120ms, 240ms, 360ms
-              const staggerDelay = idx * 120;
+              // Sequential Graph Growth Reveal: Card 1 (100ms) -> Card 2 (380ms) -> Card 3 (660ms) -> Card 4 (940ms)
+              const staggerDelay = idx * 280 + 100;
 
               return (
                 <div
                   key={step.stepNum}
-                  onMouseEnter={() => setHoveredIdx(idx)}
-                  onMouseLeave={() => setHoveredIdx(null)}
-                  className="snap-center shrink-0 w-[280px] sm:w-[320px] lg:w-auto flex flex-col justify-end group transition-all duration-300"
+                  className="snap-center shrink-0 w-[280px] sm:w-[320px] lg:w-auto flex flex-col justify-end group"
                   style={{
                     height: `${step.cardHeight}px`,
-                    transformOrigin: 'bottom',
+                    transformOrigin: 'bottom center',
+                    willChange: 'transform, opacity',
                     opacity: isInView ? 1 : 0,
                     transform: isInView
                       ? 'scaleY(1) translateY(0)'
-                      : 'scaleY(0.82) translateY(20px)',
-                    transition: `opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1) ${staggerDelay}ms, transform 0.65s cubic-bezier(0.16, 1, 0.3, 1) ${staggerDelay}ms`,
+                      : 'scaleY(0.08) translateY(24px)',
+                    transition: `opacity 0.45s ease-out ${staggerDelay}ms, transform 0.75s cubic-bezier(0.16, 1, 0.3, 1) ${staggerDelay}ms`,
                   }}
                 >
-                  {/* Clean Spacious 3D Card (Shares the SAME bottom baseline) */}
+                  {/* Detached Step Top Border (Floating above card with generous space) */}
+                  <div className="w-full mb-4 shrink-0 px-1">
+                    <div
+                      className="h-[3.5px] rounded-full opacity-90"
+                      style={{
+                        background: isSummit
+                          ? 'linear-gradient(90deg, #FDD00B 0%, #3d6ab3 50%, #10b981 100%)'
+                          : step.badgeColor,
+                        boxShadow: `0 1px 4px ${step.badgeColor}30`,
+                      }}
+                    />
+                  </div>
+
+                  {/* Clean Spacious 3D Card (Shares the SAME bottom baseline, completely stable) */}
                   <div
-                    className={`relative w-full h-full overflow-hidden flex flex-col justify-between rounded-3xl bg-white border transition-all duration-300 cursor-pointer ${
-                      isHovered
-                        ? '-translate-y-2.5 shadow-2xl border-slate-300'
-                        : 'shadow-sm border-slate-200/90 hover:shadow-xl'
-                    } ${isSummit ? 'ring-2 ring-[#10b981]/50 shadow-emerald-500/15' : ''}`}
+                    className={`relative w-full flex-1 overflow-hidden flex flex-col justify-between rounded-3xl bg-white border border-slate-200/90 shadow-sm ${
+                      isSummit ? 'ring-2 ring-[#10b981]/50 shadow-emerald-500/15' : ''
+                    }`}
                   >
                     {/* Top 3D Art Banner (Scales with card height: 145px -> 245px) */}
                     <div
@@ -163,32 +189,26 @@ export const Process: React.FC<ProcessProps> = () => {
                       <img
                         src={step.imageSrc}
                         alt={step.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-106"
+                        className="w-full h-full object-cover"
                         loading="lazy"
                       />
 
-                      {/* Top Overlay Badges */}
-                      <div className="absolute top-3 left-3 flex items-center gap-2">
-                        <span
-                          className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-mono font-black text-white shadow-sm backdrop-blur-xs"
-                          style={{ background: step.badgeColor }}
-                        >
-                          {step.stepNum}
-                        </span>
-                        <span className="text-[10px] font-bold uppercase tracking-wider font-mono px-2.5 py-0.5 rounded-full bg-white/95 text-slate-800 shadow-2xs backdrop-blur-xs border border-black/5">
+                      {/* Top Overlay Badge */}
+                      <div className="absolute top-3 left-3 flex items-center">
+                        <span className="inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider font-mono px-2.5 py-1 rounded-full bg-white/95 text-slate-800 shadow-2xs backdrop-blur-xs border border-black/5">
+                          <span
+                            className="w-2 h-2 rounded-full"
+                            style={{ background: step.badgeColor }}
+                          />
                           {step.stepTag}
                         </span>
                       </div>
 
                       {/* Summit Gold Badge on Step 04 */}
-                      {isSummit ? (
-                        <div className="absolute top-3 right-3 text-[10px] font-mono font-black text-[#0f172a] bg-[#FDD00B] px-2.5 py-0.5 rounded-full shadow-md flex items-center gap-1">
+                      {isSummit && (
+                        <div className="absolute top-3 right-3 text-[10px] font-mono font-black text-[#0f172a] bg-[#FDD00B] px-2.5 py-1 rounded-full shadow-md flex items-center gap-1">
                           <TrendingUp size={11} />
                           <span>PEAK</span>
-                        </div>
-                      ) : (
-                        <div className="absolute top-3 right-3 text-[10px] font-mono font-bold text-slate-600 bg-white/90 px-2 py-0.5 rounded-full shadow-2xs backdrop-blur-xs border border-black/5">
-                          Stage 0{idx + 1}
                         </div>
                       )}
 
@@ -243,16 +263,6 @@ export const Process: React.FC<ProcessProps> = () => {
                         </div>
                       )}
                     </div>
-
-                    {/* Top Accent Stripe */}
-                    <div
-                      className="absolute top-0 left-0 right-0 h-1.5 transition-all"
-                      style={{
-                        background: isSummit
-                          ? 'linear-gradient(90deg, #FDD00B 0%, #3d6ab3 50%, #10b981 100%)'
-                          : step.badgeColor,
-                      }}
-                    />
                   </div>
                 </div>
               );

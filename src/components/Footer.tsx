@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { ChevronDown, Phone, Mail } from 'lucide-react';
 import growBigPrimary from '../assets/Growbig Primary.png';
 
 interface FooterProps {
@@ -6,7 +7,21 @@ interface FooterProps {
 }
 
 export const Footer: React.FC<FooterProps> = ({ onOpenBooking }) => {
-  const [activeMobileTab, setActiveMobileTab] = useState<'industries' | 'insights' | 'company' | 'connect'>('industries');
+  // Mobile accordion state (Services open by default)
+  const [openAccordions, setOpenAccordions] = useState<Record<string, boolean>>({
+    services: true,
+    industries: false,
+    company: false,
+    connect: false,
+  });
+
+  const toggleAccordion = (section: string) => {
+    setOpenAccordions((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
+  };
+
   const footerRef = useRef<HTMLElement>(null);
 
   // Entrance Web Animations sequence ~1.9s with 3s failsafe and gesture skip
@@ -153,153 +168,169 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking }) => {
                   </svg>
                 </span>
               </button>
-            </div>
 
-            {/* Mobile Tab Buttons (for phones ≤768px) */}
-            <div className="mobile-tab-nav" role="tablist" aria-label="Footer Navigation Tabs">
-              <button
-                type="button"
-                role="tab"
-                id="tab-services"
-                aria-controls="panel-services"
-                aria-selected={activeMobileTab === 'industries'}
-                className={`mobile-tab-btn ${activeMobileTab === 'industries' ? 'active' : ''}`}
-                onClick={() => setActiveMobileTab('industries')}
-              >
-                Services
-              </button>
-              <button
-                type="button"
-                role="tab"
-                id="tab-industries"
-                aria-controls="panel-industries"
-                aria-selected={activeMobileTab === 'insights'}
-                className={`mobile-tab-btn ${activeMobileTab === 'insights' ? 'active' : ''}`}
-                onClick={() => setActiveMobileTab('insights')}
-              >
-                Industries
-              </button>
-              <button
-                type="button"
-                role="tab"
-                id="tab-company"
-                aria-controls="panel-company"
-                aria-selected={activeMobileTab === 'company'}
-                className={`mobile-tab-btn ${activeMobileTab === 'company' ? 'active' : ''}`}
-                onClick={() => setActiveMobileTab('company')}
-              >
-                Company
-              </button>
-              <button
-                type="button"
-                role="tab"
-                id="tab-connect"
-                aria-controls="panel-connect"
-                aria-selected={activeMobileTab === 'connect'}
-                className={`mobile-tab-btn ${activeMobileTab === 'connect' ? 'active' : ''}`}
-                onClick={() => setActiveMobileTab('connect')}
-              >
-                Contact
-              </button>
+              {/* Mobile Quick Connect Action Bar (Visible on phones ≤768px) */}
+              <div className="mobile-quick-actions">
+                <a href="tel:+919493898990" className="mobile-action-pill">
+                  <Phone size={14} />
+                  <span>Call Us</span>
+                </a>
+                <a href="mailto:info@growbigmarketers.com" className="mobile-action-pill">
+                  <Mail size={14} />
+                  <span>Email</span>
+                </a>
+              </div>
             </div>
 
             {/* Column 1: Core Marketing Services */}
             <div
               id="panel-services"
-              className={`link-col ${activeMobileTab === 'industries' ? 'active' : ''}`}
-              role="tabpanel"
-              aria-labelledby="tab-services"
+              className={`link-col ${openAccordions.services ? 'accordion-open' : ''}`}
             >
-              <h4 className="col-title">Services</h4>
-              <ul className="link-list">
-                <li className="link-item"><a href="#services">Performance Marketing (PPC)</a></li>
-                <li className="link-item"><a href="#services">Search Engine Optimization (SEO)</a></li>
-                <li className="link-item"><a href="#services">Social Media & Reels Scaling</a></li>
-                <li className="link-item"><a href="#services">Conversion Rate Optimization (CRO)</a></li>
-                <li className="link-item"><a href="#services">High-Converting Sales Funnels</a></li>
-              </ul>
+              <button
+                type="button"
+                className="col-title-btn"
+                onClick={() => toggleAccordion('services')}
+                aria-expanded={openAccordions.services}
+              >
+                <h4 className="col-title">Services</h4>
+                <ChevronDown
+                  size={18}
+                  className={`accordion-chevron ${openAccordions.services ? 'rotate-180' : ''}`}
+                />
+              </button>
+              <div className={`accordion-content ${openAccordions.services ? 'open' : ''}`}>
+                <div className="accordion-inner">
+                  <ul className="link-list">
+                    <li className="link-item"><a href="#services">Performance Marketing (PPC)</a></li>
+                    <li className="link-item"><a href="#services">Search Engine Optimization (SEO)</a></li>
+                    <li className="link-item"><a href="#services">Social Media & Reels Scaling</a></li>
+                    <li className="link-item"><a href="#services">Conversion Rate Optimization (CRO)</a></li>
+                    <li className="link-item"><a href="#services">High-Converting Sales Funnels</a></li>
+                  </ul>
+                </div>
+              </div>
             </div>
 
             {/* Column 2: Industries */}
             <div
               id="panel-industries"
-              className={`link-col ${activeMobileTab === 'insights' ? 'active' : ''}`}
-              role="tabpanel"
-              aria-labelledby="tab-industries"
+              className={`link-col ${openAccordions.industries ? 'accordion-open' : ''}`}
             >
-              <h4 className="col-title">Industries</h4>
-              <ul className="link-list">
-                <li className="link-item"><a href="#portfolio">Real Estate & PropTech</a></li>
-                <li className="link-item"><a href="#portfolio">eCommerce & D2C Brands</a></li>
-                <li className="link-item"><a href="#portfolio">Healthcare & MedTech</a></li>
-                <li className="link-item"><a href="#portfolio">FinTech & Financial Services</a></li>
-                <li className="link-item"><a href="#portfolio">Hospitality & Tourism</a></li>
-              </ul>
+              <button
+                type="button"
+                className="col-title-btn"
+                onClick={() => toggleAccordion('industries')}
+                aria-expanded={openAccordions.industries}
+              >
+                <h4 className="col-title">Industries</h4>
+                <ChevronDown
+                  size={18}
+                  className={`accordion-chevron ${openAccordions.industries ? 'rotate-180' : ''}`}
+                />
+              </button>
+              <div className={`accordion-content ${openAccordions.industries ? 'open' : ''}`}>
+                <div className="accordion-inner">
+                  <ul className="link-list">
+                    <li className="link-item"><a href="#portfolio">Real Estate & PropTech</a></li>
+                    <li className="link-item"><a href="#portfolio">eCommerce & D2C Brands</a></li>
+                    <li className="link-item"><a href="#portfolio">Healthcare & MedTech</a></li>
+                    <li className="link-item"><a href="#portfolio">FinTech & Financial Services</a></li>
+                    <li className="link-item"><a href="#portfolio">Hospitality & Tourism</a></li>
+                  </ul>
+                </div>
+              </div>
             </div>
 
             {/* Column 3: Company & Process */}
             <div
               id="panel-company"
-              className={`link-col ${activeMobileTab === 'company' ? 'active' : ''}`}
-              role="tabpanel"
-              aria-labelledby="tab-company"
+              className={`link-col ${openAccordions.company ? 'accordion-open' : ''}`}
             >
-              <h4 className="col-title">Company</h4>
-              <ul className="link-list">
-                <li className="link-item"><a href="#hero">About Grow Big</a></li>
-                <li className="link-item"><a href="#process">Our 4-Step Process</a></li>
-                <li className="link-item"><a href="#portfolio">Client Case Studies</a></li>
-                <li className="link-item">
-                  <a
-                    href="#faq"
-                    onClick={(e) => {
-                      if (onOpenBooking) {
-                        e.preventDefault();
-                        onOpenBooking();
-                      }
-                    }}
-                  >
-                    Schedule Strategy Call ↗
-                  </a>
-                </li>
-                <li className="link-item"><a href="#faq">Frequently Asked Questions</a></li>
-              </ul>
+              <button
+                type="button"
+                className="col-title-btn"
+                onClick={() => toggleAccordion('company')}
+                aria-expanded={openAccordions.company}
+              >
+                <h4 className="col-title">Company</h4>
+                <ChevronDown
+                  size={18}
+                  className={`accordion-chevron ${openAccordions.company ? 'rotate-180' : ''}`}
+                />
+              </button>
+              <div className={`accordion-content ${openAccordions.company ? 'open' : ''}`}>
+                <div className="accordion-inner">
+                  <ul className="link-list">
+                    <li className="link-item"><a href="#hero">About Grow Big</a></li>
+                    <li className="link-item"><a href="#process">Our 4-Step Process</a></li>
+                    <li className="link-item"><a href="#portfolio">Client Case Studies</a></li>
+                    <li className="link-item">
+                      <a
+                        href="#faq"
+                        onClick={(e) => {
+                          if (onOpenBooking) {
+                            e.preventDefault();
+                            onOpenBooking();
+                          }
+                        }}
+                      >
+                        Schedule Strategy Call ↗
+                      </a>
+                    </li>
+                    <li className="link-item"><a href="#faq">Frequently Asked Questions</a></li>
+                  </ul>
+                </div>
+              </div>
             </div>
 
             {/* Column 4: Direct Contact & Socials */}
             <div
               id="panel-connect"
-              className={`link-col ${activeMobileTab === 'connect' ? 'active' : ''}`}
-              role="tabpanel"
-              aria-labelledby="tab-connect"
+              className={`link-col ${openAccordions.connect ? 'accordion-open' : ''}`}
             >
-              <h4 className="col-title">Contact</h4>
-              <ul className="link-list">
-                <li className="link-item">
-                  <a href="tel:+919493898990">
-                    <svg className="social-icon-glyph" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" /></svg>
-                    <span>+91 9493898990</span>
-                  </a>
-                </li>
-                <li className="link-item">
-                  <a href="mailto:info@growbigmarketers.com">
-                    <svg className="social-icon-glyph" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
-                    <span>info@growbigmarketers.com</span>
-                  </a>
-                </li>
-                <li className="link-item">
-                  <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">
-                    <svg className="social-icon-glyph" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect x="2" y="9" width="4" height="12" /><circle cx="4" cy="4" r="2" /></svg>
-                    <span>LinkedIn</span>
-                  </a>
-                </li>
-                <li className="link-item">
-                  <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
-                    <svg className="social-icon-glyph" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" /><circle cx="12" cy="12" r="4" /><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" /></svg>
-                    <span>Instagram</span>
-                  </a>
-                </li>
-              </ul>
+              <button
+                type="button"
+                className="col-title-btn"
+                onClick={() => toggleAccordion('connect')}
+                aria-expanded={openAccordions.connect}
+              >
+                <h4 className="col-title">Contact</h4>
+                <ChevronDown
+                  size={18}
+                  className={`accordion-chevron ${openAccordions.connect ? 'rotate-180' : ''}`}
+                />
+              </button>
+              <div className={`accordion-content ${openAccordions.connect ? 'open' : ''}`}>
+                <div className="accordion-inner">
+                  <ul className="link-list">
+                    <li className="link-item">
+                      <a href="tel:+919493898990">
+                        <svg className="social-icon-glyph" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" /></svg>
+                        <span>+91 9493898990</span>
+                      </a>
+                    </li>
+                    <li className="link-item">
+                      <a href="mailto:info@growbigmarketers.com">
+                        <svg className="social-icon-glyph" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
+                        <span>info@growbigmarketers.com</span>
+                      </a>
+                    </li>
+                    <li className="link-item">
+                      <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">
+                        <svg className="social-icon-glyph" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect x="2" y="9" width="4" height="12" /><circle cx="4" cy="4" r="2" /></svg>
+                        <span>LinkedIn</span>
+                      </a>
+                    </li>
+                    <li className="link-item">
+                      <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+                        <svg className="social-icon-glyph" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" /><circle cx="12" cy="12" r="4" /><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" /></svg>
+                        <span>Instagram</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
 
           </div>
@@ -533,10 +564,40 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking }) => {
           transform: translateX(calc(2 * var(--u)));
         }
 
+        .mobile-quick-actions {
+          display: none;
+        }
+
         .link-col {
           border-left: calc(2.4 * var(--u)) solid var(--border-rule);
           padding-left: calc(26 * var(--u));
           padding-right: calc(12 * var(--u));
+        }
+
+        .col-title-btn {
+          display: block;
+          width: auto;
+          background: transparent;
+          border: none;
+          padding: 0;
+          margin: 0;
+          text-align: left;
+          cursor: default;
+          pointer-events: none;
+        }
+
+        .accordion-chevron {
+          display: none !important;
+        }
+
+        .accordion-content {
+          display: block !important;
+          grid-template-rows: none !important;
+          opacity: 1 !important;
+        }
+
+        .accordion-inner {
+          overflow: visible !important;
         }
 
         .col-title {
@@ -613,11 +674,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking }) => {
           color: var(--muted-1);
         }
 
-        .mobile-tab-nav {
-          display: none;
-        }
-
-        @media (max-width: 1024px) {
+        @media (max-width: 1024px) and (min-width: 769px) {
           .card-top-row {
             grid-template-columns: 1fr 1fr;
             gap: 36px;
@@ -646,37 +703,66 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking }) => {
           .nimbus-footer-section {
             min-height: auto;
             height: auto;
-            padding: 24px 0;
+            padding: 24px 0 32px;
           }
 
           .card-outer-wrap {
-            padding: 0 16px 24px;
+            padding: 0 14px 20px;
+          }
+
+          .footer-card {
+            border-radius: 14px;
+            box-shadow:
+              0 2px 0 0 var(--brand-blue),
+              0 12px 32px rgba(3, 6, 58, 0.22);
+          }
+
+          .card-top-row {
+            display: flex;
+            flex-direction: column;
+            padding: 26px 18px 12px;
+            gap: 0;
+            min-height: auto;
+          }
+
+          .brand-col {
+            padding-right: 0;
+            padding-bottom: 22px;
+            border-bottom: 1.5px solid var(--border-rule);
           }
 
           .brand-logo-mark {
-            height: 48px;
-            max-height: 52px;
+            height: 44px;
+            max-height: 48px;
+            min-height: auto;
+          }
+
+          .brand-headline-wrap {
+            margin-top: 16px;
           }
 
           .brand-headline {
-            font-size: 18px;
-            line-height: 25px;
+            font-size: 16.5px;
+            line-height: 23px;
           }
 
           .brand-touch-btn {
-            width: fit-content;
-            min-width: 236px;
+            width: 100%;
+            max-width: 100%;
+            min-width: auto;
             height: 52px;
-            padding: 0 6px 0 20px;
-            gap: 14px;
-            font-size: 15.5px;
-            white-space: nowrap;
-            margin-top: 24px;
+            padding: 0 6px 0 18px;
+            gap: 12px;
+            font-size: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+            justify-content: space-between;
           }
 
           .brand-touch-cap {
             width: 40px;
             height: 40px;
+            border-radius: 6px;
           }
 
           .brand-touch-cap svg {
@@ -684,63 +770,143 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking }) => {
             height: 17px;
           }
 
-          .mobile-tab-nav {
+          /* Mobile Direct Quick Actions */
+          .mobile-quick-actions {
             display: flex;
-            overflow-x: auto;
-            gap: 8px;
-            border-bottom: 2px solid var(--border-rule);
-            padding-bottom: 12px;
-            margin-bottom: 24px;
+            gap: 10px;
+            margin-top: 14px;
+            width: 100%;
           }
 
-          .mobile-tab-btn {
-            padding: 8px 14px;
-            background: transparent;
-            border: none;
-            font-family: inherit;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--muted-2);
-            cursor: pointer;
-            border-radius: 6px;
-            white-space: nowrap;
+          .mobile-action-pill {
+            flex: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 11px 12px;
+            background: #f1f5f9;
+            color: #0f172a;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
             transition: all 0.2s ease;
           }
 
-          .mobile-tab-btn.active {
-            background: var(--brand-blue);
-            color: #ffffff;
+          .mobile-action-pill:active {
+            background: #e2e8f0;
+            transform: scale(0.98);
           }
 
-          .card-top-row {
-            display: flex;
-            flex-direction: column;
-            padding: 28px 20px;
-            gap: 24px;
-          }
-
+          /* Mobile Accordion Link Columns */
           .link-col {
-            display: none;
-            border-top: none;
-            padding-top: 0;
+            border-left: none;
+            padding-left: 0;
+            padding-right: 0;
+            border-bottom: 1px solid var(--border-rule);
+            display: block !important;
           }
 
-          .link-col.active {
-            display: block;
+          .col-title-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 16px 0;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            pointer-events: auto;
+            text-align: left;
+            -webkit-tap-highlight-color: transparent;
+          }
+
+          .col-title {
+            font-size: 15.5px;
+            font-weight: 700;
+            margin-bottom: 0;
+            color: var(--ink);
+            letter-spacing: -0.01em;
+            -webkit-text-stroke: 0;
+          }
+
+          .accordion-chevron {
+            display: block !important;
+            color: var(--muted-2);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease;
+          }
+
+          .accordion-chevron.rotate-180 {
+            transform: rotate(180deg);
+            color: var(--brand-blue);
+          }
+
+          .accordion-content {
+            display: grid !important;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+            opacity: 0;
+          }
+
+          .accordion-content.open {
+            grid-template-rows: 1fr;
+            opacity: 1;
+          }
+
+          .accordion-inner {
+            overflow: hidden;
+            padding-bottom: 16px;
           }
 
           .link-list {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-          }
-
-          .card-bottom-row {
-            height: auto;
-            padding: 20px;
+            display: flex;
             flex-direction: column;
             gap: 12px;
-            align-items: flex-start;
+          }
+
+          .link-item a {
+            font-size: 14.5px;
+            line-height: 1.4;
+            color: var(--muted-2);
+            padding: 5px 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+          }
+
+          .link-item a:active {
+            color: var(--brand-blue);
+          }
+
+          /* Bottom Row on Mobile */
+          .card-bottom-row {
+            height: auto;
+            padding: 22px 18px;
+            flex-direction: column;
+            gap: 14px;
+            align-items: center;
+            text-align: center;
+          }
+
+          .bottom-legal-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px 12px;
+            font-size: 12.5px;
+          }
+
+          .bottom-legal-links span {
+            color: var(--border-rule);
+          }
+
+          .bottom-copyright {
+            font-size: 11.5px;
+            line-height: 1.6;
+            color: var(--muted-1);
+            text-align: center;
           }
         }
 
