@@ -112,8 +112,8 @@ function drawCardCanvas(
   item: ServiceCardData,
   isMob = false
 ) {
-  const W = isMob ? 1000 : 1300;
-  const H = isMob ? 1350 : 975;
+  const W = isMob ? 1000 : 1200;
+  const H = isMob ? 1350 : 760;
 
   // Clear background
   ctx.clearRect(0, 0, W, H);
@@ -121,7 +121,7 @@ function drawCardCanvas(
   // 1. Card Background: Pure Crisp White with subtle luxury warmth (No blue bg)
   ctx.fillStyle = '#ffffff';
   ctx.beginPath();
-  ctx.roundRect(0, 0, W, H, isMob ? 38 : 30);
+  ctx.roundRect(0, 0, W, H, isMob ? 38 : 24);
   ctx.fill();
 
   const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
@@ -130,10 +130,10 @@ function drawCardCanvas(
   bgGrad.addColorStop(1, '#fcfaf2');
   ctx.fillStyle = bgGrad;
   ctx.beginPath();
-  ctx.roundRect(0, 0, W, H, isMob ? 38 : 30);
+  ctx.roundRect(0, 0, W, H, isMob ? 38 : 24);
   ctx.fill();
 
-  const pad = isMob ? 28 : 28;
+  const pad = isMob ? 28 : 20;
   const imgX = pad;
   const imgY = pad;
   const imgW = W - pad * 2;
@@ -143,15 +143,15 @@ function drawCardCanvas(
   if (img && img.naturalWidth && img.naturalHeight) {
     const natAspect = img.naturalWidth / img.naturalHeight;
     const naturalH = Math.round(imgW / natAspect);
-    imgH = clamp(naturalH, isMob ? 340 : 360, isMob ? 500 : 520);
+    imgH = clamp(naturalH, isMob ? 340 : 280, isMob ? 500 : 360);
   } else {
-    imgH = isMob ? 420 : 460;
+    imgH = isMob ? 420 : 330;
   }
 
   // 2. Clean, unobstructed Image Frame Container (NO text/badge overlays on image!)
   ctx.save();
   ctx.beginPath();
-  ctx.roundRect(imgX, imgY, imgW, imgH, isMob ? 24 : 20);
+  ctx.roundRect(imgX, imgY, imgW, imgH, isMob ? 24 : 16);
   ctx.clip();
 
   // Neutral subtle base behind image
@@ -178,9 +178,9 @@ function drawCardCanvas(
   // Thin, clean border around image frame
   ctx.save();
   ctx.strokeStyle = 'rgba(15, 23, 42, 0.09)';
-  ctx.lineWidth = 2;
+  ctx.lineWidth = 1.5;
   ctx.beginPath();
-  ctx.roundRect(imgX, imgY, imgW, imgH, isMob ? 24 : 20);
+  ctx.roundRect(imgX, imgY, imgW, imgH, isMob ? 24 : 16);
   ctx.stroke();
   ctx.restore();
 
@@ -339,56 +339,100 @@ function drawCardCanvas(
     ctx.restore();
     // Button removed as requested
   } else {
-    // 3. DESKTOP CONTENT (Airy, spacious, NO button)
-    let curY = imgY + imgH + 32;
+    // 3. DESKTOP CONTENT (Refined, proportional, high clarity)
+    let curY = imgY + imgH + 24;
 
     ctx.save();
-    // Category & Metric Pill
+    // A. Category & Metric Pill
     const catText = '●  ' + item.category;
-    ctx.font = '700 17px "IBM Plex Mono", monospace';
-    const catW = ctx.measureText(catText).width + 30;
+    ctx.font = '700 15px "IBM Plex Mono", monospace';
+    const catW = ctx.measureText(catText).width + 26;
     ctx.fillStyle = 'rgba(253, 208, 11, 0.2)';
     ctx.strokeStyle = 'rgba(245, 158, 11, 0.55)';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.roundRect(pad + 14, curY, catW, 38, 19);
+    ctx.roundRect(pad + 12, curY, catW, 32, 16);
     ctx.fill();
     ctx.stroke();
 
     ctx.fillStyle = '#b45309';
-    ctx.fillText(catText, pad + 29, curY + 25);
+    ctx.fillText(catText, pad + 25, curY + 21);
 
     const metricText = item.metric;
-    const metricW = ctx.measureText(metricText).width + 30;
-    const metricX = pad + 14 + catW + 14;
+    const metricW = ctx.measureText(metricText).width + 26;
+    const metricX = pad + 12 + catW + 12;
     ctx.fillStyle = 'rgba(15, 23, 42, 0.05)';
     ctx.strokeStyle = 'rgba(15, 23, 42, 0.12)';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.roundRect(metricX, curY, metricW, 38, 19);
+    ctx.roundRect(metricX, curY, metricW, 32, 16);
     ctx.fill();
     ctx.stroke();
 
     ctx.fillStyle = '#0f172a';
-    ctx.fillText(metricText, metricX + 15, curY + 25);
+    ctx.fillText(metricText, metricX + 13, curY + 21);
 
-    curY += 38 + 24;
+    curY += 32 + 18;
 
+    // B. Title
     ctx.fillStyle = '#0f172a';
-    ctx.font = '800 52px "Inter Tight", sans-serif';
-    ctx.fillText(item.title, pad + 14, curY + 48);
-    curY += 48 + 24;
+    ctx.font = '800 40px "Inter Tight", sans-serif';
+    ctx.fillText(item.title, pad + 12, curY + 36);
+    curY += 36 + 14;
 
+    // C. Subtitle
     ctx.fillStyle = '#b45309';
-    ctx.font = '700 28px "Inter Tight", sans-serif';
-    const cleanSubtitle = item.subtitle.length > 60 ? item.subtitle.slice(0, 60) + '...' : item.subtitle;
-    ctx.fillText(cleanSubtitle, pad + 14, curY + 26);
-    curY += 26 + 24;
+    ctx.font = '700 22px "Inter Tight", sans-serif';
+    const cleanSubtitle = item.subtitle.length > 56 ? item.subtitle.slice(0, 56) + '...' : item.subtitle;
+    ctx.fillText(cleanSubtitle, pad + 12, curY + 20);
+    curY += 20 + 12;
 
+    // D. Description
     ctx.fillStyle = '#475569';
-    ctx.font = '500 25px "Inter Tight", sans-serif';
-    const cleanDesc = item.desc.length > 82 ? item.desc.slice(0, 82) + '...' : item.desc;
-    ctx.fillText(cleanDesc, pad + 14, curY + 24);
+    ctx.font = '500 19px "Inter Tight", sans-serif';
+    const cleanDesc = item.desc.length > 88 ? item.desc.slice(0, 88) + '...' : item.desc;
+    ctx.fillText(cleanDesc, pad + 12, curY + 18);
+    curY += 18 + 20;
+
+    // E. Deliverable Badges / Chips
+    if (item.deliverables && item.deliverables.length > 0) {
+      const chipH = 34;
+      const d1 = item.deliverables[0];
+      const d1Text = '✓  ' + (d1.length > 30 ? d1.slice(0, 30) + '...' : d1);
+      ctx.font = '700 16px "Inter Tight", sans-serif';
+      const d1Width = ctx.measureText(d1Text).width + 34;
+
+      ctx.fillStyle = 'rgba(254, 243, 199, 0.95)';
+      ctx.strokeStyle = 'rgba(245, 158, 11, 0.65)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.roundRect(pad + 12, curY, d1Width, chipH, 17);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#78350f';
+      ctx.fillText(d1Text, pad + 29, curY + 23);
+
+      if (item.deliverables.length > 1) {
+        const d2 = item.deliverables[1];
+        const d2Text = '✓  ' + (d2.length > 30 ? d2.slice(0, 30) + '...' : d2);
+        const d2Width = ctx.measureText(d2Text).width + 34;
+        const d2X = pad + 12 + d1Width + 12;
+
+        if (d2X + d2Width < W - pad - 12) {
+          ctx.fillStyle = 'rgba(254, 243, 199, 0.95)';
+          ctx.strokeStyle = 'rgba(245, 158, 11, 0.65)';
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.roundRect(d2X, curY, d2Width, chipH, 17);
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.fillStyle = '#78350f';
+          ctx.fillText(d2Text, d2X + 17, curY + 23);
+        }
+      }
+    }
 
     ctx.restore();
     // Button removed as requested
@@ -399,7 +443,7 @@ function drawCardCanvas(
   ctx.strokeStyle = 'rgba(234, 179, 8, 0.75)';
   ctx.lineWidth = 3.5;
   ctx.beginPath();
-  ctx.roundRect(2, 2, W - 4, H - 4, isMob ? 38 : 30);
+  ctx.roundRect(2, 2, W - 4, H - 4, isMob ? 38 : 24);
   ctx.stroke();
   ctx.restore();
 }
@@ -557,8 +601,8 @@ void main(){
     const isInitialMob = typeof window !== 'undefined' && window.innerWidth < 768;
     const cards: CardObj[] = SERVICES_DATA.map((item, i) => {
       const cardCanvas = document.createElement('canvas');
-      cardCanvas.width = isInitialMob ? 1000 : 1300;
-      cardCanvas.height = isInitialMob ? 1350 : 975;
+      cardCanvas.width = isInitialMob ? 1000 : 1200;
+      cardCanvas.height = isInitialMob ? 1350 : 760;
       const ctx = cardCanvas.getContext('2d')!;
 
       const tex = new THREE.CanvasTexture(cardCanvas);
@@ -568,7 +612,7 @@ void main(){
       tex.generateMipmaps = false;
 
       const geo = new THREE.PlaneGeometry(1, 1, NX, NY);
-      const initialAspect = isInitialMob ? (1000 / 1350) : (1300 / 975);
+      const initialAspect = isInitialMob ? (1000 / 1350) : (1200 / 760);
       const mat = new THREE.ShaderMaterial({
         vertexShader: vs,
         fragmentShader: fs,
@@ -635,8 +679,8 @@ void main(){
 
       if (prevMob !== isMobile) {
         cards.forEach((c) => {
-          const targetW = isMobile ? 1000 : 1300;
-          const targetH = isMobile ? 1350 : 975;
+          const targetW = isMobile ? 1000 : 1200;
+          const targetH = isMobile ? 1350 : 760;
           c.mat.uniforms.aspect.value = targetW / targetH;
           if (c.tex.image.width !== targetW || c.tex.image.height !== targetH) {
             c.tex.image.width = targetW;
@@ -663,8 +707,8 @@ void main(){
     const vp = new THREE.Vector3();
 
     function poseRibbon(c: CardObj, head: number) {
-      const cardW = isMobile ? 1.55 : 2.12;
-      const cardH = isMobile ? 2.08 : 1.59;
+      const cardW = isMobile ? 1.55 : 2.0;
+      const cardH = isMobile ? 2.08 : (2.0 / (1200 / 760));
       const step = cardW + GAP;
       const pos = c.geo.attributes.position;
       const centre = head - c.i * step;
@@ -700,9 +744,10 @@ void main(){
           cardWidthPx = cardHeightPx / 1.35;
         }
       } else {
-        // Desktop: Increased card size for maximum impact!
-        cardWidthPx = Math.min(W * 0.44, 620);
-        cardHeightPx = cardWidthPx / (4 / 3);
+        // Desktop: Refined, compact card size (Reduced from oversized 620px!)
+        // Sized comfortably so neighbor cards peek nicely with elegant perspective
+        cardWidthPx = Math.min(W * 0.33, 450);
+        cardHeightPx = cardWidthPx / (1200 / 760);
       }
 
       const cw = (cardWidthPx / W) * vw;
