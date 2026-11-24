@@ -3,6 +3,7 @@ import {
   Sparkles,
   TrendingUp,
   ArrowUpRight,
+  CheckCircle2,
 } from 'lucide-react';
 
 interface ProcessProps {
@@ -16,7 +17,9 @@ interface StepItem {
   desc: string;
   imageSrc: string;
   badgeColor: string;
-  elevateY: number; // Vertical offset for ascending staircase growth
+  cardHeight: number; // Increasing height in px: 280, 315, 350, 385, 420
+  imageHeight: number; // Increasing image height in px: 110, 125, 140, 155, 175
+  deliverables?: string[];
 }
 
 const STEPS_DATA: StepItem[] = [
@@ -24,10 +27,11 @@ const STEPS_DATA: StepItem[] = [
     stepNum: '01',
     stepTag: 'AUDIT',
     title: 'Discovery & Audit',
-    desc: 'Deep-dive digital systems audit, customer persona mapping & ROI benchmark roadmap.',
+    desc: 'Deep-dive digital systems audit, persona mapping & ROI benchmark roadmap.',
     imageSrc: '/08bb2c3d-c44b-4a7c-a619-827e21876041.png',
     badgeColor: '#3d6ab3', // Grow Big Blue
-    elevateY: 80, // Baseline level
+    cardHeight: 280, // Step 1: On the bottom ground baseline
+    imageHeight: 110,
   },
   {
     stepNum: '02',
@@ -36,7 +40,9 @@ const STEPS_DATA: StepItem[] = [
     desc: 'Scalable cloud infrastructure, Figma UX prototypes & conversion funnel blueprints.',
     imageSrc: '/9f493760-7736-405f-91a5-9e820c7437bd.png',
     badgeColor: '#0ea5e9', // Sky Blue
-    elevateY: 60, // Step 2 (+20px higher)
+    cardHeight: 315, // Step 2: Increases height (+35px)
+    imageHeight: 125,
+    deliverables: ['Figma UI/UX Prototype'],
   },
   {
     stepNum: '03',
@@ -45,7 +51,9 @@ const STEPS_DATA: StepItem[] = [
     desc: 'High-velocity web & mobile codebase, database schemas & autonomous AI engines.',
     imageSrc: '/fd555308-e374-46dc-b0dd-845fb535289d.png',
     badgeColor: '#8b5cf6', // Violet
-    elevateY: 40, // Step 3 (+20px higher)
+    cardHeight: 350, // Step 3: Increases height (+35px)
+    imageHeight: 140,
+    deliverables: ['React & Mobile App', 'AI Automations'],
   },
   {
     stepNum: '04',
@@ -54,7 +62,9 @@ const STEPS_DATA: StepItem[] = [
     desc: 'Zero-downtime cloud deploy on AWS/Azure with speed & enterprise security protocols.',
     imageSrc: '/27041215-fa1b-4b51-9458-5ef3071e27eb.png',
     badgeColor: '#eab308', // Amber Gold
-    elevateY: 20, // Step 4 (+20px higher)
+    cardHeight: 385, // Step 4: Increases height (+35px)
+    imageHeight: 155,
+    deliverables: ['Cloud Deployment', 'Core Web Vitals'],
   },
   {
     stepNum: '05',
@@ -63,7 +73,9 @@ const STEPS_DATA: StepItem[] = [
     desc: 'Full-funnel conversion rate optimization, viral paid ads & exponential revenue scale.',
     imageSrc: '/61c21095-46e4-4d45-b98c-8325f99d614c.png',
     badgeColor: '#10b981', // Emerald Peak
-    elevateY: 0, // Summit (+20px higher - Highest peak!)
+    cardHeight: 420, // Step 5: Highest peak summit (+35px)
+    imageHeight: 175,
+    deliverables: ['Conversion Optimization', 'Revenue Scaling'],
   },
 ];
 
@@ -124,27 +136,19 @@ export const Process: React.FC<ProcessProps> = ({ onOpenBooking }) => {
         </div>
 
         {/* ====================================================================
-            ASCENDING GROWTH STAIRCASE: All 5 Clean Cards in Viewport
-            (Each card is physically stepped LITTLE ABOVE the previous card,
-             featuring high-impact 3D imagery, minimal content & growth reveal)
+            ASCENDING GROWTH STAIRCASE (Aligned to the SAME BOTTOM Ground)
+            Step 1 starts on the bottom ground, and each step increases in height:
+            280px -> 315px -> 350px -> 385px -> 420px (Peak Summit at Top Right)
             ==================================================================== */}
         <div className="w-full">
-          {/* 5-Column Grid on Desktop, Smooth Snap Row on Mobile */}
-          <div className="flex lg:grid lg:grid-cols-5 items-end gap-3.5 sm:gap-4 lg:gap-4.5 overflow-x-auto lg:overflow-visible pb-4 pt-2 scrollbar-none snap-x snap-mandatory">
+          {/* 5-Column Grid with items-end: All cards rest on the SAME bottom line */}
+          <div className="flex lg:grid lg:grid-cols-5 items-end gap-3.5 sm:gap-4 lg:gap-4.5 overflow-x-auto lg:overflow-visible pb-2 pt-4 scrollbar-none snap-x snap-mandatory min-h-[440px]">
             {STEPS_DATA.map((step, idx) => {
               const isHovered = hoveredIdx === idx;
               const isSummit = idx === 4;
 
-              // Staggered Growth Reveal Delay
-              const staggerDelay = idx * 100; // 0ms, 100ms, 200ms, 300ms, 400ms
-
-              // Physical Staircase Lift (Desktop):
-              // Step 1: translate-y-[80px]
-              // Step 2: translate-y-[60px]
-              // Step 3: translate-y-[40px]
-              // Step 4: translate-y-[20px]
-              // Step 5: translate-y-[0px]
-              const translateYDesktop = isInView ? -step.elevateY : 40;
+              // Staggered Growth Reveal Delay: 0ms, 100ms, 200ms, 300ms, 400ms
+              const staggerDelay = idx * 100;
 
               return (
                 <div
@@ -153,25 +157,32 @@ export const Process: React.FC<ProcessProps> = ({ onOpenBooking }) => {
                   onMouseLeave={() => setHoveredIdx(null)}
                   className="snap-center shrink-0 w-[250px] sm:w-[270px] lg:w-auto flex flex-col justify-end group transition-all duration-300"
                   style={{
+                    height: `${step.cardHeight}px`,
+                    transformOrigin: 'bottom',
                     opacity: isInView ? 1 : 0,
-                    transform: `translateY(${translateYDesktop}px)`,
+                    transform: isInView
+                      ? 'scaleY(1) translateY(0)'
+                      : 'scaleY(0.75) translateY(20px)',
                     transition: `opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1) ${staggerDelay}ms, transform 0.65s cubic-bezier(0.16, 1, 0.3, 1) ${staggerDelay}ms`,
                   }}
                 >
-                  {/* Clean Growth Card */}
+                  {/* Clean Growth Card (Shares the SAME bottom line with all cards) */}
                   <div
-                    className={`relative overflow-hidden flex flex-col justify-between rounded-2xl bg-white border transition-all duration-300 cursor-pointer ${
+                    className={`relative w-full h-full overflow-hidden flex flex-col justify-between rounded-2xl bg-white border transition-all duration-300 cursor-pointer ${
                       isHovered
                         ? '-translate-y-2 shadow-xl border-slate-300'
                         : 'shadow-xs border-slate-200/90 hover:shadow-md'
-                    } ${isSummit ? 'ring-2 ring-[#10b981]/40' : ''}`}
+                    } ${isSummit ? 'ring-2 ring-[#10b981]/40 shadow-emerald-500/10' : ''}`}
                   >
-                    {/* Top Image Preview Banner */}
-                    <div className="relative w-full h-[140px] sm:h-[148px] bg-slate-100 overflow-hidden rounded-t-2xl">
+                    {/* Top Image Banner (Scales with card height: 110px -> 175px) */}
+                    <div
+                      className="relative w-full bg-slate-100 overflow-hidden rounded-t-2xl shrink-0"
+                      style={{ height: `${step.imageHeight}px` }}
+                    >
                       <img
                         src={step.imageSrc}
                         alt={step.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-108"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-106"
                         loading="lazy"
                       />
 
@@ -206,13 +217,28 @@ export const Process: React.FC<ProcessProps> = ({ onOpenBooking }) => {
                         </h3>
 
                         {/* Short 1-Line Description */}
-                        <p className="text-[11.5px] text-slate-500 leading-relaxed mb-3 line-clamp-2">
+                        <p className="text-[11.5px] text-slate-500 leading-relaxed mb-2 line-clamp-2">
                           {step.desc}
                         </p>
+
+                        {/* Key Deliverable Pills (Visible as height increases) */}
+                        {step.deliverables && (
+                          <div className="flex flex-wrap gap-1 mt-1 mb-2">
+                            {step.deliverables.map((d, dIdx) => (
+                              <span
+                                key={dIdx}
+                                className="text-[10px] font-medium text-slate-700 bg-slate-50 px-2 py-0.5 rounded-md border border-slate-100 inline-flex items-center gap-1"
+                              >
+                                <CheckCircle2 size={10} style={{ color: step.badgeColor }} />
+                                <span>{d}</span>
+                              </span>
+                            ))}
+                          </div>
+                        )}
                       </div>
 
                       {/* Integrated Stepped Growth Progress Bar */}
-                      <div className="pt-2.5 border-t border-slate-100 flex items-center justify-between text-[10.5px]">
+                      <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[10.5px] mt-auto">
                         <span className="font-mono text-slate-400 font-semibold">
                           Step 0{idx + 1}/05
                         </span>
@@ -250,16 +276,16 @@ export const Process: React.FC<ProcessProps> = ({ onOpenBooking }) => {
           </div>
 
           {/* ====================================================================
-              SUBTLE BASELINE PROGRESSION TRACK & BOTTOM CTA
+              SHARED BOTTOM GROUND LINE: All cards anchor to this same bottom!
               ==================================================================== */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-slate-200/80 text-xs text-slate-500 mt-2">
+          <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t-2 border-slate-200 text-xs text-slate-500 mt-0">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#3d6ab3]" />
-              <span className="font-medium text-slate-600">Phase 01 Baseline</span>
-              <span className="font-mono text-slate-300">─────▶</span>
+              <span className="w-2.5 h-2.5 rounded-full bg-[#3d6ab3]" />
+              <span className="font-bold text-slate-700">Step 01 Ground Baseline</span>
+              <span className="font-mono text-slate-300">────────────────────────▶</span>
               <span className="flex items-center gap-1 font-bold text-[#10b981]">
-                <TrendingUp size={13} />
-                Phase 05 Scale Summit
+                <TrendingUp size={14} />
+                Step 05 Peak Elevation
               </span>
             </div>
 
