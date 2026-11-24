@@ -1,5 +1,10 @@
-import React from 'react';
-import { Sparkles, ArrowRight, CheckCircle2 } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  Sparkles,
+  CheckCircle2,
+  TrendingUp,
+  ArrowUpRight,
+} from 'lucide-react';
 
 interface ProcessProps {
   onOpenBooking?: () => void;
@@ -7,353 +12,312 @@ interface ProcessProps {
 
 interface StepItem {
   stepNum: string;
+  stepLevel: number;
+  blockLabel: string;
+  badge: string;
   title: string;
-  subtitle: string;
   desc: string;
   deliverables: string[];
-  cardBg: string;
-  borderColor: string;
-  numBg: string;
+  accentColor: string;
+  accentBg: string;
+  pedestalHeight: number; // Height in px for the ascending growth step
 }
 
 const STEPS_DATA: StepItem[] = [
   {
     stepNum: '01',
-    title: 'Subscribe & Discovery Audit',
-    subtitle: 'Aligning Business Vision, Audience & Market Dynamics',
-    desc: 'We analyze your current digital landscape, identify operational friction, profile your target customer personas, and set clear ROI targets.',
-    deliverables: ['Digital Architecture Audit', 'User Persona Mapping', 'Competitor Benchmark'],
-    cardBg: '#f7fee7', // Light Lime Tint
-    borderColor: 'rgba(132, 204, 22, 0.4)',
-    numBg: '#84cc16',
+    stepLevel: 1,
+    blockLabel: 'STEP',
+    badge: 'Phase 01',
+    title: 'Discovery & Audit',
+    desc: 'Audit digital systems, map user personas & establish ROI benchmarks.',
+    deliverables: ['Architecture Audit', 'Persona Mapping'],
+    accentColor: '#3d6ab3', // Grow Big Blue
+    accentBg: '#eff6ff',
+    pedestalHeight: 32,
   },
   {
     stepNum: '02',
-    title: "Let's Discuss & Architecture Plan",
-    subtitle: 'Designing Scalable Tech & Conversion Systems',
-    desc: 'We map out custom software architecture, interactive Figma UI/UX wireframes, database schemas, and multi-channel funnel blueprints.',
-    deliverables: ['Interactive Figma Wireframes', 'Cloud Architecture Blueprint', 'Funnel Architecture'],
-    cardBg: '#f0f9ff', // Light Sky Blue Tint
-    borderColor: 'rgba(56, 189, 248, 0.4)',
-    numBg: '#0ea5e9',
+    stepLevel: 2,
+    blockLabel: 'BY',
+    badge: 'Phase 02',
+    title: 'Architecture Plan',
+    desc: 'Scalable tech architecture, interactive wireframes & funnel blueprints.',
+    deliverables: ['Figma UI/UX', 'Funnel Blueprint'],
+    accentColor: '#0ea5e9', // Sky Blue
+    accentBg: '#f0f9ff',
+    pedestalHeight: 56,
   },
   {
     stepNum: '03',
-    title: 'Agile Sprint Engineering & AI Integration',
-    subtitle: 'High-Velocity Code, Responsive UI & Autonomous AI',
-    desc: 'Our engineering squad builds your custom web platform, mobile app, CRM/ERP integration, or AI automation engine using modern frameworks.',
-    deliverables: ['React & Mobile Codebase', 'Autonomous AI Chatbots', 'ERP & Payment Sync'],
-    cardBg: '#faf5ff', // Light Purple Tint
-    borderColor: 'rgba(192, 132, 252, 0.4)',
-    numBg: '#a855f7',
+    stepLevel: 3,
+    blockLabel: 'STEP',
+    badge: 'Phase 03',
+    title: 'Sprint Engineering',
+    desc: 'High-velocity codebase, responsive UI & autonomous AI integrations.',
+    deliverables: ['React & Mobile App', 'AI Automations'],
+    accentColor: '#8b5cf6', // Violet
+    accentBg: '#f5f3ff',
+    pedestalHeight: 80,
   },
   {
     stepNum: '04',
-    title: 'Zero-Downtime Go-Live Launch',
-    subtitle: 'Cloud Infrastructure & High-Availability Go-Live',
-    desc: 'We execute zero-downtime cloud deployments on AWS/Azure, conduct stress tests, verify security protocols, and launch your platform.',
-    deliverables: ['AWS / Azure Deployment', 'Core Web Vitals Optimization', '24/7 Security Setup'],
-    cardBg: '#fffbeb', // Light Amber Tint
-    borderColor: 'rgba(251, 191, 36, 0.4)',
-    numBg: '#eab308',
+    stepLevel: 4,
+    blockLabel: 'SCALE',
+    badge: 'Phase 04',
+    title: 'Go-Live Launch',
+    desc: 'Zero-downtime cloud deployment on AWS/Azure with speed & security tests.',
+    deliverables: ['Cloud Deploy', 'Core Web Vitals'],
+    accentColor: '#eab308', // Amber Gold
+    accentBg: '#fefce8',
+    pedestalHeight: 104,
   },
   {
     stepNum: '05',
-    title: 'And Booom! Project is Ready & Scaling!',
-    subtitle: 'Maximizing Conversions, Performance & Growth',
-    desc: 'Post-launch, we continuously monitor user analytics, optimize ad campaigns, refine conversion funnels, and scale infrastructure as demand grows.',
-    deliverables: ['A/B Conversion Testing', 'Paid Performance Scaling', 'Monthly Executive Reports'],
-    cardBg: '#ecfdf5', // Light Emerald Tint
-    borderColor: 'rgba(16, 185, 129, 0.4)',
-    numBg: '#10b981',
+    stepLevel: 5,
+    blockLabel: 'GROW BIG',
+    badge: 'Phase 05',
+    title: 'GROW BIG & Scale',
+    desc: 'Conversion optimization, paid ads scaling & continuous revenue expansion.',
+    deliverables: ['A/B Testing', 'Revenue Scaling'],
+    accentColor: '#10b981', // Emerald Peak
+    accentBg: '#ecfdf5',
+    pedestalHeight: 130,
   },
 ];
 
 export const Process: React.FC<ProcessProps> = ({ onOpenBooking }) => {
+  const [isInView, setIsInView] = useState(false);
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+        }
+      },
+      { threshold: 0.15 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section
+      ref={sectionRef}
       id="process"
-      style={{
-        background: '#f8fafc', // Soft Slate Grey Section Background
-        padding: '6.5rem 0 7.5rem 0',
-        borderBottom: '1px solid rgba(15, 23, 42, 0.08)',
-        position: 'relative',
-      }}
+      className="relative w-full overflow-hidden bg-[#f8fafc] py-14 sm:py-16 md:py-20 border-b border-slate-200/70"
     >
-      {/* Background Ambient Glows */}
+      {/* Background Soft Glow */}
       <div
-        style={{
-          position: 'absolute',
-          top: '15%',
-          left: '-5%',
-          width: '500px',
-          height: '500px',
-          background: 'radial-gradient(circle, rgba(132, 204, 22, 0.16) 0%, transparent 70%)',
-          filter: 'blur(80px)',
-          pointerEvents: 'none',
-        }}
+        className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-gradient-to-r from-blue-100/30 via-yellow-100/20 to-emerald-100/30 rounded-full blur-3xl pointer-events-none"
+        aria-hidden="true"
       />
 
-      {/* Main Container Aligned Parallel to Navbar */}
-      <div
-        style={{
-          width: '100%',
-          maxWidth: '1400px',
-          margin: '0 auto',
-          padding: '0 2rem',
-          position: 'relative',
-          zIndex: 2,
-        }}
-      >
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1.15fr',
-            gap: '4rem',
-            alignItems: 'start',
-          }}
-          className="sticky-process-grid"
-        >
-          {/* LEFT COLUMN: STICKY CONTENT */}
-          <div
-            style={{
-              position: 'sticky',
-              top: '110px',
-              alignSelf: 'flex-start',
-              zIndex: 10,
-            }}
-            className="sticky-left-container reveal-fade-up"
-          >
-            {/* Tagline */}
-            <div style={{ marginBottom: '1.25rem' }}>
-              <span
-                style={{
-                  fontSize: '0.85rem',
-                  fontWeight: 900,
-                  background: 'rgba(253, 208, 11, 0.2)',
-                  color: '#0f172a',
-                  padding: '0.45rem 1.25rem',
-                  borderRadius: 'var(--radius-full)',
-                  border: '1px solid rgba(253, 208, 11, 0.5)',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.15em',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                }}
-              >
-                <Sparkles size={14} color="#0f172a" /> GROW BIG METHODOLOGY
+      <div className="relative z-10 w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+        {/* ====================================================================
+            SMALL REFINED SECTION HEADING (Clean, compact, understated)
+            ==================================================================== */}
+        <div className="w-full flex flex-col items-center text-center mb-8 sm:mb-10 md:mb-12">
+          {/* Small Category Pill */}
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/70 text-[10.5px] font-mono font-bold tracking-widest text-[#1e3a8a] uppercase mb-2 shadow-2xs">
+            <Sparkles size={11} className="text-[#FDD00B]" />
+            <span>GROW BIG METHODOLOGY</span>
+          </div>
+
+          {/* Small Heading */}
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">
+            Step-by-Step Growth Architecture
+          </h2>
+
+          {/* Short 1-Line Subtitle */}
+          <p className="text-xs sm:text-sm text-slate-500 max-w-md mt-1">
+            A systematic 5-phase engineering process engineered for predictability and scale.
+          </p>
+        </div>
+
+        {/* ====================================================================
+            ASCENDING GROWTH STAIRCASE: All 5 Cards In Viewport
+            (Each card is elevated little above the previous card,
+             with a real sequential growth reveal animation on scroll)
+            ==================================================================== */}
+        <div className="w-full">
+          {/* 5-Column Grid on Desktop, Smooth Snap on Mobile */}
+          <div className="flex lg:grid lg:grid-cols-5 items-end gap-3 sm:gap-3.5 lg:gap-4 overflow-x-auto lg:overflow-visible pb-4 pt-2 scrollbar-none snap-x snap-mandatory">
+            {STEPS_DATA.map((step, idx) => {
+              const isHovered = hoveredIdx === idx;
+              const isPeak = idx === 4;
+
+              // Staggered Growth Reveal Delay
+              const staggerDelay = idx * 110; // 0ms, 110ms, 220ms, 330ms, 440ms
+
+              return (
+                <div
+                  key={step.stepNum}
+                  onMouseEnter={() => setHoveredIdx(idx)}
+                  onMouseLeave={() => setHoveredIdx(null)}
+                  className="snap-center shrink-0 w-[240px] sm:w-[260px] lg:w-auto flex flex-col justify-end group transition-all duration-300"
+                  style={{
+                    opacity: isInView ? 1 : 0,
+                    transform: isInView
+                      ? 'translateY(0) scale(1)'
+                      : 'translateY(50px) scale(0.93)',
+                    transition: `opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1) ${staggerDelay}ms, transform 0.65s cubic-bezier(0.16, 1, 0.3, 1) ${staggerDelay}ms`,
+                  }}
+                >
+                  {/* The Card Component */}
+                  <div
+                    className={`relative overflow-hidden flex flex-col justify-between rounded-2xl p-4 sm:p-4.5 bg-white border transition-all duration-300 min-h-[220px] sm:min-h-[235px] ${
+                      isHovered
+                        ? '-translate-y-1.5 shadow-xl border-slate-300'
+                        : 'shadow-xs border-slate-200/80 hover:shadow-md'
+                    } ${isPeak ? 'ring-2 ring-[#10b981]/30' : ''}`}
+                  >
+                    {/* Top Level Bar */}
+                    <div>
+                      <div className="flex items-center justify-between mb-2.5 pb-2 border-b border-slate-100">
+                        <div className="flex items-center gap-1.5">
+                          <span
+                            className="w-6 h-6 rounded-md flex items-center justify-center text-[11px] font-mono font-black text-white shadow-xs"
+                            style={{ background: step.accentColor }}
+                          >
+                            {step.stepNum}
+                          </span>
+                          <span
+                            className="text-[10px] font-bold uppercase tracking-wider font-mono"
+                            style={{ color: step.accentColor }}
+                          >
+                            {step.badge}
+                          </span>
+                        </div>
+                        <span className="text-[9.5px] font-mono font-semibold text-slate-400 bg-slate-50 px-1.5 py-0.5 rounded border border-slate-100">
+                          Lvl 0{step.stepLevel}
+                        </span>
+                      </div>
+
+                      {/* Card Title */}
+                      <h3 className="text-sm sm:text-[14.5px] font-bold text-slate-900 leading-snug mb-1.5">
+                        {step.title}
+                      </h3>
+
+                      {/* Concise Description */}
+                      <p className="text-[11.5px] text-slate-500 leading-relaxed mb-2.5">
+                        {step.desc}
+                      </p>
+                    </div>
+
+                    {/* Concise 2-Pill Deliverables */}
+                    <div className="pt-2 border-t border-slate-100 flex flex-col gap-1 mt-auto">
+                      {step.deliverables.map((item, dIdx) => (
+                        <div
+                          key={dIdx}
+                          className="text-[10.5px] font-medium text-slate-700 bg-slate-50/80 px-2 py-0.5 rounded-md border border-slate-100 flex items-center gap-1.5"
+                        >
+                          <CheckCircle2
+                            size={10}
+                            style={{ color: step.accentColor }}
+                            className="shrink-0"
+                          />
+                          <span className="truncate">{item}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Top Accent Stripe */}
+                    <div
+                      className="absolute top-0 left-0 right-0 h-1 transition-all"
+                      style={{
+                        background: isPeak
+                          ? 'linear-gradient(90deg, #FDD00B 0%, #3d6ab3 50%, #10b981 100%)'
+                          : step.accentColor,
+                      }}
+                    />
+                  </div>
+
+                  {/* ================================================================
+                      STEPPED GROWTH PEDESTAL (Physically lifts each card LITTLE ABOVE)
+                      Real Growth Scale-Up Animation
+                      ================================================================ */}
+                  <div
+                    className="w-full rounded-xl flex flex-col items-center justify-center text-center mt-2 border transition-all duration-500 shadow-2xs overflow-hidden"
+                    style={{
+                      height: `${step.pedestalHeight}px`,
+                      background: isPeak
+                        ? 'linear-gradient(135deg, #FDD00B 0%, #3d6ab3 50%, #10b981 100%)'
+                        : `linear-gradient(180deg, ${step.accentBg} 0%, white 100%)`,
+                      borderColor: isPeak ? 'rgba(16, 185, 129, 0.4)' : 'rgba(226, 232, 240, 0.9)',
+                      transformOrigin: 'bottom',
+                      transform: isInView ? 'scaleY(1)' : 'scaleY(0)',
+                      transition: `transform 0.65s cubic-bezier(0.16, 1, 0.3, 1) ${
+                        staggerDelay + 50
+                      }ms`,
+                    }}
+                  >
+                    <span
+                      className={`text-[11px] font-black uppercase tracking-wider font-mono ${
+                        isPeak ? 'text-white drop-shadow-sm' : 'text-slate-800'
+                      }`}
+                    >
+                      {step.blockLabel}
+                    </span>
+                    <span
+                      className={`text-[8.5px] font-bold font-mono mt-0.5 ${
+                        isPeak ? 'text-white/90' : 'text-slate-400'
+                      }`}
+                    >
+                      +{step.pedestalHeight}px Growth
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* ====================================================================
+              SUBTLE BASELINE PROGRESSION TRACK & BOTTOM CTA
+              ==================================================================== */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-slate-200/80 text-xs text-slate-500 mt-2">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#3d6ab3]" />
+              <span className="font-medium text-slate-600">Phase 01 Baseline</span>
+              <span className="font-mono text-slate-300">─────▶</span>
+              <span className="flex items-center gap-1 font-bold text-[#10b981]">
+                <TrendingUp size={13} />
+                Phase 05 Scale Summit
               </span>
             </div>
 
-            {/* Main Heading */}
-            <h2
-              style={{
-                fontSize: 'clamp(2.3rem, 3.5vw, 3rem)',
-                fontWeight: 900,
-                color: '#0f172a',
-                lineHeight: 1.12,
-                marginBottom: '1.5rem',
-                letterSpacing: '-0.03em',
-              }}
-            >
-              Empowering Growth & Scale in the <span style={{ color: '#FDD00B', background: '#3E6AB3', padding: '0.15rem 0.6rem', borderRadius: '8px', fontStyle: 'italic', fontSize: '0.88em', boxShadow: '0 4px 15px rgba(62, 106, 179, 0.35)', display: 'inline-block' }}>Digital World</span>
-            </h2>
-
-            {/* Description */}
-            <p
-              style={{
-                fontSize: '1.05rem',
-                color: '#475569',
-                lineHeight: 1.7,
-                marginBottom: '2.25rem',
-                maxWidth: '520px',
-              }}
-            >
-              Our 5-step engineering methodology transforms complex business goals into predictable, high-performing digital systems.
-            </p>
-
-            {/* Action CTA Button */}
             {onOpenBooking && (
               <button
+                type="button"
                 onClick={onOpenBooking}
-                className="btn btn-lime"
-                style={{
-                  padding: '1rem 2.4rem',
-                  fontSize: '1rem',
-                  fontWeight: 900,
-                  borderRadius: 'var(--radius-full)',
-                  boxShadow: '0 12px 30px rgba(253, 208, 11, 0.45)',
-                }}
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-[#1e3a8a] hover:text-[#3d6ab3] transition-colors"
               >
-                Explore the Development World <ArrowRight size={18} />
+                <span>Discuss Your Growth Architecture</span>
+                <ArrowUpRight size={13} />
               </button>
             )}
-          </div>
-
-          {/* RIGHT COLUMN: SCROLLABLE TIMELINE TRACK WITH PASTEL LIGHT OPACITY BG CARDS */}
-          <div style={{ position: 'relative' }}>
-            
-            {/* Main Brand Sunburst Gold Vertical Scroll Strip (#FDD00B) */}
-            <div
-              style={{
-                position: 'absolute',
-                top: '25px',
-                bottom: '25px',
-                left: '23px',
-                width: '10px',
-                background: 'linear-gradient(to bottom, #FDD00B 0%, #FFE866 50%, #10b981 100%)',
-                borderRadius: '5px',
-                zIndex: 1,
-                boxShadow: '0 0 20px rgba(253, 208, 11, 0.55)',
-              }}
-            />
-
-            {/* Steps Track */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
-              {STEPS_DATA.map((step) => (
-                <div
-                  key={step.stepNum}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    gap: '2rem',
-                    position: 'relative',
-                    zIndex: 2,
-                  }}
-                  className="reveal-fade-up"
-                >
-                  {/* Number Circle */}
-                  <div
-                    style={{
-                      width: '56px',
-                      height: '56px',
-                      borderRadius: '50%',
-                      background: step.numBg,
-                      color: '#ffffff',
-                      fontSize: '1.3rem',
-                      fontWeight: 900,
-                      fontFamily: 'monospace',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexShrink: 0,
-                      boxShadow: '0 8px 20px rgba(0,0,0,0.15)',
-                      border: '4px solid #f8fafc',
-                    }}
-                  >
-                    {parseInt(step.stepNum, 10)}
-                  </div>
-
-                  {/* Pastel Light Opacity Card */}
-                  <div
-                    style={{
-                      flex: 1,
-                      background: step.cardBg, // Light pastel opacity background per step
-                      borderRadius: '26px',
-                      padding: '2.25rem',
-                      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.03)',
-                      border: `1.5px solid ${step.borderColor}`,
-                      transition: 'all 0.3s ease',
-                    }}
-                    className="pastel-step-card"
-                  >
-                    <span
-                      style={{
-                        fontSize: '0.8rem',
-                        fontWeight: 900,
-                        color: step.numBg,
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.15em',
-                        display: 'inline-block',
-                        marginBottom: '0.35rem',
-                      }}
-                    >
-                      STEP {step.stepNum}
-                    </span>
-
-                    <h3
-                      style={{
-                        fontSize: '1.45rem',
-                        fontWeight: 900,
-                        color: '#0f172a',
-                        marginBottom: '0.35rem',
-                        lineHeight: 1.25,
-                      }}
-                    >
-                      {step.title}
-                    </h3>
-
-                    <div
-                      style={{
-                        fontSize: '0.875rem',
-                        fontWeight: 800,
-                        color: '#64748b',
-                        marginBottom: '1rem',
-                      }}
-                    >
-                      {step.subtitle}
-                    </div>
-
-                    <p
-                      style={{
-                        fontSize: '0.95rem',
-                        color: '#475569',
-                        lineHeight: 1.65,
-                        marginBottom: '1.25rem',
-                      }}
-                    >
-                      {step.desc}
-                    </p>
-
-                    {/* Deliverables Checklist */}
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                      {step.deliverables.map((item, dIdx) => (
-                        <span
-                          key={dIdx}
-                          style={{
-                            fontSize: '0.775rem',
-                            fontWeight: 800,
-                            background: '#ffffff',
-                            color: '#334155',
-                            padding: '0.35rem 0.85rem',
-                            borderRadius: 'var(--radius-full)',
-                            border: '1px solid rgba(15, 23, 42, 0.08)',
-                            boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '5px',
-                          }}
-                        >
-                          <CheckCircle2 size={13} color={step.numBg} /> {item}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
           </div>
         </div>
       </div>
 
       <style>{`
-        .pastel-step-card:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08) !important;
+        .scrollbar-none::-webkit-scrollbar {
+          display: none;
         }
-        @media (max-width: 992px) {
-          .sticky-process-grid {
-            grid-template-columns: 1fr !important;
-            gap: 2.5rem !important;
-          }
-          .sticky-left-container {
-            position: relative !important;
-            top: 0 !important;
-          }
+        .scrollbar-none {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
         }
       `}</style>
     </section>
   );
 };
+
+export default Process;
