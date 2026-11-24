@@ -113,7 +113,7 @@ function drawCardCanvas(
   _isMob = false
 ) {
   const W = 1000;
-  const H = 1680;
+  const H = 1140;
 
   // Clear background
   ctx.clearRect(0, 0, W, H);
@@ -121,39 +121,39 @@ function drawCardCanvas(
   // 1. Card Background: Pure Crisp White with subtle luxury warmth (No blue bg)
   ctx.fillStyle = '#ffffff';
   ctx.beginPath();
-  ctx.roundRect(0, 0, W, H, 36);
+  ctx.roundRect(0, 0, W, H, 32);
   ctx.fill();
 
   const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
   bgGrad.addColorStop(0, '#ffffff');
-  bgGrad.addColorStop(0.72, '#ffffff');
+  bgGrad.addColorStop(0.75, '#ffffff');
   bgGrad.addColorStop(1, '#fcfaf2');
   ctx.fillStyle = bgGrad;
   ctx.beginPath();
-  ctx.roundRect(0, 0, W, H, 36);
+  ctx.roundRect(0, 0, W, H, 32);
   ctx.fill();
 
-  // 2. Image Frame Container: Exactly 300 x 400 proportion (3:4 aspect ratio)
-  const pad = 42;
+  // 2. Image Frame Container: Exactly 400 x 300 proportion (4:3 aspect ratio)
+  const pad = 36;
   const imgX = pad;
   const imgY = pad;
-  const imgW = W - pad * 2; // 916px
-  // Exact 300 x 400 aspect ratio:
-  const imgH = Math.round(imgW * (400 / 300)); // 1221px
+  const imgW = W - pad * 2; // 928px
+  // Exact 400 x 300 aspect ratio:
+  const imgH = Math.round(imgW * (300 / 400)); // 696px
 
   ctx.save();
   ctx.beginPath();
-  ctx.roundRect(imgX, imgY, imgW, imgH, 24);
+  ctx.roundRect(imgX, imgY, imgW, imgH, 20);
   ctx.clip();
 
   // Neutral subtle base behind image
   ctx.fillStyle = '#f8fafc';
   ctx.fillRect(imgX, imgY, imgW, imgH);
 
-  // Draw full image in 300x400 frame maintaining natural ratio
+  // Draw full image in 400x300 frame maintaining natural ratio
   if (img && img.complete && img.naturalWidth > 0) {
     const ia = img.naturalWidth / img.naturalHeight;
-    const ta = imgW / imgH; // 300 / 400 = 0.75
+    const ta = imgW / imgH; // 400 / 300 = 1.3333
     let sx = 0, sy = 0, sw = img.naturalWidth, sh = img.naturalHeight;
     if (ia > ta) {
       sw = img.naturalHeight * ta;
@@ -170,58 +170,58 @@ function drawCardCanvas(
   // Thin, clean border around image frame
   ctx.save();
   ctx.strokeStyle = 'rgba(15, 23, 42, 0.09)';
-  ctx.lineWidth = 2;
+  ctx.lineWidth = 1.5;
   ctx.beginPath();
-  ctx.roundRect(imgX, imgY, imgW, imgH, 24);
+  ctx.roundRect(imgX, imgY, imgW, imgH, 20);
   ctx.stroke();
   ctx.restore();
 
-  // 3. CONTENT (Generous breathing room, crisp hierarchy, NO button, NO text on image)
-  let curY = imgY + imgH + 34;
-  const maxTextW = W - (pad + 16) * 2;
+  // 3. CONTENT (Clean, prominent hierarchy, NO text on image)
+  let curY = imgY + imgH + 26;
+  const maxTextW = W - (pad + 12) * 2;
 
   ctx.save();
 
   // A. Category Pill & Metric Indicator (Moved cleanly below image!)
   const catText = '●  ' + item.category;
-  ctx.font = '700 21px "IBM Plex Mono", monospace';
-  const catW = ctx.measureText(catText).width + 36;
-  const pillH = 46;
+  ctx.font = '700 18px "IBM Plex Mono", monospace';
+  const catW = ctx.measureText(catText).width + 32;
+  const pillH = 40;
 
   // Category Pill
   ctx.fillStyle = 'rgba(253, 208, 11, 0.20)';
   ctx.strokeStyle = 'rgba(245, 158, 11, 0.60)';
   ctx.lineWidth = 1.5;
   ctx.beginPath();
-  ctx.roundRect(pad + 12, curY, catW, pillH, 23);
+  ctx.roundRect(pad + 8, curY, catW, pillH, 20);
   ctx.fill();
   ctx.stroke();
 
   ctx.fillStyle = '#b45309';
-  ctx.fillText(catText, pad + 30, curY + 31);
+  ctx.fillText(catText, pad + 24, curY + 27);
 
   // Metric Pill
   const metricText = item.metric;
-  const metricW = ctx.measureText(metricText).width + 36;
-  const metricX = pad + 12 + catW + 14;
-  if (metricX + metricW <= W - pad - 12) {
+  const metricW = ctx.measureText(metricText).width + 32;
+  const metricX = pad + 8 + catW + 12;
+  if (metricX + metricW <= W - pad - 8) {
     ctx.fillStyle = 'rgba(15, 23, 42, 0.05)';
     ctx.strokeStyle = 'rgba(15, 23, 42, 0.14)';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.roundRect(metricX, curY, metricW, pillH, 23);
+    ctx.roundRect(metricX, curY, metricW, pillH, 20);
     ctx.fill();
     ctx.stroke();
 
     ctx.fillStyle = '#0f172a';
-    ctx.fillText(metricText, metricX + 18, curY + 31);
+    ctx.fillText(metricText, metricX + 16, curY + 27);
   }
 
-  curY += pillH + 28;
+  curY += pillH + 22;
 
   // B. Title (Bold, modern slate black)
   ctx.fillStyle = '#0f172a';
-  ctx.font = '800 52px "Inter Tight", sans-serif';
+  ctx.font = '800 44px "Inter Tight", sans-serif';
 
   const titleWords = item.title.split(' ');
   let titleLine1 = '';
@@ -236,79 +236,79 @@ function drawCardCanvas(
   }
 
   if (titleLine2) {
-    ctx.fillText(titleLine1, pad + 12, curY + 48);
-    curY += 48 + 14;
-    ctx.fillText(titleLine2, pad + 12, curY + 48);
-    curY += 48 + 20;
+    ctx.fillText(titleLine1, pad + 8, curY + 40);
+    curY += 40 + 10;
+    ctx.fillText(titleLine2, pad + 8, curY + 40);
+    curY += 40 + 14;
   } else {
-    ctx.fillText(titleLine1, pad + 12, curY + 48);
-    curY += 48 + 22;
+    ctx.fillText(titleLine1, pad + 8, curY + 40);
+    curY += 40 + 16;
   }
 
   // C. Subtitle (Warm Amber Gold highlight)
   ctx.fillStyle = '#b45309';
-  ctx.font = '700 30px "Inter Tight", sans-serif';
-  const cleanSubtitle = item.subtitle.length > 48 ? item.subtitle.slice(0, 48) + '...' : item.subtitle;
-  ctx.fillText(cleanSubtitle, pad + 12, curY + 28);
-  curY += 28 + 20;
+  ctx.font = '700 24px "Inter Tight", sans-serif';
+  const cleanSubtitle = item.subtitle.length > 52 ? item.subtitle.slice(0, 52) + '...' : item.subtitle;
+  ctx.fillText(cleanSubtitle, pad + 8, curY + 22);
+  curY += 22 + 14;
 
   // D. Description (Crisp, comfortable reading size)
   ctx.fillStyle = '#475569';
-  ctx.font = '500 25px "Inter Tight", sans-serif';
+  ctx.font = '500 21px "Inter Tight", sans-serif';
   const words = item.desc.split(' ');
   let line1 = '', line2 = '';
   for (const w of words) {
-    if ((line1 + ' ' + w).length <= 42) {
+    if ((line1 + ' ' + w).length <= 48) {
       line1 += (line1 ? ' ' : '') + w;
-    } else if ((line2 + ' ' + w).length <= 42) {
+    } else if ((line2 + ' ' + w).length <= 48) {
       line2 += (line2 ? ' ' : '') + w;
     }
   }
-  ctx.fillText(line1, pad + 12, curY + 26);
-  curY += 26;
+  ctx.fillText(line1, pad + 8, curY + 22);
+  curY += 22;
   if (line2) {
-    curY += 12;
-    ctx.fillText(line2 + (item.desc.length > (line1.length + line2.length + 5) ? '...' : ''), pad + 12, curY + 26);
-    curY += 26;
+    curY += 8;
+    ctx.fillText(line2 + (item.desc.length > (line1.length + line2.length + 5) ? '...' : ''), pad + 8, curY + 22);
+    curY += 22;
   }
-  curY += 28;
+  curY += 20;
 
   // E. Deliverable Badges / Chips
   if (item.deliverables && item.deliverables.length > 0) {
-    const chipH = 46;
+    const chipH = 38;
     const d1 = item.deliverables[0];
-    const d1Text = '✓  ' + (d1.length > 26 ? d1.slice(0, 26) + '...' : d1);
-    ctx.font = '700 22px "Inter Tight", sans-serif';
-    const d1Width = ctx.measureText(d1Text).width + 42;
+    const d1Text = '✓  ' + (d1.length > 28 ? d1.slice(0, 28) + '...' : d1);
+    ctx.font = '700 18px "Inter Tight", sans-serif';
+    const d1Width = ctx.measureText(d1Text).width + 36;
 
     ctx.fillStyle = 'rgba(254, 243, 199, 0.95)';
     ctx.strokeStyle = 'rgba(245, 158, 11, 0.65)';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.roundRect(pad + 12, curY, d1Width, chipH, 23);
+    ctx.roundRect(pad + 8, curY, d1Width, chipH, 19);
     ctx.fill();
     ctx.stroke();
 
     ctx.fillStyle = '#78350f';
-    ctx.fillText(d1Text, pad + 33, curY + 31);
+    ctx.fillText(d1Text, pad + 26, curY + 26);
 
     if (item.deliverables.length > 1) {
       const d2 = item.deliverables[1];
-      const d2Text = '✓  ' + (d2.length > 26 ? d2.slice(0, 26) + '...' : d2);
-      const d2Width = ctx.measureText(d2Text).width + 42;
-      const d2X = pad + 12 + d1Width + 14;
+      const d2Text = '✓  ' + (d2.length > 28 ? d2.slice(0, 28) + '...' : d2);
+      const d2Width = ctx.measureText(d2Text).width + 36;
+      const d2X = pad + 8 + d1Width + 12;
 
-      if (d2X + d2Width < W - pad - 12) {
+      if (d2X + d2Width < W - pad - 8) {
         ctx.fillStyle = 'rgba(254, 243, 199, 0.95)';
         ctx.strokeStyle = 'rgba(245, 158, 11, 0.65)';
         ctx.lineWidth = 1.5;
         ctx.beginPath();
-        ctx.roundRect(d2X, curY, d2Width, chipH, 23);
+        ctx.roundRect(d2X, curY, d2Width, chipH, 19);
         ctx.fill();
         ctx.stroke();
 
         ctx.fillStyle = '#78350f';
-        ctx.fillText(d2Text, d2X + 21, curY + 31);
+        ctx.fillText(d2Text, d2X + 18, curY + 26);
       }
     }
   }
@@ -320,7 +320,7 @@ function drawCardCanvas(
   ctx.strokeStyle = 'rgba(234, 179, 8, 0.75)';
   ctx.lineWidth = 3.5;
   ctx.beginPath();
-  ctx.roundRect(2, 2, W - 4, H - 4, 36);
+  ctx.roundRect(2, 2, W - 4, H - 4, 32);
   ctx.stroke();
   ctx.restore();
 }
@@ -479,7 +479,7 @@ void main(){
     const cards: CardObj[] = SERVICES_DATA.map((item, i) => {
       const cardCanvas = document.createElement('canvas');
       cardCanvas.width = 1000;
-      cardCanvas.height = 1680;
+      cardCanvas.height = 1140;
       const ctx = cardCanvas.getContext('2d')!;
 
       const tex = new THREE.CanvasTexture(cardCanvas);
@@ -489,7 +489,7 @@ void main(){
       tex.generateMipmaps = false;
 
       const geo = new THREE.PlaneGeometry(1, 1, NX, NY);
-      const initialAspect = 1000 / 1680;
+      const initialAspect = 1000 / 1140;
       const mat = new THREE.ShaderMaterial({
         vertexShader: vs,
         fragmentShader: fs,
@@ -557,7 +557,7 @@ void main(){
       if (prevMob !== isMobile) {
         cards.forEach((c) => {
           const targetW = 1000;
-          const targetH = 1680;
+          const targetH = 1140;
           c.mat.uniforms.aspect.value = targetW / targetH;
           if (c.tex.image.width !== targetW || c.tex.image.height !== targetH) {
             c.tex.image.width = targetW;
@@ -584,8 +584,8 @@ void main(){
     const vp = new THREE.Vector3();
 
     function poseRibbon(c: CardObj, head: number) {
-      const cardW = isMobile ? 1.40 : 1.45;
-      const cardH = cardW * (1680 / 1000);
+      const cardW = isMobile ? 1.50 : 1.55;
+      const cardH = cardW * (1140 / 1000);
       const step = cardW + GAP;
       const pos = c.geo.attributes.position;
       const centre = head - c.i * step;
@@ -612,22 +612,22 @@ void main(){
       let cardHeightPx: number;
 
       if (isMobile) {
-        // Mobile: 3:4 portrait card with 300x400 proportional image
-        cardWidthPx = Math.min(W - 20, 360);
-        cardHeightPx = cardWidthPx * (1680 / 1000);
-        const maxH = H * 0.72;
+        // Mobile: 400x300 proportional image card
+        cardWidthPx = Math.min(W - 24, 360);
+        cardHeightPx = cardWidthPx * (1140 / 1000);
+        const maxH = H * 0.70;
         if (cardHeightPx > maxH) {
           cardHeightPx = maxH;
-          cardWidthPx = cardHeightPx / (1680 / 1000);
+          cardWidthPx = cardHeightPx / (1140 / 1000);
         }
       } else {
-        // Desktop: Reduced width (340px) with 300x400 proportional image!
-        cardWidthPx = Math.min(W * 0.25, 340);
-        cardHeightPx = cardWidthPx * (1680 / 1000);
-        const maxH = H * 0.68;
+        // Desktop: Reduced width with 400x300 proportional image!
+        cardWidthPx = Math.min(W * 0.28, 380);
+        cardHeightPx = cardWidthPx * (1140 / 1000);
+        const maxH = H * 0.65;
         if (cardHeightPx > maxH) {
           cardHeightPx = maxH;
-          cardWidthPx = cardHeightPx / (1680 / 1000);
+          cardWidthPx = cardHeightPx / (1140 / 1000);
         }
       }
 
