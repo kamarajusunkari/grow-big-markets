@@ -309,7 +309,7 @@ export const Faq: React.FC<FaqProps> = ({ onOpenBooking }) => {
         }
         @media (max-width: 768px) {
           .faq-section {
-            padding: 2.25rem 0 2.5rem 0 !important;
+            padding: 3.75rem 0 4.25rem 0 !important;
           }
           .faq-header-container {
             padding: 0 1rem !important;
@@ -317,7 +317,7 @@ export const Faq: React.FC<FaqProps> = ({ onOpenBooking }) => {
           .faq-split-grid {
             display: flex !important;
             flex-direction: column !important;
-            gap: 1.5rem !important;
+            gap: 2.25rem !important;
           }
           .faq-sticky-left {
             position: relative !important;

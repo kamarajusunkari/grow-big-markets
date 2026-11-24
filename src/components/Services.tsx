@@ -106,19 +106,62 @@ const ease = (t: number) => t * t * (3 - 2 * t);
 const out = (t: number) => 1 - Math.pow(1 - t, 3);
 const span = (p: number, a: number, b: number) => clamp((p - a) / (b - a));
 
-function drawCardCanvas(ctx: CanvasRenderingContext2D, img: HTMLImageElement | null, item: ServiceCardData) {
-  const W = 1400;
-  const H = 880;
+function drawCardCanvas(
+  ctx: CanvasRenderingContext2D,
+  img: HTMLImageElement | null,
+  item: ServiceCardData,
+  isMob = false
+) {
+  const W = isMob ? 1000 : 1300;
+  const H = isMob ? 1350 : 975;
 
-  // Dark slate base
-  ctx.fillStyle = '#0f172a';
-  ctx.fillRect(0, 0, W, H);
+  // Clear background
+  ctx.clearRect(0, 0, W, H);
 
-  // Cover image
+  // 1. Card Background: Pure Crisp White with subtle luxury warmth (No blue bg)
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath();
+  ctx.roundRect(0, 0, W, H, isMob ? 38 : 30);
+  ctx.fill();
+
+  const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+  bgGrad.addColorStop(0, '#ffffff');
+  bgGrad.addColorStop(0.75, '#ffffff');
+  bgGrad.addColorStop(1, '#fcfaf2');
+  ctx.fillStyle = bgGrad;
+  ctx.beginPath();
+  ctx.roundRect(0, 0, W, H, isMob ? 38 : 30);
+  ctx.fill();
+
+  const pad = isMob ? 28 : 28;
+  const imgX = pad;
+  const imgY = pad;
+  const imgW = W - pad * 2;
+
+  // Free size image: dynamically proportional to the image's actual aspect ratio!
+  let imgH: number;
+  if (img && img.naturalWidth && img.naturalHeight) {
+    const natAspect = img.naturalWidth / img.naturalHeight;
+    const naturalH = Math.round(imgW / natAspect);
+    imgH = clamp(naturalH, isMob ? 340 : 360, isMob ? 500 : 520);
+  } else {
+    imgH = isMob ? 420 : 460;
+  }
+
+  // 2. Clean, unobstructed Image Frame Container (NO text/badge overlays on image!)
+  ctx.save();
+  ctx.beginPath();
+  ctx.roundRect(imgX, imgY, imgW, imgH, isMob ? 24 : 20);
+  ctx.clip();
+
+  // Neutral subtle base behind image
+  ctx.fillStyle = '#f1f5f9';
+  ctx.fillRect(imgX, imgY, imgW, imgH);
+
+  // Draw full image in frame, maintaining natural ratio
   if (img && img.complete && img.naturalWidth > 0) {
-    ctx.save();
     const ia = img.naturalWidth / img.naturalHeight;
-    const ta = W / H;
+    const ta = imgW / imgH;
     let sx = 0, sy = 0, sw = img.naturalWidth, sh = img.naturalHeight;
     if (ia > ta) {
       sw = img.naturalHeight * ta;
@@ -127,88 +170,238 @@ function drawCardCanvas(ctx: CanvasRenderingContext2D, img: HTMLImageElement | n
       sh = img.naturalWidth / ta;
       sy = (img.naturalHeight - sh) / 2;
     }
-    ctx.drawImage(img, sx, sy, sw, sh, 0, 0, W, H);
-    ctx.restore();
+    ctx.drawImage(img, sx, sy, sw, sh, imgX, imgY, imgW, imgH);
   }
 
-  // Top Light Scrim
-  const topGrad = ctx.createLinearGradient(0, 0, 0, 220);
-  topGrad.addColorStop(0, 'rgba(15, 23, 42, 0.70)');
-  topGrad.addColorStop(1, 'rgba(15, 23, 42, 0)');
-  ctx.fillStyle = topGrad;
-  ctx.fillRect(0, 0, W, 220);
+  ctx.restore(); // end clip
 
-  // Bottom Deep Scrim for text readability
-  const botGrad = ctx.createLinearGradient(0, H - 380, 0, H);
-  botGrad.addColorStop(0, 'rgba(15, 23, 42, 0)');
-  botGrad.addColorStop(0.35, 'rgba(15, 23, 42, 0.75)');
-  botGrad.addColorStop(0.75, 'rgba(15, 23, 42, 0.94)');
-  botGrad.addColorStop(1, 'rgba(15, 23, 42, 0.98)');
-  ctx.fillStyle = botGrad;
-  ctx.fillRect(0, H - 380, W, 380);
-
-  // Category Tag Pill (Top Left) - Sunburst Gold Theme
+  // Thin, clean border around image frame
   ctx.save();
-  ctx.fillStyle = '#FDD00B';
-  const pillW = 310;
-  const pillH = 48;
-  const pillX = 48;
-  const pillY = 46;
-  const rad = 24;
+  ctx.strokeStyle = 'rgba(15, 23, 42, 0.09)';
+  ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.roundRect(pillX, pillY, pillW, pillH, rad);
-  ctx.fill();
-
-  // Dark dot
-  ctx.fillStyle = '#0f172a';
-  ctx.beginPath();
-  ctx.arc(pillX + 24, pillY + 24, 5, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Category Text
-  ctx.fillStyle = '#0f172a';
-  ctx.font = '700 18px "IBM Plex Mono", monospace';
-  ctx.fillText(item.category, pillX + 42, pillY + 31);
-  ctx.restore();
-
-  // Metric Badge (Top Right)
-  ctx.save();
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
-  ctx.strokeStyle = 'rgba(253, 208, 11, 0.8)';
-  ctx.lineWidth = 2.5;
-  const mW = 250;
-  const mH = 48;
-  const mX = W - mW - 48;
-  const mY = 46;
-  ctx.beginPath();
-  ctx.roundRect(mX, mY, mW, mH, rad);
-  ctx.fill();
+  ctx.roundRect(imgX, imgY, imgW, imgH, isMob ? 24 : 20);
   ctx.stroke();
-
-  ctx.fillStyle = '#0f172a';
-  ctx.font = '700 18px "IBM Plex Mono", monospace';
-  ctx.textAlign = 'center';
-  ctx.fillText(item.metric, mX + mW / 2, mY + 31);
   ctx.restore();
 
-  // Title (Bottom Left)
-  ctx.fillStyle = '#ffffff';
-  ctx.font = '700 52px "Inter Tight", sans-serif';
-  ctx.shadowColor = 'rgba(0, 0, 0, 0.85)';
-  ctx.shadowBlur = 12;
-  ctx.fillText(item.title, 52, H - 120);
-  ctx.shadowBlur = 0;
+  if (isMob) {
+    // 3. MOBILE CONTENT (High breathing room, generous spacing, NO button, NO compact feel)
+    let curY = imgY + imgH + 40;
+    const maxTextW = W - (pad + 16) * 2;
 
-  // Description (Bottom Left)
-  ctx.fillStyle = 'rgba(244, 241, 234, 0.92)';
-  ctx.font = '400 24px "Inter Tight", sans-serif';
-  const cleanDesc = item.desc.length > 70 ? item.desc.slice(0, 70) + '...' : item.desc;
-  ctx.fillText(cleanDesc, 52, H - 64);
+    ctx.save();
 
-  // Subtle Outer Gold Border
-  ctx.strokeStyle = 'rgba(253, 208, 11, 0.45)';
-  ctx.lineWidth = 4;
-  ctx.strokeRect(2, 2, W - 4, H - 4);
+    // A. Category Pill & Metric Indicator (Moved cleanly below image!)
+    const catText = '●  ' + item.category;
+    ctx.font = '700 24px "IBM Plex Mono", monospace';
+    const catW = ctx.measureText(catText).width + 38;
+    const pillH = 50;
+
+    // Category Pill
+    ctx.fillStyle = 'rgba(253, 208, 11, 0.2)';
+    ctx.strokeStyle = 'rgba(245, 158, 11, 0.55)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(pad + 16, curY, catW, pillH, 25);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = '#b45309';
+    ctx.fillText(catText, pad + 35, curY + 34);
+
+    // Metric Pill
+    const metricText = item.metric;
+    const metricW = ctx.measureText(metricText).width + 38;
+    const metricX = pad + 16 + catW + 16;
+    if (metricX + metricW <= W - pad - 16) {
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.05)';
+      ctx.strokeStyle = 'rgba(15, 23, 42, 0.14)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.roundRect(metricX, curY, metricW, pillH, 25);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#0f172a';
+      ctx.fillText(metricText, metricX + 19, curY + 34);
+    }
+
+    curY += pillH + 34; // Generous space before title
+
+    // B. Title (Bold, large, airy line-height)
+    ctx.fillStyle = '#0f172a';
+    ctx.font = '800 72px "Inter Tight", sans-serif';
+
+    const titleWords = item.title.split(' ');
+    let titleLine1 = '';
+    let titleLine2 = '';
+    for (const w of titleWords) {
+      const test = titleLine1 ? `${titleLine1} ${w}` : w;
+      if (ctx.measureText(test).width <= maxTextW) {
+        titleLine1 = test;
+      } else {
+        titleLine2 = titleLine2 ? `${titleLine2} ${w}` : w;
+      }
+    }
+
+    if (titleLine2) {
+      ctx.fillText(titleLine1, pad + 16, curY + 66);
+      curY += 66 + 20;
+      ctx.fillText(titleLine2, pad + 16, curY + 66);
+      curY += 66 + 32; // Generous space after 2-line title
+    } else {
+      ctx.fillText(titleLine1, pad + 16, curY + 68);
+      curY += 68 + 36; // Generous space after 1-line title
+    }
+
+    // C. Subtitle (Amber Gold highlight with breathing room)
+    ctx.fillStyle = '#b45309';
+    ctx.font = '700 42px "Inter Tight", sans-serif';
+    const cleanSubtitle = item.subtitle.length > 44 ? item.subtitle.slice(0, 44) + '...' : item.subtitle;
+    ctx.fillText(cleanSubtitle, pad + 16, curY + 40);
+    curY += 40 + 38; // Generous space before description
+
+    // D. Description (Crisp, comfortable reading size, relaxed line-height)
+    ctx.fillStyle = '#475569';
+    ctx.font = '500 36px "Inter Tight", sans-serif';
+    const words = item.desc.split(' ');
+    let line1 = '', line2 = '';
+    for (const w of words) {
+      if ((line1 + ' ' + w).length <= 36) {
+        line1 += (line1 ? ' ' : '') + w;
+      } else if ((line2 + ' ' + w).length <= 36) {
+        line2 += (line2 ? ' ' : '') + w;
+      }
+    }
+    ctx.fillText(line1, pad + 16, curY + 36);
+    curY += 36;
+    if (line2) {
+      curY += 20;
+      ctx.fillText(line2 + (item.desc.length > (line1.length + line2.length + 5) ? '...' : ''), pad + 16, curY + 36);
+      curY += 36;
+    }
+    curY += 46; // Generous space before deliverable chips
+
+    // E. Deliverable Badges / Capabilities (Spacious, prominent pills)
+    if (item.deliverables && item.deliverables.length > 0) {
+      const chipH = 64;
+      const d1 = item.deliverables[0];
+      const d1Text = '✓  ' + (d1.length > 28 ? d1.slice(0, 28) + '...' : d1);
+      ctx.font = '700 30px "Inter Tight", sans-serif';
+      const d1Width = ctx.measureText(d1Text).width + 52;
+
+      ctx.fillStyle = 'rgba(254, 243, 199, 0.95)';
+      ctx.strokeStyle = 'rgba(245, 158, 11, 0.7)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.roundRect(pad + 16, curY, d1Width, chipH, 32);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#78350f';
+      ctx.fillText(d1Text, pad + 42, curY + 43);
+
+      if (item.deliverables.length > 1) {
+        const d2 = item.deliverables[1];
+        const d2Text = '✓  ' + (d2.length > 28 ? d2.slice(0, 28) + '...' : d2);
+        const d2Width = ctx.measureText(d2Text).width + 52;
+        const d2X = pad + 16 + d1Width + 16;
+
+        if (d2X + d2Width < W - pad - 16) {
+          // Fits on same line
+          ctx.fillStyle = 'rgba(254, 243, 199, 0.95)';
+          ctx.strokeStyle = 'rgba(245, 158, 11, 0.7)';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.roundRect(d2X, curY, d2Width, chipH, 32);
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.fillStyle = '#78350f';
+          ctx.fillText(d2Text, d2X + 26, curY + 43);
+        } else {
+          // Stack onto second chip row
+          curY += chipH + 18;
+          ctx.fillStyle = 'rgba(254, 243, 199, 0.95)';
+          ctx.strokeStyle = 'rgba(245, 158, 11, 0.7)';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.roundRect(pad + 16, curY, Math.min(d2Width, W - (pad + 16) * 2), chipH, 32);
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.fillStyle = '#78350f';
+          ctx.fillText(d2Text, pad + 42, curY + 43);
+        }
+      }
+    }
+
+    ctx.restore();
+    // Button removed as requested
+  } else {
+    // 3. DESKTOP CONTENT (Airy, spacious, NO button)
+    let curY = imgY + imgH + 32;
+
+    ctx.save();
+    // Category & Metric Pill
+    const catText = '●  ' + item.category;
+    ctx.font = '700 17px "IBM Plex Mono", monospace';
+    const catW = ctx.measureText(catText).width + 30;
+    ctx.fillStyle = 'rgba(253, 208, 11, 0.2)';
+    ctx.strokeStyle = 'rgba(245, 158, 11, 0.55)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(pad + 14, curY, catW, 38, 19);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = '#b45309';
+    ctx.fillText(catText, pad + 29, curY + 25);
+
+    const metricText = item.metric;
+    const metricW = ctx.measureText(metricText).width + 30;
+    const metricX = pad + 14 + catW + 14;
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.05)';
+    ctx.strokeStyle = 'rgba(15, 23, 42, 0.12)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(metricX, curY, metricW, 38, 19);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = '#0f172a';
+    ctx.fillText(metricText, metricX + 15, curY + 25);
+
+    curY += 38 + 24;
+
+    ctx.fillStyle = '#0f172a';
+    ctx.font = '800 52px "Inter Tight", sans-serif';
+    ctx.fillText(item.title, pad + 14, curY + 48);
+    curY += 48 + 24;
+
+    ctx.fillStyle = '#b45309';
+    ctx.font = '700 28px "Inter Tight", sans-serif';
+    const cleanSubtitle = item.subtitle.length > 60 ? item.subtitle.slice(0, 60) + '...' : item.subtitle;
+    ctx.fillText(cleanSubtitle, pad + 14, curY + 26);
+    curY += 26 + 24;
+
+    ctx.fillStyle = '#475569';
+    ctx.font = '500 25px "Inter Tight", sans-serif';
+    const cleanDesc = item.desc.length > 82 ? item.desc.slice(0, 82) + '...' : item.desc;
+    ctx.fillText(cleanDesc, pad + 14, curY + 24);
+
+    ctx.restore();
+    // Button removed as requested
+  }
+
+  // 4. Subtle Outer Gold Border
+  ctx.save();
+  ctx.strokeStyle = 'rgba(234, 179, 8, 0.75)';
+  ctx.lineWidth = 3.5;
+  ctx.beginPath();
+  ctx.roundRect(2, 2, W - 4, H - 4, isMob ? 38 : 30);
+  ctx.stroke();
+  ctx.restore();
 }
 
 export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
@@ -230,7 +423,6 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
   const l2Ref = useRef<HTMLDivElement>(null);
   const capRef = useRef<HTMLDivElement>(null);
   const ruleRef = useRef<HTMLDivElement>(null);
-  const nameRef = useRef<HTMLDivElement>(null);
   const landedCtaRef = useRef<HTMLDivElement>(null);
   const carouselControlsRef = useRef<HTMLDivElement>(null);
 
@@ -333,10 +525,7 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking }) => {
     };
 
     /* ---------- Cards & Shaders ---------- */
-    const CARD_W = 2.1;
-    const CARD_H = 1.32;
     const GAP = 0.03;
-    const STEP = CARD_W + GAP;
     const NX = 28;
     const NY = 3;
 
@@ -357,6 +546,7 @@ void main(){
       i: number;
       item: ServiceCardData;
       title: string;
+      img: HTMLImageElement | null;
       tex: THREE.CanvasTexture;
       geo: THREE.PlaneGeometry;
       mat: THREE.ShaderMaterial;
@@ -364,10 +554,11 @@ void main(){
       rect: { x: number; y: number; w: number; h: number; vw: number; vh: number; i: number } | null;
     }
 
+    const isInitialMob = typeof window !== 'undefined' && window.innerWidth < 768;
     const cards: CardObj[] = SERVICES_DATA.map((item, i) => {
       const cardCanvas = document.createElement('canvas');
-      cardCanvas.width = 1400;
-      cardCanvas.height = 880;
+      cardCanvas.width = isInitialMob ? 1000 : 1300;
+      cardCanvas.height = isInitialMob ? 1350 : 975;
       const ctx = cardCanvas.getContext('2d')!;
 
       const tex = new THREE.CanvasTexture(cardCanvas);
@@ -377,6 +568,7 @@ void main(){
       tex.generateMipmaps = false;
 
       const geo = new THREE.PlaneGeometry(1, 1, NX, NY);
+      const initialAspect = isInitialMob ? (1000 / 1350) : (1300 / 975);
       const mat = new THREE.ShaderMaterial({
         vertexShader: vs,
         fragmentShader: fs,
@@ -385,7 +577,7 @@ void main(){
         uniforms: {
           map: { value: tex },
           cover: { value: new THREE.Vector2(1, 1) },
-          aspect: { value: CARD_W / CARD_H },
+          aspect: { value: initialAspect },
           ready: { value: 0 },
           radius: { value: 0.018 },
         },
@@ -395,24 +587,25 @@ void main(){
       mesh.frustumCulled = false;
       scene.add(mesh);
 
-      const cardObj: CardObj = { i, item, title: item.title, tex, geo, mat, mesh, rect: null };
+      const cardObj: CardObj = { i, item, title: item.title, img: null, tex, geo, mat, mesh, rect: null };
 
       const img = new Image();
       img.crossOrigin = 'anonymous';
       img.onload = () => {
-        drawCardCanvas(ctx, img, item);
+        cardObj.img = img;
+        drawCardCanvas(ctx, img, item, isMobile);
         tex.needsUpdate = true;
         mat.uniforms.ready.value = 1;
       };
       img.onerror = () => {
-        drawCardCanvas(ctx, null, item);
+        drawCardCanvas(ctx, null, item, isMobile);
         tex.needsUpdate = true;
         mat.uniforms.ready.value = 1;
       };
       img.src = item.imageSrc;
 
       // Initial canvas paint
-      drawCardCanvas(ctx, null, item);
+      drawCardCanvas(ctx, null, item, isInitialMob);
       tex.needsUpdate = true;
 
       return cardObj;
@@ -428,16 +621,34 @@ void main(){
       W = stage.clientWidth || window.innerWidth;
       H = stage.clientHeight || window.innerHeight;
       asp = W / H;
-      isMobile = asp < 0.85 || W < 768;
+      const prevMob = isMobile;
+      isMobile = asp < 0.88 || W < 768;
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.setSize(W, H, false);
       camera.aspect = asp;
       camera.fov = isMobile
-        ? 42
+        ? 44
         : (asp < 16 / 9 ? Math.min(46, (Math.atan(0.561 / Math.max(asp, 0.72)) * 360) / Math.PI) : FOV);
       camera.updateProjectionMatrix();
       tanH = Math.tan((camera.fov * Math.PI) / 360);
       buildPath();
+
+      if (prevMob !== isMobile) {
+        cards.forEach((c) => {
+          const targetW = isMobile ? 1000 : 1300;
+          const targetH = isMobile ? 1350 : 975;
+          c.mat.uniforms.aspect.value = targetW / targetH;
+          if (c.tex.image.width !== targetW || c.tex.image.height !== targetH) {
+            c.tex.image.width = targetW;
+            c.tex.image.height = targetH;
+            const ctx = c.tex.image.getContext('2d');
+            if (ctx) {
+              drawCardCanvas(ctx, c.img, c.item, isMobile);
+              c.tex.needsUpdate = true;
+            }
+          }
+        });
+      }
     }
 
     window.addEventListener('resize', resize);
@@ -452,16 +663,19 @@ void main(){
     const vp = new THREE.Vector3();
 
     function poseRibbon(c: CardObj, head: number) {
+      const cardW = isMobile ? 1.55 : 2.12;
+      const cardH = isMobile ? 2.08 : 1.59;
+      const step = cardW + GAP;
       const pos = c.geo.attributes.position;
-      const centre = head - c.i * STEP;
+      const centre = head - c.i * step;
       for (let iy = 0; iy <= NY; iy++) {
         for (let ix = 0; ix <= NX; ix++) {
           const k = iy * (NX + 1) + ix;
           const lu = ix / NX - 0.5;
           const lv = 0.5 - iy / NY;
-          at(centre + lu * CARD_W, op, ot);
+          at(centre + lu * cardW, op, ot);
           up.copy(Y).addScaledVector(ot, -Y.dot(ot)).normalize();
-          vp.copy(op).addScaledVector(up, lv * CARD_H);
+          vp.copy(op).addScaledVector(up, lv * cardH);
           pos.setXYZ(k, vp.x, vp.y, vp.z);
         }
       }
@@ -472,27 +686,41 @@ void main(){
     function poseCarousel(c: CardObj, q: number, currentOffset: number) {
       const vh = 2 * GZ * tanH;
       const vw = vh * asp;
-      const aspectRatio = CARD_W / CARD_H; // 2.1 / 1.32 = 1.5909
 
-      // Card sizing in world units
-      const cardWidthPx = isMobile ? Math.min(W - 48, 380) : Math.min(W * 0.42, 540);
-      const cardHeightPx = cardWidthPx / aspectRatio;
+      let cardWidthPx: number;
+      let cardHeightPx: number;
+
+      if (isMobile) {
+        // Mobile: Maximize card presence and viewport coverage
+        cardWidthPx = Math.min(W - 16, 420);
+        cardHeightPx = cardWidthPx * 1.35; // ~540px tall
+        const maxH = H * 0.70;
+        if (cardHeightPx > maxH) {
+          cardHeightPx = maxH;
+          cardWidthPx = cardHeightPx / 1.35;
+        }
+      } else {
+        // Desktop: Increased card size for maximum impact!
+        cardWidthPx = Math.min(W * 0.44, 620);
+        cardHeightPx = cardWidthPx / (4 / 3);
+      }
+
       const cw = (cardWidthPx / W) * vw;
       const ch = (cardHeightPx / H) * vh;
-      const gap = cw * 0.12;
+      const gap = cw * (isMobile ? 0.16 : 0.12);
 
-      // Safe vertical center between navbar and bottom controls
-      const navbarPx = isMobile ? 65 : 85;
-      const buttonPx = isMobile ? 95 : 110;
-      const centerOffsetPx = (buttonPx - navbarPx) / 2;
+      // Safe vertical centering between header and bottom controls
+      const topPx = isMobile ? 40 : 85;
+      const botPx = isMobile ? 120 : 110;
+      const centerOffsetPx = (botPx - topPx) / 2;
       const centerY = (centerOffsetPx / H) * vh;
 
       const delta = c.i - currentOffset;
       const xCenter = delta * (cw + gap);
-      const zOffset = -Math.abs(delta) * 0.55;
+      const zOffset = -Math.abs(delta) * (isMobile ? 0.45 : 0.55);
       const zCenter = -GZ + zOffset;
-      const rotY = clamp(-delta * 0.22, -0.45, 0.45);
-      const scale = Math.max(0.78, 1 - Math.abs(delta) * 0.08);
+      const rotY = clamp(-delta * (isMobile ? 0.18 : 0.22), -0.42, 0.42);
+      const scale = Math.max(isMobile ? 0.82 : 0.78, 1 - Math.abs(delta) * 0.08);
 
       // Smooth landing from ribbon rail into carousel slot
       const flyX = (1 - q) * (delta >= 0 ? 1 : -1) * vw * 0.4;
@@ -514,12 +742,7 @@ void main(){
           const vx = lx * cosY;
           const vz = -lx * sinY;
 
-          pos.setXYZ(
-            k,
-            x + vx,
-            y + ly,
-            z + vz
-          );
+          pos.setXYZ(k, x + vx, y + ly, z + vz);
         }
       }
       pos.needsUpdate = true;
@@ -604,19 +827,21 @@ void main(){
       }
 
       // 6. 3D Ribbon & Single-Row Carousel Cards
+      const cardW = isMobile ? 1.55 : 2.12;
+      const step = cardW + GAP;
       const pr = span(pp, RIB_A, RIB_B);
-      const head = mix(0, PATH_L + cards.length * STEP, pr);
+      const head = mix(0, PATH_L + cards.length * step, pr);
 
       for (const c of cards) {
-        const s = head - c.i * STEP;
-        const end = PATH_L - CARD_W;
+        const s = head - c.i * step;
+        const end = PATH_L - cardW;
         if (s < end) {
-          c.mesh.visible = s > CARD_W;
+          c.mesh.visible = s > cardW;
           c.rect = null;
           if (c.mesh.visible) poseRibbon(c, head);
         } else {
           // Card has left the rail -> smoothly transitions into its single-row carousel slot!
-          const st = mix(RIB_A, RIB_B, (end + c.i * STEP) / (PATH_L + cards.length * STEP));
+          const st = mix(RIB_A, RIB_B, (end + c.i * step) / (PATH_L + cards.length * step));
           const q = out(span(pp, st, st + 0.12));
           c.mesh.visible = q > 0.001;
           if (c.mesh.visible) {
@@ -663,16 +888,7 @@ void main(){
         hit = findHitCard(e.clientX, e.clientY);
       }
       hoveredCardRef.current = hit;
-      if (nameRef.current) {
-        nameRef.current.style.opacity = hit ? '1' : '0';
-        if (hit) {
-          nameRef.current.innerHTML = `<span>${hit.item.title}</span><span style="color:#FDD00B;font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:600">${hit.item.metric}</span>`;
-          nameRef.current.style.transform = `translate(${e.clientX + 14}px,${e.clientY + 16}px)`;
-          stage.style.cursor = 'pointer';
-        } else {
-          stage.style.cursor = 'default';
-        }
-      }
+      stage.style.cursor = hit ? 'pointer' : 'default';
     };
 
     const handleStageClick = (e: MouseEvent) => {
@@ -711,6 +927,15 @@ void main(){
             nextCard();
           } else {
             prevCard();
+          }
+        } else if (Math.abs(dx) < 12 && Math.abs(dy) < 12) {
+          const hit = findHitCard(touchStartX, touchStartY);
+          if (hit) {
+            if (hit.i === activeCardRef.current) {
+              setActiveModal(hit.item);
+            } else {
+              goToCard(hit.i);
+            }
           }
         }
       }
@@ -839,9 +1064,6 @@ void main(){
             <ArrowRight size={18} />
           </button>
         </div>
-
-        {/* Cursor-Following Hover Name Tag */}
-        <div id="name" ref={nameRef}></div>
       </main>
 
       {/* Service Details Interactive Modal */}
@@ -903,7 +1125,7 @@ void main(){
 
         @media (max-width: 768px) {
           .vante-services-section {
-            height: 320vh;
+            height: 340vh;
           }
         }
 
@@ -1132,28 +1354,6 @@ void main(){
           transform: translateY(-2px);
         }
 
-        #name {
-          position: absolute;
-          left: 0;
-          top: 0;
-          padding: 8px 16px;
-          background: #0f172a;
-          color: #ffffff;
-          border-radius: 99px;
-          font-size: 12px;
-          font-weight: 600;
-          letter-spacing: 0.04em;
-          pointer-events: none;
-          opacity: 0;
-          transition: opacity 0.16s;
-          white-space: nowrap;
-          z-index: 20;
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-        }
-
         /* Modal Styles */
         .service-modal-backdrop {
           position: fixed;
@@ -1287,6 +1487,10 @@ void main(){
         }
 
         @media (max-width: 768px) {
+          #rule {
+            display: none !important;
+          }
+
           .hl {
             font-size: clamp(48px, 13vw, 76px);
             line-height: 0.94;
@@ -1319,16 +1523,22 @@ void main(){
           }
 
           .carousel-arrow-btn {
-            width: 40px;
-            height: 40px;
+            top: 26%;
+            transform: translateY(-50%);
+            width: 42px;
+            height: 42px;
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.96);
+            border: 1.5px solid rgba(253, 208, 11, 0.7);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
           }
 
           .carousel-arrow-left {
-            left: 12px;
+            left: 8px;
           }
 
           .carousel-arrow-right {
-            right: 12px;
+            right: 8px;
           }
 
           .carousel-indicator-bar {
@@ -1336,8 +1546,9 @@ void main(){
           }
 
           .carousel-counter-text {
-            font-size: 10.5px;
-            padding: 3px 12px;
+            font-size: 11px;
+            padding: 4px 14px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
           }
 
           .carousel-dot.active {
@@ -1346,14 +1557,15 @@ void main(){
 
           .landed-cta-btn {
             width: 100%;
-            height: 44px;
+            height: 46px;
             padding: 0 20px;
-            font-size: 13px;
+            font-size: 13.5px;
             justify-content: center;
+            box-shadow: 0 6px 20px rgba(253, 208, 11, 0.4);
           }
 
           .landed-cta-wrap {
-            bottom: 16px;
+            bottom: 14px;
             width: calc(100% - 32px);
             max-width: 380px;
           }

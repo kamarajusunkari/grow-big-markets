@@ -99,7 +99,7 @@ export const Process: React.FC<ProcessProps> = ({ onOpenBooking }) => {
     <section
       ref={sectionRef}
       id="process"
-      className="relative w-full overflow-hidden bg-[#f8fafc] py-7 sm:py-16 md:py-24 border-b border-slate-200/70 select-none"
+      className="relative w-full overflow-hidden bg-[#f8fafc] py-12 sm:py-16 md:py-24 border-b border-slate-200/70 select-none"
     >
       {/* Background Soft Glow */}
       <div
@@ -116,7 +116,7 @@ export const Process: React.FC<ProcessProps> = ({ onOpenBooking }) => {
         <div className="relative w-full">
           {/* Main Headline & Action Button: Positioned on Top-Left above Cards 1 & 2 */}
           <div
-            className="lg:absolute lg:top-0 lg:left-0 z-20 mb-4 lg:mb-0 max-w-lg"
+            className="lg:absolute lg:top-0 lg:left-0 z-20 mb-7 lg:mb-0 max-w-lg"
             style={{
               opacity: isInView ? 1 : 0,
               transform: isInView ? 'translateY(0)' : 'translateY(16px)',

@@ -394,10 +394,10 @@ export const Testimonials: React.FC = () => {
         }
         @media (max-width: 768px) {
           .testimonials-section {
-            padding: 2.25rem 0 2.5rem 0 !important;
+            padding: 3.75rem 0 4.25rem 0 !important;
           }
           .testimonials-header-container {
-            margin-bottom: 1.5rem !important;
+            margin-bottom: 2.25rem !important;
             padding: 0 1rem !important;
           }
           .testimonials-3-cols {

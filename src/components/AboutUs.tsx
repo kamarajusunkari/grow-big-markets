@@ -1,13 +1,11 @@
-import React, { useState } from 'react';
-import { ArrowUpRight, Play, X, Smile } from 'lucide-react';
+import React from 'react';
+import { ArrowUpRight, Smile } from 'lucide-react';
 
 interface AboutUsProps {
   onOpenBooking?: () => void;
 }
 
 export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
-  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
-
   return (
     <section
       id="about"
@@ -74,43 +72,18 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
               We empower ambitious businesses, healthcare clinics, e-commerce brands, and financial institutions with ROI-focused digital marketing campaigns, high-converting Google & Meta ads, search engine optimization (SEO), and performance marketing strategies engineered for rapid revenue growth.
             </p>
 
-            {/* Action Buttons Row (Matching Screenshot: Black Pill Button + Circular Play Button) */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-              {onOpenBooking && (
-                <button
-                  onClick={onOpenBooking}
-                  className="btn btn-dark"
-                  style={{
-                    padding: '0.9rem 2.2rem',
-                    fontSize: '0.95rem',
-                    fontWeight: 900,
-                    borderRadius: 'var(--radius-full)',
-                  }}
-                >
-                  Learn More <ArrowUpRight size={18} color="#84cc16" />
-                </button>
-              )}
-
-              {/* Play Video Button */}
+            {/* Action Button: Enhanced Premium "Learn More" CTA */}
+            <div>
               <button
-                onClick={() => setIsVideoModalOpen(true)}
-                style={{
-                  width: '52px',
-                  height: '52px',
-                  borderRadius: '50%',
-                  background: '#f8fafc',
-                  border: '1px solid rgba(15, 23, 42, 0.12)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  boxShadow: '0 8px 20px rgba(0, 0, 0, 0.06)',
-                  transition: 'all 0.25s ease',
-                }}
-                className="play-video-btn"
-                title="Watch Overview Video"
+                type="button"
+                onClick={onOpenBooking}
+                className="about-learn-more-btn"
+                aria-label="Learn more about Grow Big Marketers"
               >
-                <Play size={20} fill="#0f172a" color="#0f172a" style={{ marginLeft: '2px' }} />
+                <span className="about-btn-text">Learn More</span>
+                <span className="about-btn-icon-wrap">
+                  <ArrowUpRight size={19} strokeWidth={2.5} />
+                </span>
               </button>
             </div>
           </div>
@@ -300,65 +273,51 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
         </div>
       </div>
 
-      {/* Video Preview Modal */}
-      {isVideoModalOpen && (
-        <div className="modal-backdrop" onClick={() => setIsVideoModalOpen(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ padding: '2rem', maxWidth: '750px' }}>
-            <button
-              onClick={() => setIsVideoModalOpen(false)}
-              style={{
-                position: 'absolute',
-                top: '1rem',
-                right: '1rem',
-                background: '#f1f5f9',
-                border: 'none',
-                borderRadius: '50%',
-                width: '36px',
-                height: '36px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-              }}
-            >
-              <X size={18} />
-            </button>
-
-            <h3 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#0f172a', marginBottom: '1rem' }}>
-              Grow Big Marketers Overview
-            </h3>
-
-            <div
-              style={{
-                width: '100%',
-                height: '380px',
-                background: '#0f172a',
-                borderRadius: '20px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#ffffff',
-                textAlign: 'center',
-                padding: '2rem',
-              }}
-            >
-              <div>
-                <Play size={60} color="#84cc16" style={{ marginBottom: '1rem' }} />
-                <h4 style={{ fontSize: '1.2rem', fontWeight: 800 }}>Company Capabilities Showcase</h4>
-                <p style={{ fontSize: '0.9rem', color: '#94a3b8', marginTop: '0.5rem' }}>
-                  Interactive video overview loading...
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
       <style>{`
-        .play-video-btn:hover {
-          transform: scale(1.08);
-          border-color: #84cc16 !important;
+        .about-learn-more-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 14px;
+          padding: 8px 10px 8px 24px;
+          background: #0f172a;
+          color: #ffffff;
+          border: 1.5px solid rgba(253, 208, 11, 0.45);
+          border-radius: 9999px;
+          font-family: inherit;
+          font-size: 1.02rem;
+          font-weight: 800;
+          letter-spacing: -0.01em;
+          cursor: pointer;
+          box-shadow: 0 10px 28px -4px rgba(15, 23, 42, 0.2), 0 4px 12px rgba(253, 208, 11, 0.15);
+          transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+          text-decoration: none;
         }
+
+        .about-learn-more-btn:hover {
+          transform: translateY(-2.5px);
+          background: #090e17;
+          border-color: #FDD00B;
+          box-shadow: 0 18px 38px -6px rgba(15, 23, 42, 0.32), 0 6px 18px rgba(253, 208, 11, 0.4);
+        }
+
+        .about-btn-icon-wrap {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: #FDD00B;
+          color: #0f172a;
+          display: flex;
+          align-items: center;
+          justifyContent: center;
+          box-shadow: 0 4px 12px rgba(253, 208, 11, 0.4);
+          transition: transform 0.25s ease, background 0.25s ease;
+        }
+
+        .about-learn-more-btn:hover .about-btn-icon-wrap {
+          transform: translate(2px, -2px) scale(1.05);
+          background: #ffe043;
+        }
+
         .about-get-started-card:hover {
           transform: translateY(-6px);
           box-shadow: 0 25px 50px rgba(168, 85, 247, 0.45) !important;
@@ -380,7 +339,7 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
         }
         @media (max-width: 768px) {
           .about-section {
-            padding: 2.25rem 0 2.5rem 0 !important;
+            padding: 3.75rem 0 4.25rem 0 !important;
           }
           .about-section-container {
             padding: 0 16px !important;
@@ -388,8 +347,8 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
           }
           .about-top-grid {
             grid-template-columns: 1fr !important;
-            gap: 1.25rem !important;
-            margin-bottom: 1.5rem !important;
+            gap: 1.5rem !important;
+            margin-bottom: 2rem !important;
           }
           .about-main-heading {
             font-size: clamp(1.75rem, 6.5vw, 2.2rem) !important;
@@ -400,6 +359,15 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
             font-size: 0.95rem !important;
             line-height: 1.6 !important;
             margin-bottom: 1.5rem !important;
+          }
+          .about-learn-more-btn {
+            font-size: 0.92rem !important;
+            padding: 6px 8px 6px 20px !important;
+            gap: 12px !important;
+          }
+          .about-btn-icon-wrap {
+            width: 36px !important;
+            height: 36px !important;
           }
           /* 2x2 Grid for Mobile */
           .about-bottom-5-cards {

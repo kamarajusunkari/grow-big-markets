@@ -372,7 +372,7 @@ export const Industries: React.FC<IndustriesProps> = ({ onOpenBooking }) => {
     <section
       ref={sectionRef}
       id="industries"
-      className="relative w-full overflow-hidden text-slate-900 select-none py-7 sm:py-16 md:py-24 bg-black"
+      className="relative w-full overflow-hidden text-slate-900 select-none py-12 sm:py-16 md:py-24 bg-black"
     >
       {/* ====================================================================
           MODERN ARCHITECTURAL SKYLINE BACKGROUND (With Balanced Black Overlay)
@@ -395,7 +395,7 @@ export const Industries: React.FC<IndustriesProps> = ({ onOpenBooking }) => {
           ==================================================================== */}
       <div className="relative z-10 w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center">
         {/* Thin Elegant Header: Light "INDUSTRIES" + Tracked Light "WE COVER" with Text Reveal */}
-        <div className="w-full mb-5 sm:mb-8 md:mb-12 reveal-fade-up">
+        <div className="w-full mb-7 sm:mb-10 md:mb-12 reveal-fade-up">
           <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
             <h2 className="text-3xl sm:text-5xl md:text-6xl font-light text-white tracking-tight leading-none drop-shadow-md text-reveal">
               <span className="text-reveal-inner">INDUSTRIES</span>
