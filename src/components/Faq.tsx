@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Plus, Minus, ArrowRight } from 'lucide-react';
 
 interface FaqProps {
-  onOpenBooking?: () => void;
+  onOpenBooking?: (message?: string) => void;
 }
 
 interface FaqItem {
@@ -171,7 +171,7 @@ export const Faq: React.FC<FaqProps> = ({ onOpenBooking }) => {
 
               <div>
                 <button
-                  onClick={onOpenBooking}
+                  onClick={() => onOpenBooking ? onOpenBooking('Hi Grow Big Marketers, I have a question regarding your services and operations on WhatsApp.') : undefined}
                   style={{
                     background: '#FDD00B', // Sunburst Gold Accent (#FDD00B)
                     color: '#0f172a',

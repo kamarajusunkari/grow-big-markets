@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ChevronDown, Sparkles, Zap, Activity, ArrowRight, Rocket, Layers, Database, Cpu, Star, CheckCircle2 } from 'lucide-react';
 
 interface AboutOperationsProps {
-  onOpenBooking?: () => void;
+  onOpenBooking?: (message?: string) => void;
 }
 
 const OPERATIONS_LIST = [
@@ -406,7 +406,7 @@ export const AboutOperations: React.FC<AboutOperationsProps> = ({ onOpenBooking 
             {/* Action CTA Button */}
             {onOpenBooking && (
               <button
-                onClick={onOpenBooking}
+                onClick={() => onOpenBooking('Hi Grow Big Marketers, I would like to discuss operations architecture on WhatsApp.')}
                 className="btn btn-lime"
                 style={{
                   padding: '0.9rem 2.2rem',

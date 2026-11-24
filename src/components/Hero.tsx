@@ -3,7 +3,7 @@ import { ArrowUpRight, ArrowDown, Menu, X } from 'lucide-react';
 import growBigPrimary from '../assets/Growbig Primary.png';
 
 interface HeroProps {
-  onOpenBooking: () => void;
+  onOpenBooking: (message?: string) => void;
 }
 
 interface SlotData {
@@ -317,7 +317,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
               {/* Contact Button */}
               <button
                 type="button"
-                onClick={onOpenBooking}
+                onClick={() => onOpenBooking('Hi Grow Big Marketers, I would like to book a call on WhatsApp.')}
                 className="btn-join-vela"
               >
                 <span>Book a Call</span>
@@ -395,7 +395,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
               <button
                 ref={primaryBtnRef}
                 type="button"
-                onClick={onOpenBooking}
+                onClick={() => onOpenBooking('Hi Grow Big Marketers, I would like to book a strategy call for my business on WhatsApp.')}
                 className="store-btn primary-action-btn"
               >
                 <span>Book Strategy Call</span>

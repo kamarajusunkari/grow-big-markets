@@ -3,7 +3,7 @@ import { ArrowUpRight, CheckCircle2, PhoneCall, X, Sparkles } from 'lucide-react
 import industriesBg from '../assets/909452205a43160f9d3576966802333d.jpg';
 
 interface IndustriesProps {
-  onOpenBooking?: () => void;
+  onOpenBooking?: (message?: string) => void;
 }
 
 interface IndustryItem {
@@ -488,11 +488,11 @@ export const Industries: React.FC<IndustriesProps> = ({ onOpenBooking }) => {
 
           <button
             type="button"
-            onClick={onOpenBooking}
+            onClick={() => onOpenBooking?.('Hi Grow Big Marketers, I would like to schedule an industry strategy call on WhatsApp.')}
             className="inline-flex items-center gap-1.5 bg-[#FDD00B] hover:bg-[#facc15] text-[#0f172a] font-bold text-xs px-5 py-2.5 rounded-full transition-all duration-200 hover:scale-105 shadow-md shadow-[#FDD00B]/25 shrink-0"
           >
             <PhoneCall size={13} />
-            <span>Discuss Your Industry</span>
+            <span>Discuss on WhatsApp</span>
           </button>
         </div>
       </div>
@@ -561,13 +561,16 @@ export const Industries: React.FC<IndustriesProps> = ({ onOpenBooking }) => {
             <button
               type="button"
               onClick={() => {
+                const title = activeItem.title;
                 setActiveItem(null);
-                if (onOpenBooking) onOpenBooking();
+                if (onOpenBooking) {
+                  onOpenBooking(`Hi Grow Big Marketers, I want to discuss marketing for ${title} on WhatsApp.`);
+                }
               }}
               className="w-full py-3 px-6 rounded-full bg-[#FDD00B] hover:bg-[#facc15] text-[#0f172a] font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#FDD00B]/30 transition-all duration-200 active:scale-[0.98]"
             >
               <PhoneCall size={16} />
-              <span>Book Custom Strategy Call for {activeItem.shortTitle}</span>
+              <span>Book Strategy Call on WhatsApp</span>
             </button>
           </div>
         </div>

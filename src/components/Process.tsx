@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 
 interface ProcessProps {
-  onOpenBooking?: () => void;
+  onOpenBooking?: (message?: string) => void;
 }
 
 interface StepItem {
@@ -131,7 +131,7 @@ export const Process: React.FC<ProcessProps> = ({ onOpenBooking }) => {
             {/* Ready to Grow Action Button */}
             <button
               type="button"
-              onClick={onOpenBooking}
+              onClick={() => onOpenBooking?.('Hi Grow Big Marketers, I would like to discuss your 4-step growth process on WhatsApp.')}
               className="mt-2.5 inline-flex items-center gap-2 px-4.5 py-2 rounded-full bg-[#FDD00B] hover:bg-[#facc15] text-[#0f172a] font-bold text-xs sm:text-[13px] shadow-sm shadow-[#FDD00B]/25 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
             >
               <span>Ready to Grow? Let's Talk</span>

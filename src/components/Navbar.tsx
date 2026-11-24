@@ -3,7 +3,7 @@ import { Menu, X, ArrowUpRight, Grid } from 'lucide-react';
 import growBigPrimary from '../assets/Growbig Primary.png';
 
 interface NavbarProps {
-  onOpenBooking: () => void;
+  onOpenBooking: (message?: string) => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
@@ -107,7 +107,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
             className="desktop-cta"
           >
             <button
-              onClick={onOpenBooking}
+              onClick={() => onOpenBooking('Hi Grow Big Marketers, I would like to connect with your team on WhatsApp.')}
               style={{
                 borderRadius: '9999px',
                 padding: '0.6rem 1.4rem',
@@ -141,7 +141,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
               }}
-              onClick={onOpenBooking}
+              onClick={() => onOpenBooking('Hi Grow Big Marketers, I would like to connect with your team on WhatsApp.')}
               className="hover:bg-white/30"
               title="Open Services Menu"
             >
@@ -197,13 +197,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
           <button
             onClick={() => {
               setMobileMenuOpen(false);
-              onOpenBooking();
+              onOpenBooking('Hi Grow Big Marketers, I would like to connect with your team on WhatsApp.');
             }}
             style={{
               width: '100%',
               marginTop: '0.5rem',
-              background: '#fdcf09',
-              color: '#0f172a',
+              background: '#25D366',
+              color: '#ffffff',
               borderRadius: '9999px',
               padding: '0.75rem',
               fontWeight: 800,
@@ -214,10 +214,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
               gap: '6px',
               border: 'none',
               cursor: 'pointer',
-              boxShadow: '0 4px 15px rgba(253, 207, 9, 0.35)',
+              boxShadow: '0 4px 15px rgba(37, 211, 102, 0.4)',
             }}
           >
-            Contact Now <ArrowUpRight size={17} />
+            Chat on WhatsApp <ArrowUpRight size={17} />
           </button>
         </div>
       )}

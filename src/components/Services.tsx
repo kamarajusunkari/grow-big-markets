@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { CheckCircle2, X, PhoneCall, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface ServicesProps {
-  onOpenBooking: () => void;
+  onOpenBooking: (message?: string) => void;
 }
 
 export interface ServiceCardData {
@@ -1056,11 +1056,11 @@ void main(){
         <div id="landedCta" ref={landedCtaRef} className="landed-cta-wrap">
           <button
             type="button"
-            onClick={onOpenBooking}
+            onClick={() => onOpenBooking('Hi Grow Big Marketers, I want to discuss custom strategy and performance marketing services on WhatsApp.')}
             className="landed-cta-btn"
           >
             <PhoneCall size={18} />
-            <span>Book Custom Strategy Call</span>
+            <span>Book Custom Strategy Call on WhatsApp</span>
             <ArrowRight size={18} />
           </button>
         </div>
@@ -1098,12 +1098,13 @@ void main(){
               type="button"
               className="service-modal-action-btn"
               onClick={() => {
+                const title = activeModal.title;
                 setActiveModal(null);
-                onOpenBooking();
+                onOpenBooking(`Hi Grow Big Marketers, I would like to inquire about ${title} on WhatsApp.`);
               }}
             >
               <PhoneCall size={18} />
-              <span>Book Strategy Call For This Service</span>
+              <span>Book Strategy Call on WhatsApp</span>
               <ArrowRight size={18} />
             </button>
           </div>

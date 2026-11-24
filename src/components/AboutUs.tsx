@@ -2,7 +2,7 @@ import React from 'react';
 import { ArrowUpRight, Smile } from 'lucide-react';
 
 interface AboutUsProps {
-  onOpenBooking?: () => void;
+  onOpenBooking?: (message?: string) => void;
 }
 
 export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
@@ -76,9 +76,13 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
             <div>
               <button
                 type="button"
-                onClick={onOpenBooking}
+                onClick={() =>
+                  onOpenBooking?.(
+                    'Hi Grow Big Marketers, I want to learn more about your performance marketing and scaling strategies on WhatsApp.'
+                  )
+                }
                 className="about-learn-more-btn"
-                aria-label="Learn more about Grow Big Marketers"
+                aria-label="Learn more about Grow Big Marketers on WhatsApp"
               >
                 <span className="about-btn-text">Learn More</span>
                 <span className="about-btn-icon-wrap">
@@ -224,7 +228,11 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
 
           {/* Card 5: Royal Blue Gradient Card (Get Started With Us) */}
           <div
-            onClick={onOpenBooking}
+            onClick={() =>
+              onOpenBooking?.(
+                'Hi Grow Big Marketers, I want to get started with your digital growth sprint on WhatsApp.'
+              )
+            }
             style={{
               background: 'linear-gradient(135deg, #3E6AB3 0%, #1e3a8a 100%)',
               borderRadius: '26px',

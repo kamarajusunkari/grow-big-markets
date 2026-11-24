@@ -10,9 +10,16 @@ import { Testimonials } from './components/Testimonials';
 import { Faq } from './components/Faq';
 import { BookingModal } from './components/BookingModal';
 import { Footer } from './components/Footer';
+import { FloatingWhatsApp } from './components/FloatingWhatsApp';
+import { openWhatsApp } from './lib/utils';
 
 export const App: React.FC = () => {
   const [isBookingOpen, setIsBookingOpen] = useState(false);
+
+  // Global handler to direct CTAs to WhatsApp with mobile number +91 9493898990
+  const handleOpenCTA = (message?: string) => {
+    openWhatsApp(message);
+  };
 
   // Smooth Scroll-Triggered Reveal & Text Reveal Engine
   useEffect(() => {
@@ -63,27 +70,30 @@ export const App: React.FC = () => {
     <div className="min-h-screen flex flex-col bg-[#FBF6EF] text-[#0D0D0C] w-full max-w-full">
       {/* Slide-in Sticky Header (appears when scrolling past the hero) */}
       <Navbar
-        onOpenBooking={() => setIsBookingOpen(true)}
+        onOpenBooking={() => handleOpenCTA('Hi Grow Big Marketers, I would like to connect with your team on WhatsApp.')}
       />
 
       {/* Main Single-Page Content */}
       <main className="flex-1 w-full max-w-full">
         {/* Vela Hero Section */}
-        <Hero onOpenBooking={() => setIsBookingOpen(true)} />
+        <Hero onOpenBooking={() => handleOpenCTA('Hi Grow Big Marketers, I would like to book a strategy call for my business.')} />
 
         <div className="bg-[#f8fafc] text-slate-800 w-full max-w-full">
-          <AboutUs onOpenBooking={() => setIsBookingOpen(true)} />
-          <Services onOpenBooking={() => setIsBookingOpen(true)} />
-          <Industries onOpenBooking={() => setIsBookingOpen(true)} />
-          <Process onOpenBooking={() => setIsBookingOpen(true)} />
+          <AboutUs onOpenBooking={() => handleOpenCTA('Hi Grow Big Marketers, I want to learn more about your performance marketing and scaling strategies.')} />
+          <Services onOpenBooking={(msg) => handleOpenCTA(msg || 'Hi Grow Big Marketers, I want to discuss custom strategy and performance marketing services.')} />
+          <Industries onOpenBooking={(msg) => handleOpenCTA(msg || 'Hi Grow Big Marketers, I would like to schedule an industry strategy call.')} />
+          <Process onOpenBooking={() => handleOpenCTA('Hi Grow Big Marketers, I would like to understand your growth process and get started.')} />
           <Portfolio />
           <Testimonials />
-          <Faq />
+          <Faq onOpenBooking={() => handleOpenCTA('Hi Grow Big Marketers, I have a question from the FAQ section on your website.')} />
         </div>
       </main>
 
       {/* Footer */}
-      <Footer onOpenBooking={() => setIsBookingOpen(true)} />
+      <Footer onOpenBooking={() => handleOpenCTA('Hi Grow Big Marketers, I want to book a strategy call and discuss a project.')} />
+
+      {/* Floating 24/7 WhatsApp Quick Connect Button (+91 9493898990) */}
+      <FloatingWhatsApp />
 
       {/* Quote & Project Booking Modal */}
       <BookingModal

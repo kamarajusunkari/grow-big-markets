@@ -3,7 +3,7 @@ import { ChevronDown, Phone, Mail } from 'lucide-react';
 import growBigPrimary from '../assets/Growbig Primary.png';
 
 interface FooterProps {
-  onOpenBooking?: () => void;
+  onOpenBooking?: (message?: string) => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({ onOpenBooking }) => {
@@ -157,7 +157,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking }) => {
 
               <button
                 type="button"
-                onClick={onOpenBooking}
+                onClick={() => onOpenBooking?.('Hi Grow Big Marketers, I want to book a strategy call and discuss marketing services on WhatsApp.')}
                 className="brand-touch-btn"
               >
                 <span>Book Strategy Call</span>
@@ -171,6 +171,18 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking }) => {
 
               {/* Mobile Quick Connect Action Bar (Visible on phones ≤768px) */}
               <div className="mobile-quick-actions">
+                <a
+                  href="https://wa.me/919493898990?text=Hi%20Grow%20Big%20Marketers%2C%20I%20would%20like%20to%20discuss%20a%20project."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mobile-action-pill mobile-action-wa"
+                  style={{ background: '#25D366', color: '#ffffff', borderColor: '#20bd5a' }}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.472 14.382c-.301-.15-1.78-.879-2.056-.979-.276-.1-.476-.15-.676.15-.2.301-.776.979-.951 1.18-.175.2-.351.225-.652.075-.3-.15-1.267-.467-2.414-1.489-.893-.797-1.496-1.782-1.671-2.083-.176-.301-.019-.464.132-.614.136-.135.301-.351.452-.527.15-.175.2-.301.3-.501.1-.2.05-.376-.025-.526-.075-.15-.676-1.63-.926-2.232-.244-.586-.492-.506-.676-.516l-.576-.01c-.2 0-.526.075-.802.376-.276.301-1.052 1.028-1.052 2.508 0 1.48 1.077 2.91 1.228 3.111.15.201 2.119 3.236 5.133 4.54.717.311 1.277.497 1.714.636.721.229 1.377.197 1.896.12.578-.087 1.78-.727 2.03-1.43.25-.702.25-1.304.175-1.43-.075-.126-.275-.201-.576-.351zM12.04 2C6.517 2 2.028 6.488 2.028 12.012c0 1.792.47 3.535 1.365 5.068L2 22l5.05-1.326c1.477.807 3.14 1.233 4.989 1.233 5.522 0 10.012-4.488 10.012-10.012 0-2.67-1.04-5.18-2.929-7.07A9.95 9.95 0 0 0 12.04 2z" />
+                  </svg>
+                  <span>WhatsApp</span>
+                </a>
                 <a href="tel:+919493898990" className="mobile-action-pill">
                   <Phone size={14} />
                   <span>Call Us</span>
@@ -271,7 +283,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking }) => {
                         onClick={(e) => {
                           if (onOpenBooking) {
                             e.preventDefault();
-                            onOpenBooking();
+                            onOpenBooking('Hi Grow Big Marketers, I would like to schedule a strategy call on WhatsApp.');
                           }
                         }}
                       >
@@ -305,9 +317,15 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking }) => {
                 <div className="accordion-inner">
                   <ul className="link-list">
                     <li className="link-item">
+                      <a href="https://wa.me/919493898990?text=Hi%20Grow%20Big%20Marketers%2C%20I%20would%20like%20to%20connect." target="_blank" rel="noopener noreferrer">
+                        <svg className="social-icon-glyph" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.301-.15-1.78-.879-2.056-.979-.276-.1-.476-.15-.676.15-.2.301-.776.979-.951 1.18-.175.2-.351.225-.652.075-.3-.15-1.267-.467-2.414-1.489-.893-.797-1.496-1.782-1.671-2.083-.176-.301-.019-.464.132-.614.136-.135.301-.351.452-.527.15-.175.2-.301.3-.501.1-.2.05-.376-.025-.526-.075-.15-.676-1.63-.926-2.232-.244-.586-.492-.506-.676-.516l-.576-.01c-.2 0-.526.075-.802.376-.276.301-1.052 1.028-1.052 2.508 0 1.48 1.077 2.91 1.228 3.111.15.201 2.119 3.236 5.133 4.54.717.311 1.277.497 1.714.636.721.229 1.377.197 1.896.12.578-.087 1.78-.727 2.03-1.43.25-.702.25-1.304.175-1.43-.075-.126-.275-.201-.576-.351zM12.04 2C6.517 2 2.028 6.488 2.028 12.012c0 1.792.47 3.535 1.365 5.068L2 22l5.05-1.326c1.477.807 3.14 1.233 4.989 1.233 5.522 0 10.012-4.488 10.012-10.012 0-2.67-1.04-5.18-2.929-7.07A9.95 9.95 0 0 0 12.04 2z" /></svg>
+                        <span>WhatsApp: +91 9493898990</span>
+                      </a>
+                    </li>
+                    <li className="link-item">
                       <a href="tel:+919493898990">
                         <svg className="social-icon-glyph" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" /></svg>
-                        <span>+91 9493898990</span>
+                        <span>Direct Call: +91 9493898990</span>
                       </a>
                     </li>
                     <li className="link-item">
@@ -344,7 +362,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking }) => {
               <span>·</span>
               <a href="#services">Free Marketing Audit</a>
               <span>·</span>
-              <a href="tel:+919493898990">+91 9493898990</a>
+              <a href="https://wa.me/919493898990" target="_blank" rel="noopener noreferrer">WhatsApp: +91 9493898990</a>
             </div>
             <div className="bottom-copyright">
               © 2025 Grow Big Marketers. All rights reserved. Premier Digital Marketing & Scaling Agency.
