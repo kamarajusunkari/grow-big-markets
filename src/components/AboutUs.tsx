@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowUpRight, Play, Sparkles, X, Smile } from 'lucide-react';
+import { ArrowUpRight, Play, X, Smile } from 'lucide-react';
 
 interface AboutUsProps {
   onOpenBooking?: () => void;
@@ -11,9 +11,9 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
   return (
     <section
       id="about"
+      className="about-section"
       style={{
         background: '#ffffff', // Clean white background matching screenshot
-        padding: '6.5rem 0 7rem 0',
         borderBottom: '1px solid rgba(15, 23, 42, 0.08)',
         position: 'relative',
         overflow: 'hidden',
@@ -42,27 +42,8 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
           }}
           className="about-top-grid"
         >
-          {/* Top Left: Subtitle Pill & Main Title */}
+          {/* Top Left: Main Title with Smooth Text Reveal */}
           <div className="reveal-fade-up">
-            <div style={{ marginBottom: '1rem' }}>
-              <span
-                style={{
-                  fontSize: '0.85rem',
-                  fontWeight: 800,
-                  background: '#ede9fe', // Light lavender pill matching screenshot
-                  color: '#6b21a8',
-                  padding: '0.45rem 1.25rem',
-                  borderRadius: 'var(--radius-full)',
-                  border: '1px solid rgba(192, 132, 252, 0.3)',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                }}
-              >
-                <Sparkles size={14} color="#84cc16" /> About Us
-              </span>
-            </div>
-
             <h2
               style={{
                 fontSize: 'clamp(2.4rem, 4vw, 3.5rem)',
@@ -73,13 +54,13 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
               }}
               className="about-main-heading"
             >
-              Digital Expertise You <br />
-              Can Count On
+              <span className="text-reveal"><span className="text-reveal-inner">Digital Expertise You</span></span> <br />
+              <span className="text-reveal"><span className="text-reveal-inner delay-100">Can Count On</span></span>
             </h2>
           </div>
 
           {/* Top Right: Paragraph & Action Buttons */}
-          <div className="reveal-fade-up delay-100">
+          <div className="reveal-fade-up delay-150">
             <p
               style={{
                 fontSize: '1.05rem',
@@ -382,7 +363,13 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
           transform: translateY(-6px);
           box-shadow: 0 25px 50px rgba(168, 85, 247, 0.45) !important;
         }
+        .about-section {
+          padding: 6.5rem 0 7rem 0;
+        }
         @media (max-width: 1024px) {
+          .about-section {
+            padding: 4.5rem 0 5rem 0;
+          }
           .about-top-grid {
             grid-template-columns: 1fr !important;
             gap: 2rem !important;
@@ -392,14 +379,17 @@ export const AboutUs: React.FC<AboutUsProps> = ({ onOpenBooking }) => {
           }
         }
         @media (max-width: 768px) {
+          .about-section {
+            padding: 2.25rem 0 2.5rem 0 !important;
+          }
           .about-section-container {
             padding: 0 16px !important;
             box-sizing: border-box !important;
           }
           .about-top-grid {
             grid-template-columns: 1fr !important;
-            gap: 1.5rem !important;
-            margin-bottom: 2rem !important;
+            gap: 1.25rem !important;
+            margin-bottom: 1.5rem !important;
           }
           .about-main-heading {
             font-size: clamp(1.75rem, 6.5vw, 2.2rem) !important;

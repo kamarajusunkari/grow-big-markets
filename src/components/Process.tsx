@@ -99,7 +99,7 @@ export const Process: React.FC<ProcessProps> = ({ onOpenBooking }) => {
     <section
       ref={sectionRef}
       id="process"
-      className="relative w-full overflow-hidden bg-[#f8fafc] py-14 sm:py-18 md:py-24 border-b border-slate-200/70 select-none"
+      className="relative w-full overflow-hidden bg-[#f8fafc] py-7 sm:py-16 md:py-24 border-b border-slate-200/70 select-none"
     >
       {/* Background Soft Glow */}
       <div
@@ -116,16 +116,16 @@ export const Process: React.FC<ProcessProps> = ({ onOpenBooking }) => {
         <div className="relative w-full">
           {/* Main Headline & Action Button: Positioned on Top-Left above Cards 1 & 2 */}
           <div
-            className="lg:absolute lg:top-0 lg:left-0 z-20 mb-6 lg:mb-0 max-w-lg"
+            className="lg:absolute lg:top-0 lg:left-0 z-20 mb-4 lg:mb-0 max-w-lg"
             style={{
               opacity: isInView ? 1 : 0,
               transform: isInView ? 'translateY(0)' : 'translateY(16px)',
               transition: 'opacity 0.6s ease-out, transform 0.6s ease-out',
             }}
           >
-            <h2 className="text-2xl sm:text-3xl lg:text-[30px] font-extrabold text-slate-900 tracking-tight leading-[1.18]">
-              Smart Systems Built for Every <br className="hidden sm:inline" />
-              Growing Business
+            <h2 className="text-2xl sm:text-3xl lg:text-[30px] font-extrabold text-slate-900 tracking-tight leading-[1.18] text-reveal">
+              <span className="text-reveal-inner">Smart Systems Built for Every</span> <br className="hidden sm:inline" />
+              <span className="text-reveal-inner delay-100">Growing Business</span>
             </h2>
 
             {/* Ready to Grow Action Button */}

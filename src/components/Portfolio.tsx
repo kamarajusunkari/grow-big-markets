@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Sparkles, ArrowUpRight, CheckCircle2, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowUpRight, CheckCircle2, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface CaseStudy {
   id: string;
@@ -284,9 +284,9 @@ export const Portfolio: React.FC = () => {
   return (
     <section
       id="portfolio"
+      className="portfolio-section"
       style={{
         background: '#f3e8ff', // Soft Lavender Background
-        padding: '6.5rem 0 7.5rem 0',
         borderBottom: '1px solid rgba(15, 23, 42, 0.08)',
         position: 'relative',
         overflow: 'hidden',
@@ -301,28 +301,9 @@ export const Portfolio: React.FC = () => {
           padding: '0 2rem',
           marginBottom: '3.5rem',
         }}
+        className="portfolio-header-container"
       >
         <div style={{ textAlign: 'center' }} className="reveal-fade-up">
-          <span
-            style={{
-              fontSize: '0.85rem',
-              fontWeight: 900,
-              background: 'rgba(253, 208, 11, 0.25)',
-              color: '#0f172a',
-              padding: '0.4rem 1.1rem',
-              borderRadius: 'var(--radius-full)',
-              border: '1px solid rgba(253, 208, 11, 0.55)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.14em',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              marginBottom: '0.75rem',
-            }}
-          >
-            <Sparkles size={14} color="#0f172a" /> PROVEN IMPACT & CASE STUDIES
-          </span>
-
           <h2
             style={{
               fontSize: 'clamp(2.2rem, 3.8vw, 3.2rem)',
@@ -332,7 +313,8 @@ export const Portfolio: React.FC = () => {
               letterSpacing: '-0.03em',
             }}
           >
-            Recent Client Work That <span style={{ color: '#FDD00B', background: '#3E6AB3', padding: '0.15rem 0.6rem', borderRadius: '8px', fontStyle: 'italic', fontSize: '0.88em', boxShadow: '0 4px 15px rgba(62, 106, 179, 0.35)', display: 'inline-block' }}>Delivers Results</span>
+            <span className="text-reveal"><span className="text-reveal-inner">Recent Client Work That</span></span>{' '}
+            <span className="text-reveal"><span className="text-reveal-inner delay-100" style={{ color: '#3E6AB3', fontStyle: 'italic' }}>Delivers Results</span></span>
           </h2>
         </div>
       </div>
@@ -673,7 +655,22 @@ export const Portfolio: React.FC = () => {
           border: 1px solid rgba(15, 23, 42, 0.1);
           box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
         }
+        .portfolio-section {
+          padding: 6.5rem 0 7.5rem 0;
+        }
+        @media (max-width: 1024px) {
+          .portfolio-section {
+            padding: 4.5rem 0 5rem 0;
+          }
+        }
         @media (max-width: 768px) {
+          .portfolio-section {
+            padding: 2.25rem 0 2.5rem 0 !important;
+          }
+          .portfolio-header-container {
+            margin-bottom: 1.25rem !important;
+            padding: 0 1rem !important;
+          }
           .portfolio-desktop-wrapper {
             display: none !important;
           }

@@ -372,7 +372,7 @@ export const Industries: React.FC<IndustriesProps> = ({ onOpenBooking }) => {
     <section
       ref={sectionRef}
       id="industries"
-      className="relative w-full overflow-hidden text-slate-900 select-none py-14 sm:py-20 md:py-24 bg-black"
+      className="relative w-full overflow-hidden text-slate-900 select-none py-7 sm:py-16 md:py-24 bg-black"
     >
       {/* ====================================================================
           MODERN ARCHITECTURAL SKYLINE BACKGROUND (With Balanced Black Overlay)
@@ -394,14 +394,14 @@ export const Industries: React.FC<IndustriesProps> = ({ onOpenBooking }) => {
           MAIN 1400PX CONTENT CONTAINER
           ==================================================================== */}
       <div className="relative z-10 w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center">
-        {/* Thin Elegant Header: Light "INDUSTRIES" + Tracked Light "WE COVER" (High-contrast against dark overlay) */}
-        <div className="w-full mb-8 sm:mb-10 md:mb-12">
+        {/* Thin Elegant Header: Light "INDUSTRIES" + Tracked Light "WE COVER" with Text Reveal */}
+        <div className="w-full mb-5 sm:mb-8 md:mb-12 reveal-fade-up">
           <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-light text-white tracking-tight leading-none drop-shadow-md">
-              INDUSTRIES
+            <h2 className="text-3xl sm:text-5xl md:text-6xl font-light text-white tracking-tight leading-none drop-shadow-md text-reveal">
+              <span className="text-reveal-inner">INDUSTRIES</span>
             </h2>
-            <div className="text-2xl sm:text-3xl md:text-4xl font-extralight text-slate-300 tracking-[0.24em] uppercase mt-1 drop-shadow-sm">
-              WE COVER
+            <div className="text-xl sm:text-3xl md:text-4xl font-extralight text-slate-300 tracking-[0.24em] uppercase mt-1 drop-shadow-sm text-reveal delay-100">
+              <span className="text-reveal-inner">WE COVER</span>
             </div>
           </div>
         </div>

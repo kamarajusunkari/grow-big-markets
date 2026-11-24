@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { AboutUs } from './components/AboutUs';
@@ -13,6 +13,51 @@ import { Footer } from './components/Footer';
 
 export const App: React.FC = () => {
   const [isBookingOpen, setIsBookingOpen] = useState(false);
+
+  // Smooth Scroll-Triggered Reveal & Text Reveal Engine
+  useEffect(() => {
+    const selector = '.reveal-fade-up, .fade-up, .text-reveal, .reveal-scale, .reveal-scale-up';
+
+    if (!('IntersectionObserver' in window)) {
+      document.querySelectorAll(selector).forEach((el) => el.classList.add('is-visible'));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        rootMargin: '0px 0px -36px 0px',
+        threshold: 0.08,
+      }
+    );
+
+    const observeAll = () => {
+      document.querySelectorAll(`${selector}:not(.is-visible)`).forEach((el) => {
+        observer.observe(el);
+      });
+    };
+
+    observeAll();
+
+    // Listen for dynamically mounted sections or cards
+    const mutationObserver = new MutationObserver(() => {
+      observeAll();
+    });
+
+    mutationObserver.observe(document.body, { childList: true, subtree: true });
+
+    return () => {
+      observer.disconnect();
+      mutationObserver.disconnect();
+    };
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FBF6EF] text-[#0D0D0C] w-full max-w-full">

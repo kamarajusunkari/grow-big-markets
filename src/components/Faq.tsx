@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Minus, ArrowRight, Sparkles } from 'lucide-react';
+import { Plus, Minus, ArrowRight } from 'lucide-react';
 
 interface FaqProps {
   onOpenBooking?: () => void;
@@ -59,9 +59,9 @@ export const Faq: React.FC<FaqProps> = ({ onOpenBooking }) => {
   return (
     <section
       id="faq"
+      className="faq-section"
       style={{
         background: '#f5f2eb', // Warm off-white background
-        padding: '6.5rem 0 7.5rem 0',
         borderBottom: '1px solid rgba(15, 23, 42, 0.08)',
         position: 'relative',
       }}
@@ -76,6 +76,7 @@ export const Faq: React.FC<FaqProps> = ({ onOpenBooking }) => {
           position: 'relative',
           zIndex: 2,
         }}
+        className="faq-header-container"
       >
         <div
           style={{
@@ -96,29 +97,7 @@ export const Faq: React.FC<FaqProps> = ({ onOpenBooking }) => {
             }}
             className="faq-sticky-left reveal-fade-up"
           >
-            {/* Tagline Subtitle */}
-            <div style={{ marginBottom: '1.25rem' }}>
-              <span
-                style={{
-                  fontSize: '0.85rem',
-                  fontWeight: 900,
-                  background: 'rgba(253, 208, 11, 0.25)',
-                  color: '#0f172a',
-                  padding: '0.4rem 1.1rem',
-                  borderRadius: 'var(--radius-full)',
-                  border: '1px solid rgba(253, 208, 11, 0.55)',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.14em',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                }}
-              >
-                <Sparkles size={14} color="#0f172a" /> QUESTIONS & ANSWERS
-              </span>
-            </div>
-
-            {/* Main Title (Consistent Brand Heading Font: Outfit) */}
+            {/* Main Title with Smooth Text Reveal */}
             <h2
               style={{
                 fontSize: 'clamp(2.4rem, 4.2vw, 3.5rem)',
@@ -130,8 +109,8 @@ export const Faq: React.FC<FaqProps> = ({ onOpenBooking }) => {
                 letterSpacing: '-0.03em',
               }}
             >
-              Clear answers for <br />
-              <span style={{ color: '#FDD00B', background: '#3E6AB3', padding: '0.15rem 0.6rem', borderRadius: '8px', fontStyle: 'italic', fontSize: '0.88em', boxShadow: '0 4px 15px rgba(62, 106, 179, 0.35)', display: 'inline-block' }}>complex operations</span>
+              <span className="text-reveal"><span className="text-reveal-inner">Clear answers for</span></span> <br />
+              <span className="text-reveal"><span className="text-reveal-inner delay-100" style={{ color: '#3E6AB3', fontStyle: 'italic' }}>complex operations</span></span>
             </h2>
 
             {/* Subtitle Paragraph (Consistent Brand Body Font: Plus Jakarta Sans) */}
@@ -233,11 +212,12 @@ export const Faq: React.FC<FaqProps> = ({ onOpenBooking }) => {
 
           {/* RIGHT COLUMN: SCROLLABLE ACCORDION LIST */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }} className="faq-questions-column reveal-fade-up delay-100">
-            {FAQ_LIST.map((item) => {
+            {FAQ_LIST.map((item, idx) => {
               const isOpen = openId === item.id;
               return (
                 <div
                   key={item.id}
+                  className={`reveal-fade-up delay-${Math.min(idx * 50, 400)}`}
                   style={{
                     background: '#faf8f5',
                     borderRadius: '24px',
@@ -315,15 +295,29 @@ export const Faq: React.FC<FaqProps> = ({ onOpenBooking }) => {
       </div>
 
       <style>{`
+        .faq-section {
+          padding: 6.5rem 0 7.5rem 0;
+        }
         .faq-cta-btn:hover {
           transform: translateY(-2px);
           background: #d97706 !important;
         }
+        @media (max-width: 1024px) {
+          .faq-section {
+            padding: 4.5rem 0 5rem 0;
+          }
+        }
         @media (max-width: 768px) {
+          .faq-section {
+            padding: 2.25rem 0 2.5rem 0 !important;
+          }
+          .faq-header-container {
+            padding: 0 1rem !important;
+          }
           .faq-split-grid {
             display: flex !important;
             flex-direction: column !important;
-            gap: 2rem !important;
+            gap: 1.5rem !important;
           }
           .faq-sticky-left {
             position: relative !important;

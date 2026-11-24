@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Sparkles, Play, Quote, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Play, Quote, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface QuoteCardData {
   type: 'quote';
@@ -119,9 +119,9 @@ export const Testimonials: React.FC = () => {
   return (
     <section
       id="testimonials"
+      className="testimonials-section"
       style={{
         background: '#ffffff',
-        padding: '6.5rem 0 8.5rem 0',
         borderBottom: '1px solid rgba(15, 23, 42, 0.08)',
         position: 'relative',
         overflow: 'hidden',
@@ -149,29 +149,10 @@ export const Testimonials: React.FC = () => {
           position: 'relative',
           zIndex: 2,
         }}
+        className="testimonials-header-container"
       >
-        {/* Section Header (Matching Screenshot: 007 • TESTIMONIAL & What They're Saying) */}
+        {/* Section Header with Smooth Text Reveal */}
         <div style={{ textAlign: 'center', marginBottom: '4rem' }} className="reveal-fade-up">
-          <span
-            style={{
-              fontSize: '0.8rem',
-              fontWeight: 900,
-              background: '#f1f5f9',
-              color: '#0f172a',
-              padding: '0.35rem 1rem',
-              borderRadius: 'var(--radius-full)',
-              border: '1px solid rgba(15, 23, 42, 0.1)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.12em',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              marginBottom: '1rem',
-            }}
-          >
-            <Sparkles size={13} color="#FDD00B" /> TESTIMONIALS
-          </span>
-
           <h2
             style={{
               fontSize: 'clamp(2.4rem, 4vw, 3.5rem)',
@@ -181,7 +162,7 @@ export const Testimonials: React.FC = () => {
               letterSpacing: '-0.03em',
             }}
           >
-            What They're Saying
+            <span className="text-reveal"><span className="text-reveal-inner">What They're Saying</span></span>
           </h2>
         </div>
 
@@ -403,7 +384,22 @@ export const Testimonials: React.FC = () => {
           background: #FDD00B;
         }
 
+        .testimonials-section {
+          padding: 6.5rem 0 8.5rem 0;
+        }
+        @media (max-width: 1024px) {
+          .testimonials-section {
+            padding: 4.5rem 0 5.5rem 0;
+          }
+        }
         @media (max-width: 768px) {
+          .testimonials-section {
+            padding: 2.25rem 0 2.5rem 0 !important;
+          }
+          .testimonials-header-container {
+            margin-bottom: 1.5rem !important;
+            padding: 0 1rem !important;
+          }
           .testimonials-3-cols {
             display: none !important;
           }

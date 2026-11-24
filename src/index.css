@@ -161,3 +161,89 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #fdcf09;
 }
+
+/* ==========================================================================
+   SMOOTH GPU-ACCELERATED MOTION SYSTEM (Fade Up, Scale & Text Reveal)
+   ========================================================================== */
+
+/* Fade-Up Base */
+.reveal-fade-up,
+.fade-up {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-fade-up.is-visible,
+.fade-up.is-visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+/* Scale-Up Base */
+.reveal-scale-up,
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.93) translateY(22px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-scale-up.is-visible,
+.reveal-scale.is-visible {
+  opacity: 1 !important;
+  transform: scale(1) translateY(0) !important;
+}
+
+/* Text Reveal (Cinematic Slide Up from Clip Mask) */
+.text-reveal {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  line-height: 1.15;
+}
+
+.text-reveal-inner {
+  display: inline-block;
+  transform: translateY(115%);
+  opacity: 0;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+.is-visible .text-reveal-inner,
+.text-reveal.is-visible .text-reveal-inner,
+.text-reveal-inner.is-visible {
+  transform: translateY(0) !important;
+  opacity: 1 !important;
+}
+
+/* Stagger Delays */
+.delay-50 { transition-delay: 50ms !important; }
+.delay-75 { transition-delay: 75ms !important; }
+.delay-100 { transition-delay: 100ms !important; }
+.delay-150 { transition-delay: 150ms !important; }
+.delay-200 { transition-delay: 200ms !important; }
+.delay-250 { transition-delay: 250ms !important; }
+.delay-300 { transition-delay: 300ms !important; }
+.delay-350 { transition-delay: 350ms !important; }
+.delay-400 { transition-delay: 400ms !important; }
+.delay-500 { transition-delay: 500ms !important; }
+.delay-600 { transition-delay: 600ms !important; }
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-fade-up,
+  .fade-up,
+  .reveal-scale-up,
+  .reveal-scale,
+  .text-reveal-inner {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
