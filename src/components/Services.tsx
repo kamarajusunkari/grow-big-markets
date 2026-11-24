@@ -110,10 +110,10 @@ function drawCardCanvas(
   ctx: CanvasRenderingContext2D,
   img: HTMLImageElement | null,
   item: ServiceCardData,
-  isMob = false
+  _isMob = false
 ) {
-  const W = isMob ? 1000 : 1200;
-  const H = isMob ? 1350 : 760;
+  const W = 1000;
+  const H = 1680;
 
   // Clear background
   ctx.clearRect(0, 0, W, H);
@@ -121,47 +121,39 @@ function drawCardCanvas(
   // 1. Card Background: Pure Crisp White with subtle luxury warmth (No blue bg)
   ctx.fillStyle = '#ffffff';
   ctx.beginPath();
-  ctx.roundRect(0, 0, W, H, isMob ? 38 : 24);
+  ctx.roundRect(0, 0, W, H, 36);
   ctx.fill();
 
   const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
   bgGrad.addColorStop(0, '#ffffff');
-  bgGrad.addColorStop(0.75, '#ffffff');
+  bgGrad.addColorStop(0.72, '#ffffff');
   bgGrad.addColorStop(1, '#fcfaf2');
   ctx.fillStyle = bgGrad;
   ctx.beginPath();
-  ctx.roundRect(0, 0, W, H, isMob ? 38 : 24);
+  ctx.roundRect(0, 0, W, H, 36);
   ctx.fill();
 
-  const pad = isMob ? 28 : 20;
+  // 2. Image Frame Container: Exactly 300 x 400 proportion (3:4 aspect ratio)
+  const pad = 42;
   const imgX = pad;
   const imgY = pad;
-  const imgW = W - pad * 2;
+  const imgW = W - pad * 2; // 916px
+  // Exact 300 x 400 aspect ratio:
+  const imgH = Math.round(imgW * (400 / 300)); // 1221px
 
-  // Free size image: dynamically proportional to the image's actual aspect ratio!
-  let imgH: number;
-  if (img && img.naturalWidth && img.naturalHeight) {
-    const natAspect = img.naturalWidth / img.naturalHeight;
-    const naturalH = Math.round(imgW / natAspect);
-    imgH = clamp(naturalH, isMob ? 340 : 280, isMob ? 500 : 360);
-  } else {
-    imgH = isMob ? 420 : 330;
-  }
-
-  // 2. Clean, unobstructed Image Frame Container (NO text/badge overlays on image!)
   ctx.save();
   ctx.beginPath();
-  ctx.roundRect(imgX, imgY, imgW, imgH, isMob ? 24 : 16);
+  ctx.roundRect(imgX, imgY, imgW, imgH, 24);
   ctx.clip();
 
   // Neutral subtle base behind image
-  ctx.fillStyle = '#f1f5f9';
+  ctx.fillStyle = '#f8fafc';
   ctx.fillRect(imgX, imgY, imgW, imgH);
 
-  // Draw full image in frame, maintaining natural ratio
+  // Draw full image in 300x400 frame maintaining natural ratio
   if (img && img.complete && img.naturalWidth > 0) {
     const ia = img.naturalWidth / img.naturalHeight;
-    const ta = imgW / imgH;
+    const ta = imgW / imgH; // 300 / 400 = 0.75
     let sx = 0, sy = 0, sw = img.naturalWidth, sh = img.naturalHeight;
     if (ia > ta) {
       sw = img.naturalHeight * ta;
@@ -178,272 +170,157 @@ function drawCardCanvas(
   // Thin, clean border around image frame
   ctx.save();
   ctx.strokeStyle = 'rgba(15, 23, 42, 0.09)';
-  ctx.lineWidth = 1.5;
+  ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.roundRect(imgX, imgY, imgW, imgH, isMob ? 24 : 16);
+  ctx.roundRect(imgX, imgY, imgW, imgH, 24);
   ctx.stroke();
   ctx.restore();
 
-  if (isMob) {
-    // 3. MOBILE CONTENT (High breathing room, generous spacing, NO button, NO compact feel)
-    let curY = imgY + imgH + 40;
-    const maxTextW = W - (pad + 16) * 2;
+  // 3. CONTENT (Generous breathing room, crisp hierarchy, NO button, NO text on image)
+  let curY = imgY + imgH + 34;
+  const maxTextW = W - (pad + 16) * 2;
 
-    ctx.save();
+  ctx.save();
 
-    // A. Category Pill & Metric Indicator (Moved cleanly below image!)
-    const catText = '●  ' + item.category;
-    ctx.font = '700 24px "IBM Plex Mono", monospace';
-    const catW = ctx.measureText(catText).width + 38;
-    const pillH = 50;
+  // A. Category Pill & Metric Indicator (Moved cleanly below image!)
+  const catText = '●  ' + item.category;
+  ctx.font = '700 21px "IBM Plex Mono", monospace';
+  const catW = ctx.measureText(catText).width + 36;
+  const pillH = 46;
 
-    // Category Pill
-    ctx.fillStyle = 'rgba(253, 208, 11, 0.2)';
-    ctx.strokeStyle = 'rgba(245, 158, 11, 0.55)';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.roundRect(pad + 16, curY, catW, pillH, 25);
-    ctx.fill();
-    ctx.stroke();
+  // Category Pill
+  ctx.fillStyle = 'rgba(253, 208, 11, 0.20)';
+  ctx.strokeStyle = 'rgba(245, 158, 11, 0.60)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.roundRect(pad + 12, curY, catW, pillH, 23);
+  ctx.fill();
+  ctx.stroke();
 
-    ctx.fillStyle = '#b45309';
-    ctx.fillText(catText, pad + 35, curY + 34);
+  ctx.fillStyle = '#b45309';
+  ctx.fillText(catText, pad + 30, curY + 31);
 
-    // Metric Pill
-    const metricText = item.metric;
-    const metricW = ctx.measureText(metricText).width + 38;
-    const metricX = pad + 16 + catW + 16;
-    if (metricX + metricW <= W - pad - 16) {
-      ctx.fillStyle = 'rgba(15, 23, 42, 0.05)';
-      ctx.strokeStyle = 'rgba(15, 23, 42, 0.14)';
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.roundRect(metricX, curY, metricW, pillH, 25);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.fillStyle = '#0f172a';
-      ctx.fillText(metricText, metricX + 19, curY + 34);
-    }
-
-    curY += pillH + 34; // Generous space before title
-
-    // B. Title (Bold, large, airy line-height)
-    ctx.fillStyle = '#0f172a';
-    ctx.font = '800 72px "Inter Tight", sans-serif';
-
-    const titleWords = item.title.split(' ');
-    let titleLine1 = '';
-    let titleLine2 = '';
-    for (const w of titleWords) {
-      const test = titleLine1 ? `${titleLine1} ${w}` : w;
-      if (ctx.measureText(test).width <= maxTextW) {
-        titleLine1 = test;
-      } else {
-        titleLine2 = titleLine2 ? `${titleLine2} ${w}` : w;
-      }
-    }
-
-    if (titleLine2) {
-      ctx.fillText(titleLine1, pad + 16, curY + 66);
-      curY += 66 + 20;
-      ctx.fillText(titleLine2, pad + 16, curY + 66);
-      curY += 66 + 32; // Generous space after 2-line title
-    } else {
-      ctx.fillText(titleLine1, pad + 16, curY + 68);
-      curY += 68 + 36; // Generous space after 1-line title
-    }
-
-    // C. Subtitle (Amber Gold highlight with breathing room)
-    ctx.fillStyle = '#b45309';
-    ctx.font = '700 42px "Inter Tight", sans-serif';
-    const cleanSubtitle = item.subtitle.length > 44 ? item.subtitle.slice(0, 44) + '...' : item.subtitle;
-    ctx.fillText(cleanSubtitle, pad + 16, curY + 40);
-    curY += 40 + 38; // Generous space before description
-
-    // D. Description (Crisp, comfortable reading size, relaxed line-height)
-    ctx.fillStyle = '#475569';
-    ctx.font = '500 36px "Inter Tight", sans-serif';
-    const words = item.desc.split(' ');
-    let line1 = '', line2 = '';
-    for (const w of words) {
-      if ((line1 + ' ' + w).length <= 36) {
-        line1 += (line1 ? ' ' : '') + w;
-      } else if ((line2 + ' ' + w).length <= 36) {
-        line2 += (line2 ? ' ' : '') + w;
-      }
-    }
-    ctx.fillText(line1, pad + 16, curY + 36);
-    curY += 36;
-    if (line2) {
-      curY += 20;
-      ctx.fillText(line2 + (item.desc.length > (line1.length + line2.length + 5) ? '...' : ''), pad + 16, curY + 36);
-      curY += 36;
-    }
-    curY += 46; // Generous space before deliverable chips
-
-    // E. Deliverable Badges / Capabilities (Spacious, prominent pills)
-    if (item.deliverables && item.deliverables.length > 0) {
-      const chipH = 64;
-      const d1 = item.deliverables[0];
-      const d1Text = '✓  ' + (d1.length > 28 ? d1.slice(0, 28) + '...' : d1);
-      ctx.font = '700 30px "Inter Tight", sans-serif';
-      const d1Width = ctx.measureText(d1Text).width + 52;
-
-      ctx.fillStyle = 'rgba(254, 243, 199, 0.95)';
-      ctx.strokeStyle = 'rgba(245, 158, 11, 0.7)';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.roundRect(pad + 16, curY, d1Width, chipH, 32);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.fillStyle = '#78350f';
-      ctx.fillText(d1Text, pad + 42, curY + 43);
-
-      if (item.deliverables.length > 1) {
-        const d2 = item.deliverables[1];
-        const d2Text = '✓  ' + (d2.length > 28 ? d2.slice(0, 28) + '...' : d2);
-        const d2Width = ctx.measureText(d2Text).width + 52;
-        const d2X = pad + 16 + d1Width + 16;
-
-        if (d2X + d2Width < W - pad - 16) {
-          // Fits on same line
-          ctx.fillStyle = 'rgba(254, 243, 199, 0.95)';
-          ctx.strokeStyle = 'rgba(245, 158, 11, 0.7)';
-          ctx.lineWidth = 2;
-          ctx.beginPath();
-          ctx.roundRect(d2X, curY, d2Width, chipH, 32);
-          ctx.fill();
-          ctx.stroke();
-
-          ctx.fillStyle = '#78350f';
-          ctx.fillText(d2Text, d2X + 26, curY + 43);
-        } else {
-          // Stack onto second chip row
-          curY += chipH + 18;
-          ctx.fillStyle = 'rgba(254, 243, 199, 0.95)';
-          ctx.strokeStyle = 'rgba(245, 158, 11, 0.7)';
-          ctx.lineWidth = 2;
-          ctx.beginPath();
-          ctx.roundRect(pad + 16, curY, Math.min(d2Width, W - (pad + 16) * 2), chipH, 32);
-          ctx.fill();
-          ctx.stroke();
-
-          ctx.fillStyle = '#78350f';
-          ctx.fillText(d2Text, pad + 42, curY + 43);
-        }
-      }
-    }
-
-    ctx.restore();
-    // Button removed as requested
-  } else {
-    // 3. DESKTOP CONTENT (Refined, proportional, high clarity)
-    let curY = imgY + imgH + 24;
-
-    ctx.save();
-    // A. Category & Metric Pill
-    const catText = '●  ' + item.category;
-    ctx.font = '700 15px "IBM Plex Mono", monospace';
-    const catW = ctx.measureText(catText).width + 26;
-    ctx.fillStyle = 'rgba(253, 208, 11, 0.2)';
-    ctx.strokeStyle = 'rgba(245, 158, 11, 0.55)';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.roundRect(pad + 12, curY, catW, 32, 16);
-    ctx.fill();
-    ctx.stroke();
-
-    ctx.fillStyle = '#b45309';
-    ctx.fillText(catText, pad + 25, curY + 21);
-
-    const metricText = item.metric;
-    const metricW = ctx.measureText(metricText).width + 26;
-    const metricX = pad + 12 + catW + 12;
+  // Metric Pill
+  const metricText = item.metric;
+  const metricW = ctx.measureText(metricText).width + 36;
+  const metricX = pad + 12 + catW + 14;
+  if (metricX + metricW <= W - pad - 12) {
     ctx.fillStyle = 'rgba(15, 23, 42, 0.05)';
-    ctx.strokeStyle = 'rgba(15, 23, 42, 0.12)';
+    ctx.strokeStyle = 'rgba(15, 23, 42, 0.14)';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.roundRect(metricX, curY, metricW, 32, 16);
+    ctx.roundRect(metricX, curY, metricW, pillH, 23);
     ctx.fill();
     ctx.stroke();
 
     ctx.fillStyle = '#0f172a';
-    ctx.fillText(metricText, metricX + 13, curY + 21);
-
-    curY += 32 + 18;
-
-    // B. Title
-    ctx.fillStyle = '#0f172a';
-    ctx.font = '800 40px "Inter Tight", sans-serif';
-    ctx.fillText(item.title, pad + 12, curY + 36);
-    curY += 36 + 14;
-
-    // C. Subtitle
-    ctx.fillStyle = '#b45309';
-    ctx.font = '700 22px "Inter Tight", sans-serif';
-    const cleanSubtitle = item.subtitle.length > 56 ? item.subtitle.slice(0, 56) + '...' : item.subtitle;
-    ctx.fillText(cleanSubtitle, pad + 12, curY + 20);
-    curY += 20 + 12;
-
-    // D. Description
-    ctx.fillStyle = '#475569';
-    ctx.font = '500 19px "Inter Tight", sans-serif';
-    const cleanDesc = item.desc.length > 88 ? item.desc.slice(0, 88) + '...' : item.desc;
-    ctx.fillText(cleanDesc, pad + 12, curY + 18);
-    curY += 18 + 20;
-
-    // E. Deliverable Badges / Chips
-    if (item.deliverables && item.deliverables.length > 0) {
-      const chipH = 34;
-      const d1 = item.deliverables[0];
-      const d1Text = '✓  ' + (d1.length > 30 ? d1.slice(0, 30) + '...' : d1);
-      ctx.font = '700 16px "Inter Tight", sans-serif';
-      const d1Width = ctx.measureText(d1Text).width + 34;
-
-      ctx.fillStyle = 'rgba(254, 243, 199, 0.95)';
-      ctx.strokeStyle = 'rgba(245, 158, 11, 0.65)';
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.roundRect(pad + 12, curY, d1Width, chipH, 17);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.fillStyle = '#78350f';
-      ctx.fillText(d1Text, pad + 29, curY + 23);
-
-      if (item.deliverables.length > 1) {
-        const d2 = item.deliverables[1];
-        const d2Text = '✓  ' + (d2.length > 30 ? d2.slice(0, 30) + '...' : d2);
-        const d2Width = ctx.measureText(d2Text).width + 34;
-        const d2X = pad + 12 + d1Width + 12;
-
-        if (d2X + d2Width < W - pad - 12) {
-          ctx.fillStyle = 'rgba(254, 243, 199, 0.95)';
-          ctx.strokeStyle = 'rgba(245, 158, 11, 0.65)';
-          ctx.lineWidth = 1.5;
-          ctx.beginPath();
-          ctx.roundRect(d2X, curY, d2Width, chipH, 17);
-          ctx.fill();
-          ctx.stroke();
-
-          ctx.fillStyle = '#78350f';
-          ctx.fillText(d2Text, d2X + 17, curY + 23);
-        }
-      }
-    }
-
-    ctx.restore();
-    // Button removed as requested
+    ctx.fillText(metricText, metricX + 18, curY + 31);
   }
 
-  // 4. Subtle Outer Gold Border
+  curY += pillH + 28;
+
+  // B. Title (Bold, modern slate black)
+  ctx.fillStyle = '#0f172a';
+  ctx.font = '800 52px "Inter Tight", sans-serif';
+
+  const titleWords = item.title.split(' ');
+  let titleLine1 = '';
+  let titleLine2 = '';
+  for (const w of titleWords) {
+    const test = titleLine1 ? `${titleLine1} ${w}` : w;
+    if (ctx.measureText(test).width <= maxTextW) {
+      titleLine1 = test;
+    } else {
+      titleLine2 = titleLine2 ? `${titleLine2} ${w}` : w;
+    }
+  }
+
+  if (titleLine2) {
+    ctx.fillText(titleLine1, pad + 12, curY + 48);
+    curY += 48 + 14;
+    ctx.fillText(titleLine2, pad + 12, curY + 48);
+    curY += 48 + 20;
+  } else {
+    ctx.fillText(titleLine1, pad + 12, curY + 48);
+    curY += 48 + 22;
+  }
+
+  // C. Subtitle (Warm Amber Gold highlight)
+  ctx.fillStyle = '#b45309';
+  ctx.font = '700 30px "Inter Tight", sans-serif';
+  const cleanSubtitle = item.subtitle.length > 48 ? item.subtitle.slice(0, 48) + '...' : item.subtitle;
+  ctx.fillText(cleanSubtitle, pad + 12, curY + 28);
+  curY += 28 + 20;
+
+  // D. Description (Crisp, comfortable reading size)
+  ctx.fillStyle = '#475569';
+  ctx.font = '500 25px "Inter Tight", sans-serif';
+  const words = item.desc.split(' ');
+  let line1 = '', line2 = '';
+  for (const w of words) {
+    if ((line1 + ' ' + w).length <= 42) {
+      line1 += (line1 ? ' ' : '') + w;
+    } else if ((line2 + ' ' + w).length <= 42) {
+      line2 += (line2 ? ' ' : '') + w;
+    }
+  }
+  ctx.fillText(line1, pad + 12, curY + 26);
+  curY += 26;
+  if (line2) {
+    curY += 12;
+    ctx.fillText(line2 + (item.desc.length > (line1.length + line2.length + 5) ? '...' : ''), pad + 12, curY + 26);
+    curY += 26;
+  }
+  curY += 28;
+
+  // E. Deliverable Badges / Chips
+  if (item.deliverables && item.deliverables.length > 0) {
+    const chipH = 46;
+    const d1 = item.deliverables[0];
+    const d1Text = '✓  ' + (d1.length > 26 ? d1.slice(0, 26) + '...' : d1);
+    ctx.font = '700 22px "Inter Tight", sans-serif';
+    const d1Width = ctx.measureText(d1Text).width + 42;
+
+    ctx.fillStyle = 'rgba(254, 243, 199, 0.95)';
+    ctx.strokeStyle = 'rgba(245, 158, 11, 0.65)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(pad + 12, curY, d1Width, chipH, 23);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = '#78350f';
+    ctx.fillText(d1Text, pad + 33, curY + 31);
+
+    if (item.deliverables.length > 1) {
+      const d2 = item.deliverables[1];
+      const d2Text = '✓  ' + (d2.length > 26 ? d2.slice(0, 26) + '...' : d2);
+      const d2Width = ctx.measureText(d2Text).width + 42;
+      const d2X = pad + 12 + d1Width + 14;
+
+      if (d2X + d2Width < W - pad - 12) {
+        ctx.fillStyle = 'rgba(254, 243, 199, 0.95)';
+        ctx.strokeStyle = 'rgba(245, 158, 11, 0.65)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.roundRect(d2X, curY, d2Width, chipH, 23);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = '#78350f';
+        ctx.fillText(d2Text, d2X + 21, curY + 31);
+      }
+    }
+  }
+
+  ctx.restore();
+
+  // 4. Subtle Luxury Gold Border
   ctx.save();
   ctx.strokeStyle = 'rgba(234, 179, 8, 0.75)';
   ctx.lineWidth = 3.5;
   ctx.beginPath();
-  ctx.roundRect(2, 2, W - 4, H - 4, isMob ? 38 : 24);
+  ctx.roundRect(2, 2, W - 4, H - 4, 36);
   ctx.stroke();
   ctx.restore();
 }
@@ -601,8 +478,8 @@ void main(){
     const isInitialMob = typeof window !== 'undefined' && window.innerWidth < 768;
     const cards: CardObj[] = SERVICES_DATA.map((item, i) => {
       const cardCanvas = document.createElement('canvas');
-      cardCanvas.width = isInitialMob ? 1000 : 1200;
-      cardCanvas.height = isInitialMob ? 1350 : 760;
+      cardCanvas.width = 1000;
+      cardCanvas.height = 1680;
       const ctx = cardCanvas.getContext('2d')!;
 
       const tex = new THREE.CanvasTexture(cardCanvas);
@@ -612,7 +489,7 @@ void main(){
       tex.generateMipmaps = false;
 
       const geo = new THREE.PlaneGeometry(1, 1, NX, NY);
-      const initialAspect = isInitialMob ? (1000 / 1350) : (1200 / 760);
+      const initialAspect = 1000 / 1680;
       const mat = new THREE.ShaderMaterial({
         vertexShader: vs,
         fragmentShader: fs,
@@ -679,8 +556,8 @@ void main(){
 
       if (prevMob !== isMobile) {
         cards.forEach((c) => {
-          const targetW = isMobile ? 1000 : 1200;
-          const targetH = isMobile ? 1350 : 760;
+          const targetW = 1000;
+          const targetH = 1680;
           c.mat.uniforms.aspect.value = targetW / targetH;
           if (c.tex.image.width !== targetW || c.tex.image.height !== targetH) {
             c.tex.image.width = targetW;
@@ -707,8 +584,8 @@ void main(){
     const vp = new THREE.Vector3();
 
     function poseRibbon(c: CardObj, head: number) {
-      const cardW = isMobile ? 1.55 : 2.0;
-      const cardH = isMobile ? 2.08 : (2.0 / (1200 / 760));
+      const cardW = isMobile ? 1.40 : 1.45;
+      const cardH = cardW * (1680 / 1000);
       const step = cardW + GAP;
       const pos = c.geo.attributes.position;
       const centre = head - c.i * step;
@@ -735,19 +612,23 @@ void main(){
       let cardHeightPx: number;
 
       if (isMobile) {
-        // Mobile: Maximize card presence and viewport coverage
-        cardWidthPx = Math.min(W - 16, 420);
-        cardHeightPx = cardWidthPx * 1.35; // ~540px tall
-        const maxH = H * 0.70;
+        // Mobile: 3:4 portrait card with 300x400 proportional image
+        cardWidthPx = Math.min(W - 20, 360);
+        cardHeightPx = cardWidthPx * (1680 / 1000);
+        const maxH = H * 0.72;
         if (cardHeightPx > maxH) {
           cardHeightPx = maxH;
-          cardWidthPx = cardHeightPx / 1.35;
+          cardWidthPx = cardHeightPx / (1680 / 1000);
         }
       } else {
-        // Desktop: Refined, compact card size (Reduced from oversized 620px!)
-        // Sized comfortably so neighbor cards peek nicely with elegant perspective
-        cardWidthPx = Math.min(W * 0.33, 450);
-        cardHeightPx = cardWidthPx / (1200 / 760);
+        // Desktop: Reduced width (340px) with 300x400 proportional image!
+        cardWidthPx = Math.min(W * 0.25, 340);
+        cardHeightPx = cardWidthPx * (1680 / 1000);
+        const maxH = H * 0.68;
+        if (cardHeightPx > maxH) {
+          cardHeightPx = maxH;
+          cardWidthPx = cardHeightPx / (1680 / 1000);
+        }
       }
 
       const cw = (cardWidthPx / W) * vw;
