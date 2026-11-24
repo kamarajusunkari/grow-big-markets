@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Sparkles, ArrowUpRight, CheckCircle2, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface CaseStudy {
@@ -202,33 +202,84 @@ const CASE_STUDIES: CaseStudy[] = [
 
 export const Portfolio: React.FC = () => {
   const [selectedStudy, setSelectedStudy] = useState<CaseStudy | null>(null);
-  const [mobileIdx, setMobileIdx] = useState(0);
   const mobileTrackRef = useRef<HTMLDivElement>(null);
 
   // Duplicate list for continuous infinite marquee loop
   const marqueeCards = [...CASE_STUDIES, ...CASE_STUDIES];
 
   const handleMobilePrev = () => {
-    if (mobileIdx > 0) {
-      const nextIdx = mobileIdx - 1;
-      setMobileIdx(nextIdx);
-      if (mobileTrackRef.current) {
-        const cardWidth = mobileTrackRef.current.clientWidth * 0.85;
-        mobileTrackRef.current.scrollTo({ left: nextIdx * cardWidth, behavior: 'smooth' });
-      }
-    }
+    if (!mobileTrackRef.current) return;
+    mobileTrackRef.current.scrollBy({ left: -300, behavior: 'smooth' });
   };
 
   const handleMobileNext = () => {
-    if (mobileIdx < CASE_STUDIES.length - 1) {
-      const nextIdx = mobileIdx + 1;
-      setMobileIdx(nextIdx);
-      if (mobileTrackRef.current) {
-        const cardWidth = mobileTrackRef.current.clientWidth * 0.85;
-        mobileTrackRef.current.scrollTo({ left: nextIdx * cardWidth, behavior: 'smooth' });
-      }
-    }
+    if (!mobileTrackRef.current) return;
+    mobileTrackRef.current.scrollBy({ left: 300, behavior: 'smooth' });
   };
+
+  // Continuous Smooth Marquee on Mobile with Manual Touch-Swipe Support
+  useEffect(() => {
+    const track = mobileTrackRef.current;
+    if (!track) return;
+
+    let animId: number;
+    let isPaused = false;
+    let resumeTimeout: ReturnType<typeof setTimeout> | null = null;
+    let lastTime = performance.now();
+
+    // Constant marquee speed: ~42px per second for readable, fluid glide
+    const scrollSpeed = 42;
+
+    const animate = (currentTime: number) => {
+      const delta = (currentTime - lastTime) / 1000;
+      lastTime = currentTime;
+
+      if (!isPaused && track) {
+        track.scrollLeft += scrollSpeed * delta;
+
+        // When scrolled past half the duplicated marquee items, seamless reset
+        const halfWidth = track.scrollWidth / 2;
+        if (halfWidth > 0 && track.scrollLeft >= halfWidth) {
+          track.scrollLeft -= halfWidth;
+        } else if (track.scrollLeft <= 0) {
+          track.scrollLeft += halfWidth;
+        }
+      }
+
+      animId = requestAnimationFrame(animate);
+    };
+
+    animId = requestAnimationFrame(animate);
+
+    const onTouchStart = () => {
+      isPaused = true;
+      if (resumeTimeout) clearTimeout(resumeTimeout);
+    };
+
+    const onTouchEnd = () => {
+      if (resumeTimeout) clearTimeout(resumeTimeout);
+      resumeTimeout = setTimeout(() => {
+        isPaused = false;
+        lastTime = performance.now();
+      }, 2000);
+    };
+
+    track.addEventListener('touchstart', onTouchStart, { passive: true });
+    track.addEventListener('touchend', onTouchEnd, { passive: true });
+    track.addEventListener('touchcancel', onTouchEnd, { passive: true });
+    track.addEventListener('mousedown', onTouchStart, { passive: true });
+    track.addEventListener('mouseup', onTouchEnd, { passive: true });
+
+    return () => {
+      cancelAnimationFrame(animId);
+      if (resumeTimeout) clearTimeout(resumeTimeout);
+      track.removeEventListener('touchstart', onTouchStart);
+      track.removeEventListener('touchend', onTouchEnd);
+      track.removeEventListener('touchcancel', onTouchEnd);
+      track.removeEventListener('mousedown', onTouchStart);
+      track.removeEventListener('mouseup', onTouchEnd);
+    };
+  }, []);
 
   return (
     <section
@@ -398,46 +449,61 @@ export const Portfolio: React.FC = () => {
         </div>
       </div>
 
-      {/* MOBILE HORIZONTAL SWIPE CAROUSEL */}
+      {/* MOBILE CONTINUOUS MARQUEE & MANUAL TOUCH SWIPE CAROUSEL */}
       <div className="mobile-portfolio-container">
+        {/* Soft Edge Gradient Fades on Mobile */}
         <div
-          className="mobile-portfolio-track"
-          ref={mobileTrackRef}
-          onScroll={(e) => {
-            const target = e.currentTarget;
-            const cardWidth = target.clientWidth * 0.85;
-            const newIdx = Math.round(target.scrollLeft / cardWidth);
-            if (newIdx !== mobileIdx && newIdx >= 0 && newIdx < CASE_STUDIES.length) {
-              setMobileIdx(newIdx);
-            }
+          style={{
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            left: 0,
+            width: '28px',
+            background: 'linear-gradient(to right, #f3e8ff 0%, transparent 100%)',
+            zIndex: 10,
+            pointerEvents: 'none',
           }}
-        >
-          {CASE_STUDIES.map((study, idx) => (
+        />
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            right: 0,
+            width: '28px',
+            background: 'linear-gradient(to left, #f3e8ff 0%, transparent 100%)',
+            zIndex: 10,
+            pointerEvents: 'none',
+          }}
+        />
+
+        <div className="mobile-portfolio-track" ref={mobileTrackRef}>
+          {marqueeCards.map((study, idx) => (
             <div
-              key={`mob-p-${study.id}-${idx}`}
+              key={`mob-marquee-${study.id}-${idx}`}
               onClick={() => setSelectedStudy(study)}
               style={{
                 background: study.cardBg,
-                borderRadius: '24px',
-                padding: '2rem 1.75rem',
+                borderRadius: '22px',
+                padding: '1.65rem 1.4rem',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                boxShadow: '0 12px 30px rgba(0, 0, 0, 0.08)',
+                boxShadow: '0 10px 25px rgba(0, 0, 0, 0.08)',
                 border: '1px solid rgba(15, 23, 42, 0.08)',
                 cursor: 'pointer',
-                minHeight: '420px',
+                minHeight: '390px',
               }}
               className="mobile-portfolio-card-wrapper"
             >
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.75rem', marginBottom: '0.75rem' }}>
-                  <h3 style={{ fontSize: '1.4rem', fontWeight: 900, color: study.textColor, lineHeight: 1.2 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.6rem', marginBottom: '0.65rem' }}>
+                  <h3 style={{ fontSize: '1.3rem', fontWeight: 900, color: study.textColor, lineHeight: 1.2 }}>
                     {study.title}
                   </h3>
-                  <ArrowUpRight size={24} color={study.arrowColor} />
+                  <ArrowUpRight size={22} color={study.arrowColor} />
                 </div>
-                <p style={{ fontSize: '0.9rem', color: study.subtextColor, lineHeight: 1.55 }}>
+                <p style={{ fontSize: '0.86rem', color: study.subtextColor, lineHeight: 1.55, fontWeight: 500 }}>
                   {study.desc}
                 </p>
               </div>
@@ -445,44 +511,47 @@ export const Portfolio: React.FC = () => {
               <div
                 style={{
                   width: '100%',
-                  height: '200px',
-                  borderRadius: '18px',
+                  height: '175px',
+                  borderRadius: '16px',
                   overflow: 'hidden',
-                  marginTop: '1.5rem',
+                  marginTop: '1.25rem',
                 }}
               >
                 <img
                   src={study.image}
                   alt={study.title}
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  loading="lazy"
                 />
               </div>
             </div>
           ))}
         </div>
 
-        {/* Mobile Bottom Navigation Controls */}
+        {/* Mobile Navigation Controls (Prev/Next buttons, NO DOTS) */}
         <div className="mobile-portfolio-controls">
-          <button onClick={handleMobilePrev} disabled={mobileIdx === 0} className="mob-ctrl-btn">
-            <ChevronLeft size={20} />
+          <button
+            type="button"
+            onClick={handleMobilePrev}
+            className="mob-ctrl-btn"
+            aria-label="Scroll left"
+          >
+            <ChevronLeft size={18} />
           </button>
-          <div className="mob-dots-row">
-            {CASE_STUDIES.map((_, i) => (
-              <div
-                key={i}
-                onClick={() => {
-                  setMobileIdx(i);
-                  if (mobileTrackRef.current) {
-                    const cardWidth = mobileTrackRef.current.clientWidth * 0.85;
-                    mobileTrackRef.current.scrollTo({ left: i * cardWidth, behavior: 'smooth' });
-                  }
-                }}
-                className={`mob-dot ${mobileIdx === i ? 'is-active' : ''}`}
-              />
-            ))}
+
+          <div className="mob-counter-badge">
+            <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#3E6AB3', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              Swipe or Explore
+            </span>
           </div>
-          <button onClick={handleMobileNext} disabled={mobileIdx >= CASE_STUDIES.length - 1} className="mob-ctrl-btn mob-ctrl-next">
-            <ChevronRight size={20} />
+
+          <button
+            type="button"
+            onClick={handleMobileNext}
+            className="mob-ctrl-btn mob-ctrl-next"
+            aria-label="Scroll right"
+          >
+            <ChevronRight size={18} />
           </button>
         </div>
       </div>
@@ -574,8 +643,35 @@ export const Portfolio: React.FC = () => {
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 1rem;
+          gap: 1.25rem;
           margin-top: 1.5rem;
+        }
+        .mob-ctrl-btn {
+          width: 38px;
+          height: 38px;
+          border-radius: 50%;
+          background: #ffffff;
+          border: 1px solid rgba(15, 23, 42, 0.12);
+          color: #0f172a;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+          transition: transform 0.15s ease, background-color 0.15s ease;
+        }
+        .mob-ctrl-btn:active {
+          transform: scale(0.92);
+          background: #f1f5f9;
+        }
+        .mob-counter-badge {
+          display: inline-flex;
+          align-items: center;
+          padding: 6px 14px;
+          border-radius: 9999px;
+          background: #ffffff;
+          border: 1px solid rgba(15, 23, 42, 0.1);
+          box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
         }
         @media (max-width: 768px) {
           .portfolio-desktop-wrapper {
@@ -583,26 +679,38 @@ export const Portfolio: React.FC = () => {
           }
           .mobile-portfolio-container {
             display: block !important;
+            width: 100% !important;
+            position: relative !important;
+            overflow: hidden !important;
           }
           .mobile-portfolio-track {
             display: flex !important;
             overflow-x: auto !important;
-            scroll-snap-type: x mandatory !important;
-            padding: 1rem 8% !important;
-            gap: 1rem !important;
-            margin-left: -2rem !important;
-            margin-right: -2rem !important;
-            width: calc(100% + 4rem) !important;
+            padding: 0.5rem 1rem 1rem !important;
+            gap: 1.25rem !important;
+            width: 100% !important;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
+            cursor: grab;
           }
           .mobile-portfolio-track::-webkit-scrollbar {
             display: none;
           }
+          .mobile-portfolio-track:active {
+            cursor: grabbing;
+          }
           .mobile-portfolio-card-wrapper {
-            flex: 0 0 85% !important;
-            width: 85% !important;
-            scroll-snap-align: center !important;
+            flex: 0 0 290px !important;
+            width: 290px !important;
+            border-radius: 20px !important;
+            padding: 1.5rem 1.35rem !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: space-between !important;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08) !important;
+            border: 1px solid rgba(15, 23, 42, 0.08) !important;
+            cursor: pointer;
+            min-height: 380px !important;
           }
         }
         @media (min-width: 769px) {

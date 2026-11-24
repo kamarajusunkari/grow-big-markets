@@ -407,9 +407,9 @@ export const Industries: React.FC<IndustriesProps> = ({ onOpenBooking }) => {
         </div>
 
         {/* ====================================================================
-            THE 1400PX 4x2 GRID (No Outer Background, Clean Floating Cards)
+            THE 1400PX 4x2 GRID (2-Column on Mobile, 4-Column on Desktop)
             ==================================================================== */}
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-5.5">
+        <div className="w-full grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 md:gap-5.5">
           {INDUSTRIES_DATA.map((item, idx) => {
             const IconComponent = item.icon;
             const col = idx % 4;
@@ -432,9 +432,9 @@ export const Industries: React.FC<IndustriesProps> = ({ onOpenBooking }) => {
                 onClick={() => setActiveItem(item)}
                 onMouseMove={(e) => handleCardMouseMove(e, idx)}
                 onMouseLeave={handleCardMouseLeave}
-                className="group relative flex flex-col items-center justify-between text-center p-5 sm:p-5.5 rounded-2xl cursor-pointer will-change-transform overflow-hidden bg-white/90 backdrop-blur-xl border border-slate-300/80 group-hover:border-transparent shadow-[0_8px_24px_-8px_rgba(15,23,42,0.08)] hover:shadow-2xl active:scale-[0.98]"
+                className="group relative flex flex-col items-center justify-between text-center p-3.5 sm:p-5.5 rounded-2xl cursor-pointer will-change-transform overflow-hidden bg-white/90 backdrop-blur-xl border border-slate-300/80 group-hover:border-transparent shadow-[0_8px_24px_-8px_rgba(15,23,42,0.08)] hover:shadow-2xl active:scale-[0.98]"
                 style={{
-                  minHeight: '178px',
+                  minHeight: '158px',
                   opacity: isInView ? 1 : 0,
                   transform: cardTransform,
                   transition: cardTransition,
@@ -449,25 +449,25 @@ export const Industries: React.FC<IndustriesProps> = ({ onOpenBooking }) => {
                 />
 
                 {/* Top: Reduced Thin Stroke Outline Icon */}
-                <div className="relative z-10 mb-2 flex items-center justify-center">
+                <div className="relative z-10 mb-1.5 sm:mb-2 flex items-center justify-center">
                   <div className="text-[#3d6ab3] group-hover:text-white transition-all duration-300 transform group-hover:scale-110 drop-shadow-sm">
-                    <IconComponent className="w-7.5 h-7.5 sm:w-8.5 sm:h-8.5" />
+                    <IconComponent className="w-7 h-7 sm:w-8.5 sm:h-8.5" />
                   </div>
                 </div>
 
                 {/* Middle: Thin Heading */}
-                <h3 className="relative z-10 text-slate-900 group-hover:text-white text-sm sm:text-base font-normal tracking-wide transition-colors duration-300 max-w-[210px] leading-snug my-auto min-h-[42px] flex items-center justify-center">
+                <h3 className="relative z-10 text-slate-900 group-hover:text-white text-xs sm:text-sm md:text-base font-medium sm:font-normal tracking-wide transition-colors duration-300 max-w-[210px] leading-snug my-auto min-h-[34px] sm:min-h-[42px] flex items-center justify-center">
                   {item.title}
                 </h3>
 
                 {/* Bottom: Button */}
-                <div className="relative z-10 mt-3 w-full flex items-center justify-center">
+                <div className="relative z-10 mt-2 sm:mt-3 w-full flex items-center justify-center">
                   <button
                     type="button"
-                    className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-medium transition-all duration-300 bg-blue-50/90 text-[#1e3a8a] border border-blue-200/80 group-hover:bg-[#FDD00B] group-hover:text-[#0f172a] group-hover:border-transparent group-hover:shadow-md group-hover:scale-105"
+                    className="inline-flex items-center gap-1 sm:gap-1.5 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-medium transition-all duration-300 bg-blue-50/90 text-[#1e3a8a] border border-blue-200/80 group-hover:bg-[#FDD00B] group-hover:text-[#0f172a] group-hover:border-transparent group-hover:shadow-md group-hover:scale-105"
                   >
                     <span>Explore</span>
-                    <ArrowUpRight size={13} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                    <ArrowUpRight size={12} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                   </button>
                 </div>
               </div>
